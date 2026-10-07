@@ -1,0 +1,19 @@
+@use "@/shared/styles/variables" as *;
+
+.status {
+  display: inline-block;
+  padding: $space-xs $space-sm;
+  border-radius: $radius;
+  background: $color-muted-bg;
+  font-size: 0.9rem;
+}
+
+.ok {
+  background: $color-success-bg;
+  color: $color-success;
+}
+
+.error {
+  background: $color-danger-bg;
+  color: $color-danger;
+}

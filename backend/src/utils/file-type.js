@@ -1,5 +1,5 @@
 import path from "node:path";
-import { HttpError } from "../errors/HttpError";
+import { HttpError } from "../errors/HttpError.js";
 
 // Sygnatury Plików PDF oraz DOCX
 const PDF_SIGNATURE = "%PDF";

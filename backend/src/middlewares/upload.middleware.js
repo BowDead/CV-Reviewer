@@ -1,13 +1,12 @@
 import multer from "multer";
-import { HttpError } from "../errors/HttpError";
-import e from "express";
+import { HttpError } from "../errors/HttpError.js";
 
-export const MAx_FILE_SIZE_MB = 10;
+export const MAX_FILE_SIZE_MB = 10;
 
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: MAx_FILE_SIZE_MB * 1024 * 1024,
+    fileSize: MAX_FILE_SIZE_MB * 1024 * 1024,
     files: 1,
   },
 }).single("file");

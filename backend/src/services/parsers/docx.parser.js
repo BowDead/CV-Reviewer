@@ -1,4 +1,3 @@
-import { text } from "express";
 import mammoth from "mammoth";
 
 export async function extractDocxText(buffer) {

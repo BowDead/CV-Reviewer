@@ -3,7 +3,7 @@ import { detectCvKind } from "../utils/file-type.js";
 import { extractPdfText } from "./parsers/pdf.parser.js";
 import { extractDocxText } from "./parsers/docx.parser.js";
 
-const parser = {
+const parsers = {
   pdf: extractPdfText,
   docx: extractDocxText,
 };
@@ -23,6 +23,9 @@ function countWords(text) {
 export async function parseCv(file) {
   if (!file) {
     throw new HttpError(400, "Nie przesłano pliku.");
+  }
+  if (file.size === 0) {
+    throw new HttpError(400, "Plik jest pusty.");
   }
   const kind = detectCvKind(file.originalname, file.buffer);
 

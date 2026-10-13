@@ -1,5 +1,3 @@
-import { text } from "express";
-
 export function parsedCvView(parsedCv) {
   return {
     kind: parsedCv.kind,

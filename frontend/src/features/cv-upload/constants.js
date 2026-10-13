@@ -1,0 +1,9 @@
+export const MAX_FILE_SIZE_MB = 10;
+
+export const ACCEPTED_EXTENSIONS = [".pdf", ".docx"];
+
+export const ACCEPT_ATTRIBUTE = [
+  ...ACCEPTED_EXTENSIONS,
+  "application/pdf",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+].join(",");

@@ -32,12 +32,14 @@ export async function parseCv(file) {
   let parsed;
   try {
     parsed = await parsers[kind](file.buffer);
-  } catch {
+  } catch (err) {
+    console.error("Błąd parsowania CV:", err);
     throw new HttpError(
       400,
       "Nie udało się odczytać pliku. Jest uszkodzony lub ma nieprawidłowy format.",
     );
   }
+
   const text = normalizeText(parsed.text);
   if (!text) {
     throw new HttpError(

@@ -6,6 +6,6 @@ export async function extractPdfText(buffer) {
     const { totalPages, text } = await extractText(pdf, { mergePages: true });
     return { text, pageCount: totalPages };
   } finally {
-    await pdf.destroy();
+    await pdf.loadingTask.destroy();
   }
 }

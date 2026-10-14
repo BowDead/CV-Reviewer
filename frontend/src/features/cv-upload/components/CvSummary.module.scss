@@ -1,0 +1,66 @@
+@use "@/shared/styles/variables" as *;
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  padding: $space-lg;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-surface;
+}
+
+.heading {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: $space-xs $space-md;
+  margin: 0;
+
+  dt {
+    color: $color-muted-text;
+  }
+
+  dd {
+    margin: 0;
+    font-weight: 600;
+  }
+}
+
+.fileName {
+  overflow-wrap: anywhere; // długie nazwy plików bez spacji się zawiną
+}
+
+.textDetails summary {
+  cursor: pointer;
+  color: $color-primary;
+}
+
+.text {
+  max-height: 300px;
+  overflow: auto;
+  margin: $space-xs 0 0;
+  padding: $space-sm;
+  border-radius: $radius;
+  background: $color-muted-bg;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+}
+
+.resetButton {
+  align-self: flex-start;
+  padding: $space-xs $space-md;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+
+  &:hover {
+    background: $color-muted-bg;
+  }
+}

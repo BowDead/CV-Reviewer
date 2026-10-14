@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import { ACCEPT_ATTRIBUTE } from "../constants";
-import styles from ".CvDropzone.module.scss";
+import { ACCEPT_ATTRIBUTE, MAX_FILE_SIZE_MB } from "../constants";
+import styles from "./CvDropzone.module.scss";
 
 export function CvDropzone({ onFileSelected, disabled = false }) {
   const inputRef = useRef(null);

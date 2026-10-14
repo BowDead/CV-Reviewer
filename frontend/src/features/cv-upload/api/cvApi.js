@@ -1,4 +1,4 @@
-import { request } from "@shared/api/httpClient";
+import { request } from "@/shared/api/httpClient";
 
 export function parseCv(file, signal) {
   const body = new FormData();

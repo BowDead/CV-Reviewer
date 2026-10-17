@@ -21,7 +21,7 @@ export function uploadCvFile(req, res, next) {
         return next(
           new HttpError(
             413,
-            `Plik jest za duży (limit to ${MAx_FILE_SIZE_MB} MB).`,
+            `Plik jest za duży (limit to ${MAX_FILE_SIZE_MB} MB).`,
           ),
         );
       }

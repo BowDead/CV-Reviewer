@@ -1,0 +1,90 @@
+@use "@/shared/styles/variables" as *;
+
+.overview {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: $space-xl;
+  padding: $space-lg;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-surface;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120px;
+}
+
+.scoreValue {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+  color: $color-primary;
+}
+
+.scoreMax {
+  color: $color-muted-text;
+}
+
+.seniority {
+  margin-top: $space-sm;
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  background: $color-primary-bg;
+  color: $color-primary;
+  font-weight: 600;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.summary {
+  margin: 0;
+}
+
+.categories {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.categoryHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.categoryScore {
+  font-weight: 600;
+}
+
+.bar {
+  height: 6px;
+  margin-top: 0.25rem;
+  border-radius: 3px;
+  background: $color-muted-bg;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  background: $color-primary;
+}
+
+.categoryComment {
+  margin: 0.25rem 0 0;
+  color: $color-muted-text;
+  font-size: 0.85rem;
+}

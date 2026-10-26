@@ -1,0 +1,35 @@
+@use "@/shared/styles/variables" as *;
+
+.card {
+  padding: $space-md $space-lg;
+  border: 1px solid $color-border;
+  border-left-width: 4px;
+  border-radius: $radius;
+  background: $color-surface;
+}
+
+.neutral {
+  border-left-color: $color-primary;
+}
+
+.positive {
+  border-left-color: $color-success;
+}
+
+.negative {
+  border-left-color: $color-danger;
+}
+
+.title {
+  margin: 0 0 $space-xs;
+  font-size: 1rem;
+}
+
+.list {
+  margin: 0;
+  padding-left: 1.25rem;
+
+  li + li {
+    margin-top: 0.25rem;
+  }
+}

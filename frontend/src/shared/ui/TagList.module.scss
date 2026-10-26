@@ -1,0 +1,30 @@
+@use "@/shared/styles/variables" as *;
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  padding: 0.2rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.neutral {
+  background: $color-muted-bg;
+}
+
+.primary {
+  background: $color-primary-bg;
+  color: $color-primary;
+}
+
+.success {
+  background: $color-success-bg;
+  color: $color-success;
+}

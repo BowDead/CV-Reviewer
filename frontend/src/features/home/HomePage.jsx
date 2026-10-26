@@ -1,8 +1,10 @@
 import { ApiStatus } from "@/features/health";
 import { CvUploadPanel, useCvUpload } from "@/features/cv-upload";
+import { CvAnalysisPanel, useCvAnalysis } from "@/features/cv-analysis";
 
 export function HomePage() {
   const cv = useCvUpload();
+  const analysis = useCvAnalysis();
 
   return (
     <section>
@@ -13,6 +15,10 @@ export function HomePage() {
       <ApiStatus />
 
       <CvUploadPanel cv={cv} />
+
+      {cv.status === "done" && (
+        <CvAnalysisPanel cvText={cv.result.text} analysis={analysis} />
+      )}
     </section>
   );
 }

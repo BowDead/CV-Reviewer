@@ -1,0 +1,63 @@
+@use "@/shared/styles/variables" as *;
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+  padding-top: $space-lg;
+  border-top: 1px solid $color-border;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-md;
+}
+
+.title {
+  margin: 0;
+}
+
+.description {
+  max-width: 60ch;
+  margin: 0.25rem 0 0;
+  color: $color-muted-text;
+}
+
+.button {
+  padding: $space-sm $space-xl;
+  border: none;
+  border-radius: $radius;
+  background: $color-primary;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: $color-primary-hover;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+}
+
+.info,
+.error {
+  margin: 0;
+  padding: $space-xs $space-sm;
+  border-radius: $radius;
+}
+
+.info {
+  background: $color-muted-bg;
+}
+
+.error {
+  background: $color-danger-bg;
+  color: $color-danger;
+}

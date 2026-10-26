@@ -1,0 +1,65 @@
+@use "@/shared/styles/variables" as *;
+
+.profile {
+  padding: $space-md $space-lg;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-surface;
+}
+
+.toggle {
+  cursor: pointer;
+  font-weight: 600;
+  color: $color-primary;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  margin-top: $space-md;
+}
+
+.headline {
+  margin: 0;
+  font-weight: 600;
+}
+
+.heading {
+  margin: 0 0 $space-xs;
+  color: $color-muted-text;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.entries {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.period {
+  display: block;
+  color: $color-muted-text;
+  font-size: 0.85rem;
+}
+
+.highlights {
+  margin: 0.25rem 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.skillGroup + .skillGroup {
+  margin-top: $space-xs;
+}
+
+.groupName {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+}

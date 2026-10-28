@@ -1,0 +1,12 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.label {
+  @include section-label;
+}

@@ -1,0 +1,12 @@
+@use "@/shared/styles/variables" as *;
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+  gap: $space-lg;
+  align-items: start;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+}

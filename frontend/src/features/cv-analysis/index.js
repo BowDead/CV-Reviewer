@@ -1,2 +1,5 @@
 export { useCvAnalysis } from "./hooks/useCvAnalysis";
-export { CvAnalysisPanel } from "./components/CvAnalysisPanel";
+export { CvAnalysisControls } from "./components/CvAnalysisControls";
+export { CvAnalysisResult } from "./components/CvAnalysisResult";
+export { CvImprovements } from "./components/CvImprovements";
+export { ProfileSummary } from "./components/ProfileSummary";

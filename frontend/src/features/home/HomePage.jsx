@@ -1,6 +1,5 @@
 import { ApiStatus } from "@/features/health";
 import { CvUploadPanel, useCvUpload } from "@/features/cv-upload";
-import { CvAnalysisPanel, useCvAnalysis } from "@/features/cv-analysis";
 
 export function HomePage() {
   const cv = useCvUpload();

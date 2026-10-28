@@ -1,0 +1,35 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.description {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.8rem;
+}
+
+.text {
+  max-height: calc(100vh - 340px);
+  min-height: 300px;
+  overflow: auto;
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid $color-divider;
+  border-radius: $radius-sm;
+  background: $color-bg;
+  color: $color-text-soft;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}

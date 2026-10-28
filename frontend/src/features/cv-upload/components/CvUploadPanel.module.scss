@@ -3,32 +3,24 @@
 .upload {
   display: flex;
   flex-direction: column;
-  gap: $space-md;
-}
-
-.layout {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
-  gap: $space-lg;
-  align-items: start;
-
-  @media (max-width: 800px) {
-    grid-template-columns: 1fr;
-  }
+  gap: $space-xs;
 }
 
 .info,
 .error {
   margin: 0;
-  padding: $space-xs $space-sm;
+  padding: 0.375rem 0.625rem;
   border-radius: $radius;
+  font-size: 0.8rem;
 }
 
 .info {
   background: $color-muted-bg;
+  color: $color-muted-text;
 }
 
 .error {
+  border: 1px solid rgba($color-danger, 0.3);
   background: $color-danger-bg;
   color: $color-danger;
 }

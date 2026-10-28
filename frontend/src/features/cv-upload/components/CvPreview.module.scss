@@ -1,21 +1,19 @@
 @use "@/shared/styles/variables" as *;
 
-.pdf {
+.pdf,
+.text {
   display: block;
   width: 100%;
-  height: 75vh;
+  height: calc(100vh - 220px);
+  min-height: 520px;
   border: 1px solid $color-border;
   border-radius: $radius;
   background: $color-surface;
 }
 
 .text {
-  max-height: 75vh;
   overflow-y: auto;
   padding: $space-lg;
-  border: 1px solid $color-border;
-  border-radius: $radius;
-  background: $color-surface;
   white-space: pre-wrap; // zachowuje akapity i podziały linii z tekstu
   line-height: 1.6;
 }

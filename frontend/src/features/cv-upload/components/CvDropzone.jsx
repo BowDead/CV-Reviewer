@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { ACCEPT_ATTRIBUTE, MAX_FILE_SIZE_MB } from "../constants";
 import styles from "./CvDropzone.module.scss";
+import { Button } from "@/shared/ui/Button";
 
 export function CvDropzone({ onFileSelected, disabled = false }) {
   const inputRef = useRef(null);
@@ -51,14 +52,13 @@ export function CvDropzone({ onFileSelected, disabled = false }) {
       <p className={styles.title}>Przeciągnij tutaj plik CV</p>
       <p className={styles.hint}>PDF lub DOCX, maks. {MAX_FILE_SIZE_MB} MB</p>
 
-      <button
-        type="button"
-        className={styles.button}
+      <Button
+        size="sm"
         onClick={() => inputRef.current?.click()}
         disabled={disabled}
       >
         Wybierz plik
-      </button>
+      </Button>
 
       <input
         ref={inputRef}

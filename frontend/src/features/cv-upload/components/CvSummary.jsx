@@ -1,46 +1,49 @@
+import { Button } from "@/shared/ui/Button";
 import styles from "./CvSummary.module.scss";
 
 const KIND_LABELS = {
   pdf: "PDF",
-  docx: "Word (DOCX)",
+  docx: "DOCX",
 };
 
 export function CvSummary({ fileName, result, onReset }) {
-  const { kind, pageCount, stats, text } = result;
+  const { kind, pageCount, stats } = result;
+
+  const meta = [
+    KIND_LABELS[kind],
+    pageCount !== null && `${pageCount} str.`,
+    `${stats.words} słów`,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
-    <aside className={styles.summary}>
-      <h2 className={styles.heading}>Wgrane CV</h2>
+    <div className={styles.card}>
+      <div className={styles.file}>
+        <svg
+          className={styles.icon}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+          <path d="M14 3v5h5" />
+        </svg>
+        <div className={styles.info}>
+          <p className={styles.fileName}>{fileName}</p>
+          <p className={styles.meta}>{meta}</p>
+        </div>
+      </div>
 
-      <dl className={styles.stats}>
-        <dt>Plik</dt>
-        <dd className={styles.fileName}>{fileName}</dd>
-
-        <dt>Format</dt>
-        <dd>{KIND_LABELS[kind]}</dd>
-
-        {pageCount !== null && (
-          <>
-            <dt>Strony</dt>
-            <dd>{pageCount}</dd>
-          </>
-        )}
-
-        <dt>Słowa</dt>
-        <dd>{stats.words}</dd>
-
-        <dt>Znaki</dt>
-        <dd>{stats.characters}</dd>
-      </dl>
-
-      <details className={styles.textDetails}>
-        <summary>Tekst wyciągnięty z CV (to przeczyta AI)</summary>
-        <pre className={styles.text}>{text}</pre>
-      </details>
-
-      <button type="button" className={styles.resetButton} onClick={onReset}>
-        Wgraj inny plik
-      </button>
-    </aside>
+      <Button variant="ghost" size="sm" onClick={onReset}>
+        Zmień plik
+      </Button>
+    </div>
   );
 }

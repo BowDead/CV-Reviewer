@@ -1,0 +1,54 @@
+@use "@/shared/styles/variables" as *;
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-xs;
+  min-height: 2.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-radius: $radius;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.primary {
+  background: $color-primary;
+  color: $color-on-primary;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    background: $color-primary-hover;
+  }
+}
+
+.ghost {
+  border-color: $color-border-strong;
+  background: transparent;
+  color: $color-text;
+
+  &:hover:not(:disabled) {
+    background: $color-muted-bg;
+  }
+}
+
+.small {
+  min-height: 2rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.block {
+  width: 100%;
+  min-height: 2.75rem;
+}

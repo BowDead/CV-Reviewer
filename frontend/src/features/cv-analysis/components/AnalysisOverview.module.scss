@@ -1,13 +1,12 @@
 @use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
 
 .overview {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: $space-xl;
+  @include card;
   padding: $space-lg;
-  border: 1px solid $color-border;
-  border-radius: $radius;
-  background: $color-surface;
 
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
@@ -34,10 +33,10 @@
 
 .seniority {
   margin-top: $space-sm;
-  padding: 0.2rem 0.75rem;
-  border-radius: 999px;
+  padding: 0.125rem 0.625rem;
+  border-radius: $radius-sm;
   background: $color-primary-bg;
-  color: $color-primary;
+  color: $color-primary-text;
   font-weight: 600;
 }
 
@@ -71,9 +70,9 @@
 }
 
 .bar {
-  height: 6px;
+  height: 4px;
   margin-top: 0.25rem;
-  border-radius: 3px;
+  border-radius: $radius-sm;
   background: $color-muted-bg;
   overflow: hidden;
 }
@@ -81,6 +80,7 @@
 .barFill {
   height: 100%;
   background: $color-primary;
+  border-radius: $radius-sm;
 }
 
 .categoryComment {

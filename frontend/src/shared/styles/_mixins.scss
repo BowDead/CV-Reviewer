@@ -1,0 +1,18 @@
+@use "variables" as *;
+
+@mixin card {
+  padding: $space-md $space-lg;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-surface;
+}
+
+@mixin section-label {
+  margin: 0;
+  padding: 0 0.25rem;
+  color: $color-muted-text;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

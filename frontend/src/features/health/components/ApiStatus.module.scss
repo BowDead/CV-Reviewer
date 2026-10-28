@@ -1,19 +1,32 @@
 @use "@/shared/styles/variables" as *;
 
 .status {
-  display: inline-block;
-  padding: $space-xs $space-sm;
-  border-radius: $radius;
-  background: $color-muted-bg;
-  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+  margin: 0;
+  padding: 0.25rem;
+  color: $color-muted-text;
+  font-size: 0.75rem;
+
+  &::before {
+    content: "";
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: $radius-sm;
+    background: $color-faint-text;
+  }
 }
 
-.ok {
-  background: $color-success-bg;
-  color: $color-success;
+.ok::before {
+  background: $color-success;
 }
 
 .error {
-  background: $color-danger-bg;
   color: $color-danger;
+
+  &::before {
+    background: $color-danger;
+  }
 }

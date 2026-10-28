@@ -1,10 +1,8 @@
 @use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
 
 .card {
-  padding: $space-md $space-lg;
-  border: 1px solid $color-border;
-  border-radius: $radius;
-  background: $color-surface;
+  @include card;
 }
 
 .title {
@@ -15,29 +13,38 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: $space-md;
+  gap: $space-sm;
   margin: 0;
-  padding-left: 1.25rem;
+  padding: 0;
+  list-style: none;
 }
 
-.item p {
-  margin: 0.25rem 0 0;
+.item {
+  padding: $space-sm $space-md;
+  border: 1px solid $color-divider;
+  border-radius: $radius;
+  background: $color-sidebar;
+
+  p {
+    margin: 0.25rem 0 0;
+  }
 }
 
 .label {
   display: inline-block;
-  min-width: 3.5rem;
+  min-width: 3rem;
   margin-right: $space-xs;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
   color: $color-muted-text;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .before {
   color: $color-muted-text;
   text-decoration: line-through;
-  text-decoration-color: rgba($color-danger, 0.5);
+  text-decoration-color: rgba($color-danger, 0.6);
 }
 
 .after {

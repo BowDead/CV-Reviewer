@@ -10,18 +10,19 @@
 }
 
 .tag {
-  padding: 0.2rem 0.625rem;
-  border-radius: 999px;
-  font-size: 0.85rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: $radius-sm;
+  font-size: 0.8125rem;
 }
 
 .neutral {
   background: $color-muted-bg;
+  color: $color-text-soft;
 }
 
 .primary {
   background: $color-primary-bg;
-  color: $color-primary;
+  color: $color-primary-text;
 }
 
 .success {

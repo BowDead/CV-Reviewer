@@ -1,33 +1,39 @@
 @use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
 
 .card {
-  padding: $space-md $space-lg;
-  border: 1px solid $color-border;
-  border-left-width: 4px;
-  border-radius: $radius;
-  background: $color-surface;
-}
-
-.neutral {
-  border-left-color: $color-primary;
-}
-
-.positive {
-  border-left-color: $color-success;
-}
-
-.negative {
-  border-left-color: $color-danger;
+  @include card;
 }
 
 .title {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
   margin: 0 0 $space-xs;
   font-size: 1rem;
+
+  &::before {
+    content: "";
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: $radius-sm;
+    background: $color-primary;
+  }
+}
+
+.positive .title::before {
+  background: $color-success;
+}
+
+.negative .title::before {
+  background: $color-danger;
 }
 
 .list {
   margin: 0;
   padding-left: 1.25rem;
+  color: $color-text-soft;
 
   li + li {
     margin-top: 0.25rem;

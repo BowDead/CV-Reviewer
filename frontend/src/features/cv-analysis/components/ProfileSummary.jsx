@@ -17,9 +17,7 @@ export function ProfileSummary({ profile }) {
   } = profile;
 
   return (
-    <details className={styles.profile}>
-      <summary className={styles.toggle}>Dane odczytane z CV przez AI</summary>
-
+    <section className={styles.profile}>
       <div className={styles.body}>
         {(headline || location) && (
           <p className={styles.headline}>
@@ -98,6 +96,6 @@ export function ProfileSummary({ profile }) {
           </div>
         )}
       </div>
-    </details>
+    </section>
   );
 }

@@ -19,9 +19,10 @@
 .note,
 .warning {
   margin: 0;
-  padding: $space-xs $space-sm;
+  padding: $space-xs 0.75rem;
+  border: 1px solid;
   border-radius: $radius;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
 }
 
 .note {
@@ -35,6 +36,9 @@
 }
 
 .card {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
   padding: $space-md $space-lg;
   border: 1px solid $color-border;
   border-radius: $radius;

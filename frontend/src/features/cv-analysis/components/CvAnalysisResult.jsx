@@ -2,8 +2,6 @@ import { TagList } from "@/shared/ui/TagList";
 import { ANONYMIZED_LABELS } from "../constants";
 import { AnalysisOverview } from "./AnalysisOverview";
 import { InsightList } from "./InsightList";
-import { RewriteList } from "./RewriteList";
-import { ProfileSummary } from "./ProfileSummary";
 import styles from "./CvAnalysisResult.module.scss";
 
 export function CvAnalysisResult({ result }) {
@@ -40,34 +38,29 @@ export function CvAnalysisResult({ result }) {
           tone="negative"
         />
         <InsightList
-          title="Plan działania"
-          items={analysis.actionItems}
-          ordered
-        />
-        <InsightList
           title="Brakujące sekcje"
           items={analysis.missingSections}
           tone="negative"
         />
-      </div>
 
-      <div className={styles.columns}>
-        {analysis.suggestedRoles.length > 0 && (
+        {(analysis.suggestedRoles.length > 0 ||
+          analysis.skillsToAdd.length > 0) && (
           <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Sugerowane stanowiska</h3>
-            <TagList items={analysis.suggestedRoles} tone="primary" />
+            {analysis.suggestedRoles.length > 0 && (
+              <div>
+                <h3 className={styles.cardTitle}>Sugerowane stanowiska</h3>
+                <TagList items={analysis.suggestedRoles} tone="primary" />
+              </div>
+            )}
+            {analysis.skillsToAdd.length > 0 && (
+              <div>
+                <h3 className={styles.cardTitle}>Warto dodać</h3>
+                <TagList items={analysis.skillsToAdd} tone="success" />
+              </div>
+            )}
           </div>
         )}
-        {analysis.skillsToAdd.length > 0 && (
-          <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Warto dodać umiejętności</h3>
-            <TagList items={analysis.skillsToAdd} tone="success" />
-          </div>
-        )}
       </div>
-
-      <RewriteList rewrites={analysis.rewrites} />
-      <ProfileSummary profile={analysis.profile} />
     </div>
   );
 }

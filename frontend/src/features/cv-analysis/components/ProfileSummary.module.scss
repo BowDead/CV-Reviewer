@@ -1,23 +1,15 @@
 @use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
 
 .profile {
-  padding: $space-md $space-lg;
-  border: 1px solid $color-border;
-  border-radius: $radius;
-  background: $color-surface;
-}
-
-.toggle {
-  cursor: pointer;
-  font-weight: 600;
-  color: $color-primary;
+  @include card;
+  padding: $space-lg;
 }
 
 .body {
   display: flex;
   flex-direction: column;
-  gap: $space-md;
-  margin-top: $space-md;
+  gap: $space-lg;
 }
 
 .headline {

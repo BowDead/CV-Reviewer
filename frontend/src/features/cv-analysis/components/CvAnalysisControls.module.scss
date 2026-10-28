@@ -1,0 +1,14 @@
+@use "@/shared/styles/variables" as *;
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+.hint {
+  margin: 0;
+  padding: 0 0.25rem;
+  color: $color-muted-text;
+  font-size: 0.75rem;
+}

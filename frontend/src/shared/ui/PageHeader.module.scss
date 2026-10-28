@@ -1,0 +1,20 @@
+@use "@/shared/styles/variables" as *;
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid $color-divider;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.625rem;
+  letter-spacing: -0.01em;
+}
+
+.description {
+  margin: 0;
+  color: $color-muted-text;
+}

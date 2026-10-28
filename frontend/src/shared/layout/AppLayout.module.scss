@@ -1,44 +1,77 @@
 @use "@/shared/styles/variables" as *;
 
 .shell {
+  display: grid;
+  grid-template-columns: $sidebar-width minmax(0, 1fr);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: $space-xl;
-  padding: $space-sm $space-lg;
-  border-bottom: 1px solid $color-border;
-  background: $color-surface;
-}
-
-.brand {
-  font-weight: 700;
-}
-
-.nav {
-  display: flex;
-  gap: $space-md;
-
-  a {
-    color: inherit;
-    text-decoration: none;
-    opacity: 0.7;
-
-    &.active {
-      opacity: 1;
-      font-weight: 600;
-    }
+  @media (max-width: $breakpoint-sidebar) {
+    grid-template-columns: 1fr;
   }
 }
 
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+  padding: 1.25rem $space-md;
+  border-right: 1px solid $color-divider;
+  background: $color-sidebar;
+
+  @media (max-width: $breakpoint-sidebar) {
+    position: static;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid $color-divider;
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0 0.25rem;
+  font-weight: 700;
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: $radius;
+  background: $color-primary;
+  color: $color-on-primary;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  padding-top: $space-sm;
+  border-top: 1px solid $color-divider;
+}
+
 .main {
-  flex: 1;
-  width: 100%;
+  min-width: 0;
+  padding: $space-xl 2.5rem 3rem;
+
+  @media (max-width: 640px) {
+    padding: $space-lg $space-md;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
   max-width: $content-max-width;
   margin: 0 auto;
-  padding: $space-xl $space-lg;
 }

@@ -1,0 +1,49 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.label {
+  @include section-label;
+  margin-bottom: 0.375rem;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 2.5rem;
+  padding: $space-xs 0.75rem;
+  border-radius: $radius;
+  color: $color-text-soft;
+  text-decoration: none;
+
+  &:hover {
+    background: $color-muted-bg;
+    color: $color-text;
+  }
+}
+
+.active,
+.active:hover {
+  background: $color-primary-bg;
+  box-shadow: inset 2px 0 0 $color-primary;
+  color: $color-primary-text;
+  font-weight: 600;
+}
+
+.badge {
+  padding: 0 0.375rem;
+  border-radius: $radius-sm;
+  background: $color-muted-bg;
+  color: $color-muted-text;
+  font-size: 0.75rem;
+  .active & {
+    background: rgba($color-primary, 0.2);
+    color: $color-primary-text;
+  }
+}

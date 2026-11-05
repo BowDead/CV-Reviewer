@@ -1,11 +1,29 @@
 services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: cvreviewer
+      POSTGRES_PASSWORD: cvreviewer
+      POSTGRES_DB: cvreviewer
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cvreviewer -d cvreviewer"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   backend:
     build: ./backend
     env_file: ./backend/.env
     environment:
       PORT: 3001
+      DATABASE_URL: postgres://cvreviewer:cvreviewer@db:5432/cvreviewer
     ports:
       - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy
     develop:
       watch:
         - action: sync
@@ -32,3 +50,20 @@ services:
             - dist/
         - action: rebuild
           path: ./frontend/package.json
+
+  pgadmin:
+    image: dpage/pgadmin4:9
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
+    depends_on:
+      - db
+
+volumes:
+  db-data:
+  pgadmin-data:

@@ -16,21 +16,12 @@
   }
 }
 
-.note,
 .warning {
   margin: 0;
   padding: $space-xs 0.75rem;
   border: 1px solid;
   border-radius: $radius;
   font-size: 0.875rem;
-}
-
-.note {
-  background: $color-success-bg;
-  color: $color-success;
-}
-
-.warning {
   background: $color-danger-bg;
   color: $color-danger;
 }

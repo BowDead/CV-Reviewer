@@ -12,7 +12,7 @@ export function CvImprovements({ analysis }) {
   }
   return (
     <div className={styles.improvements}>
-      <InsightList title="Plan działania" items={actionItems} ordered />
+      <InsightList title="Proponowane działania" items={actionItems} ordered />
       <RewriteList rewrites={rewrites} />
     </div>
   );

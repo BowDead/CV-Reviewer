@@ -1,23 +1,13 @@
 import { TagList } from "@/shared/ui/TagList";
-import { ANONYMIZED_LABELS } from "../constants";
 import { AnalysisOverview } from "./AnalysisOverview";
 import { InsightList } from "./InsightList";
 import styles from "./CvAnalysisResult.module.scss";
 
 export function CvAnalysisResult({ result }) {
-  const { analysis, privacy, truncated } = result;
-
-  const removedData = Object.entries(privacy.anonymized).map(
-    ([key, count]) => `${ANONYMIZED_LABELS[key] ?? key} (${count})`,
-  );
+  const { analysis, truncated } = result;
 
   return (
     <div className={styles.result}>
-      {removedData.length > 0 && (
-        <p className={styles.note}>
-          Przed wysłaniem do AI usunięto: {removedData.join(", ")}.
-        </p>
-      )}
       {truncated && (
         <p className={styles.warning}>
           CV jest bardzo długie, więc AI przeanalizowało tylko jego początek.

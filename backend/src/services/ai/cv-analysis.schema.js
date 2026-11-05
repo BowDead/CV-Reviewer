@@ -47,6 +47,11 @@ const profileSchema = z.object({
   certifications: stringList,
 });
 
+const skillReviewSchema = z.object({
+  falsePositives: stringList,
+  additional: stringList,
+});
+
 export const cvAnalysisSchema = z.object({
   overallScore: score,
   seniority: z.enum(SENIORITY_LEVELS).catch(null),
@@ -59,5 +64,6 @@ export const cvAnalysisSchema = z.object({
   rewrites: listOf(z.object({ original: text, improved: text, reason: text })),
   suggestedRoles: stringList,
   skillsToAdd: stringList,
+  skillReview: skillReviewSchema.catch(() => skillReviewSchema.parse({})),
   profile: profileSchema.catch(() => profileSchema.parse({})),
 });

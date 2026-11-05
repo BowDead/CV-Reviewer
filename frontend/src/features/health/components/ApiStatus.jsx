@@ -19,7 +19,8 @@ export function ApiStatus() {
   return (
     <p className={`${styles.status} ${styles.ok}`}>
       API działa · Groq:{" "}
-      {data.groqConfigured ? "skonfigurowany" : "brak klucza"}
+      {data.groqConfigured ? "skonfigurowany" : "brak klucza"} · Baza:{" "}
+      {data.databaseConnected ? "połączona" : "brak połączenia"}
     </p>
   );
 }

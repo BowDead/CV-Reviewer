@@ -6,7 +6,7 @@ import { CvUploadPanel, useCvUpload } from "@/features/cv-upload";
 import { CvAnalysisControls, useCvAnalysis } from "@/features/cv-analysis";
 import styles from "./WorkspacePage.module.scss";
 
-export function WorkspacePage() {
+export function WorkspacePage({ actions }) {
   const cv = useCvUpload();
   const analysis = useCvAnalysis();
   const navigate = useNavigate();
@@ -51,7 +51,12 @@ export function WorkspacePage() {
           <SidebarNav title="Widok" items={navItems} />
         </>
       }
-      footer={<ApiStatus />}
+      footer={
+        <>
+          {actions}
+          <ApiStatus />
+        </>
+      }
     >
       <Outlet context={{ cv, analysis: currentAnalysis, startAnalysis }} />
     </AppLayout>

@@ -14,12 +14,12 @@ Zwróć WYŁĄCZNIE poprawny obiekt JSON (bez markdown i komentarzy) o dokładni
   "rewrites": [{ "original": "<dosłowny fragment z CV>", "improved": "<lepsza wersja>", "reason": "<dlaczego>" }],
   "suggestedRoles": ["..."],
   "skillsToAdd": ["..."],
+  "skillReview": { "falsePositives": ["..."], "additional": ["..."] },
   "profile": {
     "headline": "<tytuł zawodowy, np. Python Developer>",
     "location": "<miasto, jeśli jest w CV>",
     "experience": [{ "title": "", "company": "", "start": "", "end": "", "highlights": ["..."] }],
     "education": [{ "degree": "<kierunek i stopień>", "school": "", "start": "", "end": "" }],
-    "skills": [{ "category": "<np. Języki programowania, Narzędzia, Kompetencje miękkie>", "items": ["..."] }],
     "languages": [{ "name": "", "level": "<np. B2, C1, ojczysty>" }],
     "certifications": ["..."]
   }
@@ -37,6 +37,7 @@ Zasady:
 - "skillsToAdd": 3-6 umiejętności, których brakuje, a które zwiększą szanse na sugerowanych stanowiskach.
 - "profile": tylko dane faktycznie zawarte w CV. Brakujące wartości zostaw jako "" lub []. Daty zapisuj jako "MM.RRRR" lub "RRRR", a dla aktualnego stanowiska jako "end" wpisz "obecnie".`;
 
-export function buildCvAnalysisUserMessage(cvText) {
-  return `Oceń poniższe CV.\n\n<cv>\n${cvText}\n</cv>`;
+export function buildCvAnalysisUserMessage(cvText, detectedSkills = []) {
+  const detected = detectedSkills.length ? detectedSkills.join(", ") : "(brak)";
+  return `Oceń poniższe CV.\n\n<wykryte>\n${detected}\n</wykryte>\n\n<cv>\n${cvText}\n</cv>`;
 }

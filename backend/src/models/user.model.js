@@ -9,9 +9,9 @@ function toUser(row) {
   return {
     id: row.id,
     email: row.email,
-    passwordHash: row.passwordHash,
+    passwordHash: row.password_hash,
     role: row.role,
-    createdAt: row.createdAt,
+    createdAt: row.created_at,
   };
 }
 
@@ -23,9 +23,19 @@ export async function findUserByEmail(email) {
   return toUser(rows[0]);
 }
 
+export async function findUserById(id) {
+  const { rows } = await query(
+    `SELECT ${USER_COLUMNS} FROM users WHERE id = $1`,
+    [id],
+  );
+  return toUser(rows[0]);
+}
+
 export async function createUser({ email, passwordHash, role, dataKeyEnc }) {
   const { rows } = await query(
-    `INSERT INTO users (email, password_hash, role, data_key_enc) VALUES ($1,$2,$3,$4) RETURNING ${USER_COLUMNS}`,
+    `INSERT INTO users (email, password_hash, role, data_key_enc)
+     VALUES ($1, $2, $3, $4)
+     RETURNING ${USER_COLUMNS}`,
     [email, passwordHash, role, dataKeyEnc],
   );
   return toUser(rows[0]);

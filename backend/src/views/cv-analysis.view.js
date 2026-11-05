@@ -1,6 +1,8 @@
 export function cvAnalysisView(result) {
   return {
     analysis: result.analysis,
+    skills: result.skills,
+    unknownSkills: result.unknownSkills,
     privacy: {
       anonymized: result.anonymization,
     },

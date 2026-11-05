@@ -1,12 +1,11 @@
 export function parsedCvView(parsedCv) {
   return {
-    analysis: result.analysis,
-    skills: result.skills,
-    unknownSkills: result.unknownSkills,
-    privacy: {
-      anonymized: result.anonymization,
+    kind: parsedCv.kind,
+    text: parsedCv.text,
+    pageCount: parsedCv.pageCount,
+    stats: {
+      characters: parsedCv.stats.characters,
+      words: parsedCv.stats.words,
     },
-    truncated: result.truncated,
-    model: result.model,
   };
 }

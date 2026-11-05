@@ -1,0 +1,127 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.card {
+  @include card;
+  width: calc(100% - 2rem);
+  max-width: 420px;
+  margin: max(2rem, 12vh) auto;
+  padding: $space-xl;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: $space-lg;
+  font-weight: 700;
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: $radius;
+  background: $color-primary;
+  color: $color-on-primary;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.title {
+  margin: 0 0 $space-lg;
+  font-size: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  input {
+    min-height: 2.5rem;
+    padding: $space-xs 0.75rem;
+    border: 1px solid $color-border-strong;
+    border-radius: $radius;
+    background: $color-bg;
+    color: $color-text;
+    font-weight: 400;
+
+    &:focus {
+      border-color: $color-primary;
+      outline: none;
+    }
+  }
+}
+
+.hint {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: $color-muted-text;
+}
+
+.roles {
+  display: flex;
+  gap: $space-sm;
+  margin: 0;
+  padding: 0;
+  border: none;
+
+  legend {
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+  }
+}
+
+.role {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+  min-height: 2.5rem;
+  padding: $space-xs 0.75rem;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius;
+  color: $color-text-soft;
+  cursor: pointer;
+
+  input {
+    accent-color: $color-primary;
+  }
+
+  &:has(input:checked) {
+    border-color: $color-primary;
+    background: $color-primary-bg;
+    color: $color-primary-text;
+  }
+}
+
+.error {
+  margin: 0;
+  padding: $space-xs 0.75rem;
+  border: 1px solid rgba($color-danger, 0.3);
+  border-radius: $radius;
+  background: $color-danger-bg;
+  color: $color-danger;
+  font-size: 0.875rem;
+}
+
+.footer {
+  margin: $space-lg 0 0;
+  text-align: center;
+  color: $color-muted-text;
+  font-size: 0.9rem;
+
+  a {
+    color: $color-primary-text;
+  }
+}

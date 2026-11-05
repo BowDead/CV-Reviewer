@@ -20,3 +20,13 @@ const skillsByName = new Map(
     [skill.name, ...skill.aliases].map((name) => [name.toLowerCase(), skill]),
   ),
 );
+
+export function detectSkills(text) {
+  return matchers
+    .filter(({ pattern }) => pattern.test(text))
+    .map(({ skill }) => skill);
+}
+
+export function findSkill(name) {
+  return skillsByName.get(name.trim().toLowerCase()) ?? null;
+}

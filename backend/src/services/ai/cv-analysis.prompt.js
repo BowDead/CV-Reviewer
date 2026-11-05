@@ -35,6 +35,7 @@ Zasady:
 - "rewrites": 3-5 najsłabszych zdań lub punktów z CV. "original" przepisz dosłownie, a "improved" zacznij od czasownika akcji i dodaj mierzalny efekt, jeśli to możliwe.
 - "suggestedRoles": 3-5 krótkich nazw stanowisk nadających się jako fraza do wyszukiwania ofert pracy.
 - "skillsToAdd": 3-6 umiejętności, których brakuje, a które zwiększą szanse na sugerowanych stanowiskach.
+- Między <wykryte> a </wykryte> jest lista umiejętności znalezionych w CV przez system według słownika. W "skillReview.falsePositives" wpisz pozycje z tej listy, które w tym CV nie oznaczają umiejętności (np. "Go" użyte jako zaimek), w dokładnie takim zapisie jak na liście. W "skillReview.additional" wpisz umiejętności z CV, których na liście nie ma, w podstawowej formie nazwy (np. "Java", nie "Javy"). Nie powtarzaj umiejętności z listy.
 - "profile": tylko dane faktycznie zawarte w CV. Brakujące wartości zostaw jako "" lub []. Daty zapisuj jako "MM.RRRR" lub "RRRR", a dla aktualnego stanowiska jako "end" wpisz "obecnie".`;
 
 export function buildCvAnalysisUserMessage(cvText, detectedSkills = []) {

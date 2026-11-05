@@ -70,6 +70,8 @@ export async function analyzeCv(text, options = {}) {
     ? anonymized.text.slice(0, MAX_AI_CHARS)
     : anonymized.text;
 
+  const detected = detectSkills(anonymized.text);
+
   const raw = await completeJson({
     apiKey: resolveGroqApiKey(options),
     system: CV_ANALYSIS_SYSTEM_PROMPT,

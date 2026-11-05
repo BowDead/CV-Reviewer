@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import { apiRouter } from "./routes/index.js";
 import { notFound } from "./middlewares/notFound.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
@@ -7,6 +8,7 @@ export function createApp() {
   const app = express();
 
   app.use(express.json({ limit: "1mb" }));
+  app.use(cookieParser());
 
   app.use("/api", apiRouter);
 

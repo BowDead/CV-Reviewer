@@ -1,17 +1,17 @@
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { EmptyState } from "@/shared/ui/EmptyState";
-import { CvPreview, CvExtractedText } from "@/features/cv-upload";
+import { CvPreview, CvAnonymizedText } from "@/features/cv-upload";
 import { useWorkspace } from "./useWorkspace";
 import styles from "./tabs.module.scss";
 
 export function PreviewTab() {
-  const { cv } = useWorkspace();
+  const { cv, review, changedAfterAnalysis } = useWorkspace();
 
   return (
     <>
       <PageHeader
         title="Podgląd CV"
-        description="Oryginalny plik i tekst, który trafia do analizy."
+        description="Oryginalny plik i tekst po anonimizacji, który trafi do analizy."
       />
 
       {cv.status === "done" && (
@@ -22,7 +22,10 @@ export function PreviewTab() {
             text={cv.result.text}
             fileName={cv.file.name}
           />
-          <CvExtractedText text={cv.result.text} />
+          <CvAnonymizedText
+            review={review}
+            changedAfterAnalysis={changedAfterAnalysis}
+          />
         </div>
       )}
 

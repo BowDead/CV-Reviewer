@@ -1,3 +1,4 @@
+import { HttpError } from "../errors/HttpError.js";
 import { escapeRegExp } from "../utils/regexp.js";
 
 const NAME_LINE_RE =
@@ -57,43 +58,80 @@ const RULES = [
     replacement: "[ADRES]",
   },
   {
+    name: "address",
+    pattern:
+      /(?<=^|[\n,;:|][ \t]*)[^\s,;:|][^\n,;:|]{0,40}?\s\d+[a-zA-Z]?(?:\/\d+)?[\s,]+\d{2}-\d{3}[ \t]+\p{Lu}[\p{L}-]*(?:[ \t]\p{Lu}[\p{L}-]*)?/gmu,
+    replacement: "[ADRES]",
+  },
+  {
     name: "postalCode",
     pattern: /(?<!\d)\d{2}-\d{3}(?!\d)/g,
     replacement: "[KOD POCZTOWY]",
   },
   {
     name: "birthDate",
-    pattern: /(data urodzenia|date of birth|ur\.)\s*:?\s*[\d./-]{6,10}/gi,
-    replacement: "$1: [DATA]",
+    pattern:
+      /(?<=(?:data urodzenia|date of birth|ur\.)\s*:?\s*)[\d./-]{6,10}/gi,
+    replacement: "[DATA]",
   },
 ];
 
-function replaceAndCount(text, pattern, replacement) {
-  const count = text.match(pattern)?.length ?? 0;
-  return { text: count ? text.replace(pattern, replacement) : text, count };
-}
+const MAX_INPUT_CHARS = 50_000;
 
-export function anonymize(text) {
-  const counts = {};
-  let result = text;
+function findMatches(text) {
+  const matches = [];
+  const isFree = (start, end) =>
+    matches.every((match) => end <= match.start || start >= match.end);
+
+  const collect = (type, pattern, label) => {
+    for (const found of text.matchAll(pattern)) {
+      const start = found.index;
+      const end = start + found[0].length;
+      if (end > start && isFree(start, end)) {
+        matches.push({ start, end, type, label });
+      }
+    }
+  };
 
   const fullName = guessFullName(text);
   if (fullName) {
-    const replaced = replaceAndCount(
-      result,
+    collect(
+      "fullName",
       new RegExp(escapeRegExp(fullName), "g"),
       "[IMIĘ I NAZWISKO]",
     );
-    result = replaced.text;
-    if (replaced.count) counts.fullName = replaced.count;
   }
-
   for (const rule of RULES) {
-    const replaced = replaceAndCount(result, rule.pattern, rule.replacement);
-    result = replaced.text;
-    if (replaced.count)
-      counts[rule.name] = (counts[rule.name] ?? 0) + replaced.count;
+    collect(rule.name, rule.pattern, rule.replacement);
   }
 
-  return { text: result, counts };
+  return matches.sort((a, b) => a.start - b.start);
+}
+
+export function anonymize(text) {
+  const segments = [];
+  let position = 0;
+
+  for (const { start, end, type, label } of findMatches(text)) {
+    if (start > position) {
+      segments.push({ text: text.slice(position, start) });
+    }
+    segments.push({ text: text.slice(start, end), type, label });
+    position = end;
+  }
+  if (position < text.length) {
+    segments.push({ text: text.slice(position) });
+  }
+
+  return segments;
+}
+
+export function anonymizeCv(text) {
+  if (typeof text !== "string" || !text.trim()) {
+    throw new HttpError(400, "Brak tekstu CV.");
+  }
+  if (text.length > MAX_INPUT_CHARS) {
+    throw new HttpError(413, "Tekst CV jest za długi.");
+  }
+  return anonymize(text);
 }

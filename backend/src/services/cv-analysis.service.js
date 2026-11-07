@@ -1,6 +1,5 @@
 import { env } from "../config/env.js";
 import { HttpError } from "../errors/HttpError.js";
-import { anonymize } from "./anonymizer.service.js";
 import { completeJson } from "./ai/groq.client.js";
 import {
   CV_ANALYSIS_SYSTEM_PROMPT,
@@ -64,13 +63,10 @@ export async function analyzeCv(text, options = {}) {
     throw new HttpError(413, "Tekst CV jest za długi.");
   }
 
-  const anonymized = anonymize(text);
-  const truncated = anonymized.text.length > MAX_AI_CHARS;
-  const cvText = truncated
-    ? anonymized.text.slice(0, MAX_AI_CHARS)
-    : anonymized.text;
+  const truncated = text.length > MAX_AI_CHARS;
+  const cvText = truncated ? text.slice(0, MAX_AI_CHARS) : text;
 
-  const detected = detectSkills(anonymized.text);
+  const detected = detectSkills(text);
 
   const raw = await completeJson({
     apiKey: resolveGroqApiKey(options),
@@ -107,7 +103,6 @@ export async function analyzeCv(text, options = {}) {
       source,
     })),
     unknownSkills: unknown,
-    anonymization: anonymized.counts,
     truncated,
     model: env.groqModel,
   };

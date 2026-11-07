@@ -9,3 +9,11 @@ export function parseCv(file, signal) {
     signal,
   });
 }
+
+export function anonymizeCv(text, signal) {
+  return request("/cv/anonymize", {
+    method: "POST",
+    body: { text },
+    signal,
+  });
+}

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "@/shared/ui/Button";
 import styles from "./CvSummary.module.scss";
 
@@ -7,12 +8,13 @@ const KIND_LABELS = {
 };
 
 export function CvSummary({ fileName, result, onReset }) {
+  const { t } = useTranslation();
   const { kind, pageCount, stats } = result;
 
   const meta = [
     KIND_LABELS[kind],
-    pageCount !== null && `${pageCount} str.`,
-    `${stats.words} słów`,
+    pageCount !== null && t("cvUpload.pages", { pages: pageCount }),
+    t("cvUpload.words", { count: stats.words }),
   ]
     .filter(Boolean)
     .join(" · ");
@@ -42,7 +44,7 @@ export function CvSummary({ fileName, result, onReset }) {
       </div>
 
       <Button variant="ghost" size="sm" onClick={onReset}>
-        Zmień plik
+        {t("cvUpload.changeFile")}
       </Button>
     </div>
   );

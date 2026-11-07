@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate } from "react-router";
 import { AppLayout } from "@/shared/layout/AppLayout";
 import { SidebarNav } from "@/shared/layout/SidebarNav";
@@ -12,6 +13,7 @@ import { CvAnalysisControls, useCvAnalysis } from "@/features/cv-analysis";
 import styles from "./WorkspacePage.module.scss";
 
 export function WorkspacePage({ actions }) {
+  const { t } = useTranslation();
   const cv = useCvUpload();
   const review = useAnonymizationReview(cv);
   const analysis = useCvAnalysis();
@@ -38,10 +40,14 @@ export function WorkspacePage({ actions }) {
   const rewritesCount = currentAnalysis.result?.analysis.rewrites.length ?? 0;
 
   const navItems = [
-    { to: "/cv", label: "Podgląd CV" },
-    { to: "/analysis", label: "Analiza" },
-    { to: "/improvements", label: "Poprawki", badge: rewritesCount || null },
-    { to: "/profile", label: "Profil" },
+    { to: "/cv", label: t("workspace.nav.preview") },
+    { to: "/analysis", label: t("workspace.nav.analysis") },
+    {
+      to: "/improvements",
+      label: t("workspace.nav.improvements"),
+      badge: rewritesCount || null,
+    },
+    { to: "/profile", label: t("workspace.nav.profile") },
   ];
 
   return (
@@ -49,7 +55,7 @@ export function WorkspacePage({ actions }) {
       sidebar={
         <>
           <section className={styles.block}>
-            <h2 className={styles.label}>Twoje CV</h2>
+            <h2 className={styles.label}>{t("workspace.yourCv")}</h2>
             <CvUploadPanel cv={cv} />
             <CvAnalysisControls
               status={currentAnalysis.status}
@@ -58,7 +64,7 @@ export function WorkspacePage({ actions }) {
             />
           </section>
 
-          <SidebarNav title="Widok" items={navItems} />
+          <SidebarNav title={t("workspace.navTitle")} items={navItems} />
         </>
       }
       footer={

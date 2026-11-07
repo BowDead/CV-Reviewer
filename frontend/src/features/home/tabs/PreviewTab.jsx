@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { EmptyState } from "@/shared/ui/EmptyState";
 import { CvPreview, CvAnonymizedText } from "@/features/cv-upload";
@@ -5,13 +6,14 @@ import { useWorkspace } from "./useWorkspace";
 import styles from "./tabs.module.scss";
 
 export function PreviewTab() {
+  const { t } = useTranslation();
   const { cv, review, changedAfterAnalysis } = useWorkspace();
 
   return (
     <>
       <PageHeader
-        title="Podgląd CV"
-        description="Oryginalny plik i tekst po anonimizacji, który trafi do analizy."
+        title={t("workspace.preview.title")}
+        description={t("workspace.preview.description")}
       />
 
       {cv.status === "done" && (
@@ -30,16 +32,14 @@ export function PreviewTab() {
       )}
 
       {cv.status === "uploading" && (
-        <EmptyState busy title="Odczytywanie pliku…">
+        <EmptyState busy title={t("workspace.preview.readingTitle")}>
           {cv.file.name}
         </EmptyState>
       )}
 
       {(cv.status === "idle" || cv.status === "error") && (
-        <EmptyState title="Nie wgrano jeszcze CV">
-          Wgraj plik w panelu po lewej. Podgląd pojawi się tutaj, a w zakładkach
-          Analiza, Poprawki i Profil zobaczysz wyniki po kliknięciu „Analizuj
-          CV”.
+        <EmptyState title={t("workspace.preview.emptyTitle")}>
+          {t("workspace.preview.emptyText")}
         </EmptyState>
       )}
     </>

@@ -1,11 +1,14 @@
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/shared/ui/Button";
-import { ANONYMIZED_LABELS } from "../constants";
 import styles from "./CvAnonymizedText.module.scss";
 
-function describeHidden(counts) {
+function describeHidden(counts, t) {
   return Object.entries(counts)
-    .map(([type, count]) => `${ANONYMIZED_LABELS[type] ?? type} (${count})`)
+    .map(
+      ([type, count]) =>
+        `${t(`cvUpload.anonymized.labels.${type}`, { defaultValue: type })} (${count})`,
+    )
     .join(", ");
 }
 
@@ -28,9 +31,10 @@ function readSelection(container) {
 }
 
 export function CvAnonymizedText({ review, changedAfterAnalysis }) {
+  const { t } = useTranslation();
   const textRef = useRef(null);
   const [selection, setSelection] = useState(null);
-  const hidden = describeHidden(review.counts);
+  const hidden = describeHidden(review.counts, t);
 
   function updateSelection() {
     setSelection(readSelection(textRef.current));
@@ -49,25 +53,24 @@ export function CvAnonymizedText({ review, changedAfterAnalysis }) {
   return (
     <section className={styles.card}>
       <div className={styles.header}>
-        <h3 className={styles.title}>Tekst wysyłany do analizy</h3>
+        <h3 className={styles.title}>{t("cvUpload.anonymized.title")}</h3>
         {review.edited && (
           <Button variant="ghost" size="sm" onClick={review.restore}>
-            Przywróć
+            {t("cvUpload.anonymized.restore")}
           </Button>
         )}
       </div>
       <p className={styles.description}>
-        Kliknij ukryty fragment, aby go odkryć, albo zaznacz tekst, aby go
-        ukryć.
+        {t("cvUpload.anonymized.description")}
       </p>
       <p className={styles.summary}>
         {hidden
-          ? `Ukryto: ${hidden}`
-          : "Nie wykryto danych osobowych. Sprawdź tekst przed analizą."}
+          ? t("cvUpload.anonymized.hidden", { list: hidden })
+          : t("cvUpload.anonymized.noneFound")}
       </p>
       {changedAfterAnalysis && (
         <p className={styles.note}>
-          Zmiany zadziałają przy następnej analizie.
+          {t("cvUpload.anonymized.changedAfterAnalysis")}
         </p>
       )}
 
@@ -77,7 +80,7 @@ export function CvAnonymizedText({ review, changedAfterAnalysis }) {
           disabled={!selection}
           onClick={() => hideSelection(false)}
         >
-          Ukryj zaznaczenie
+          {t("cvUpload.anonymized.hideSelection")}
         </Button>
         <Button
           variant="ghost"
@@ -85,7 +88,7 @@ export function CvAnonymizedText({ review, changedAfterAnalysis }) {
           disabled={!selection}
           onClick={() => hideSelection(true)}
         >
-          Ukryj wszędzie
+          {t("cvUpload.anonymized.hideEverywhere")}
         </Button>
       </div>
 

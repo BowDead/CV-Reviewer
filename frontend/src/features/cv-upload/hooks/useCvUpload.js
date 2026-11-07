@@ -33,7 +33,7 @@ export function useCvUpload() {
         setState({
           ...initialState,
           status: "error",
-          error: new Error(validationError),
+          error: validationError,
         });
         return;
       }

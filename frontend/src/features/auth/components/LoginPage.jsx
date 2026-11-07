@@ -1,11 +1,14 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, Navigate, useLocation } from "react-router";
+import { errorMessage } from "@/shared/i18n/errorMessage";
 import { Button } from "@/shared/ui/Button";
 import { useAuth } from "../hooks/useAuth";
 import { homePathFor } from "../constants";
 import styles from "./AuthForm.module.scss";
 
 export function LoginPage() {
+  const { t } = useTranslation();
   const { status, user, login } = useAuth();
   const location = useLocation();
   const [form, setForm] = useState({ email: "", password: "" });
@@ -43,11 +46,11 @@ export function LoginPage() {
         </span>
         CV Reviewer
       </div>
-      <h1 className={styles.title}>Logowanie</h1>
+      <h1 className={styles.title}>{t("auth.login.title")}</h1>
 
       <form className={styles.form} onSubmit={handleSubmit}>
         <label className={styles.field}>
-          E-mail
+          {t("auth.email")}
           <input
             type="email"
             name="email"
@@ -59,7 +62,7 @@ export function LoginPage() {
         </label>
 
         <label className={styles.field}>
-          Hasło
+          {t("auth.password")}
           <input
             type="password"
             name="password"
@@ -71,16 +74,17 @@ export function LoginPage() {
         </label>
 
         <div aria-live="polite">
-          {error && <p className={styles.error}>{error.message}</p>}
+          {error && <p className={styles.error}>{errorMessage(error)}</p>}
         </div>
 
         <Button type="submit" block disabled={submitting}>
-          {submitting ? "Logowanie…" : "Zaloguj się"}
+          {submitting ? t("auth.login.submitting") : t("auth.login.submit")}
         </Button>
       </form>
 
       <p className={styles.footer}>
-        Nie masz konta? <Link to="/register">Załóż konto</Link>
+        {t("auth.login.noAccount")}{" "}
+        <Link to="/register">{t("auth.login.registerLink")}</Link>
       </p>
     </div>
   );

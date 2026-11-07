@@ -1,14 +1,17 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "@/shared/ui/Button";
 import styles from "./CvAnalysisControls.module.scss";
 
-const LABELS = {
-  idle: "Analizuj CV",
-  loading: "Analizowanie…",
-  done: "Analizuj ponownie",
-  error: "Spróbuj ponownie",
+const LABEL_KEYS = {
+  idle: "cvAnalysis.analyze",
+  loading: "cvAnalysis.analyzing",
+  done: "cvAnalysis.analyzeAgain",
+  error: "cvAnalysis.retry",
 };
 
 export function CvAnalysisControls({ status, disabled = false, onAnalyze }) {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.controls}>
       <Button
@@ -16,11 +19,9 @@ export function CvAnalysisControls({ status, disabled = false, onAnalyze }) {
         onClick={onAnalyze}
         disabled={disabled || status === "loading"}
       >
-        {LABELS[status] ?? LABELS.idle}
+        {t(LABEL_KEYS[status] ?? LABEL_KEYS.idle)}
       </Button>
-      <p className={styles.hint}>
-        Dane osobowe są usuwane przed wysłaniem tekstu do AI.
-      </p>
+      <p className={styles.hint}>{t("cvAnalysis.privacyHint")}</p>
     </div>
   );
 }

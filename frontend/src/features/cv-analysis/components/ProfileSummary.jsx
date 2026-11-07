@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { TagList } from "@/shared/ui/TagList";
 import styles from "./ProfileSummary.module.scss";
 
@@ -6,6 +7,7 @@ function formatPeriod(start, end) {
 }
 
 export function ProfileSummary({ profile }) {
+  const { t } = useTranslation();
   const {
     headline,
     location,
@@ -27,7 +29,9 @@ export function ProfileSummary({ profile }) {
 
         {experience.length > 0 && (
           <div>
-            <h4 className={styles.heading}>Doświadczenie</h4>
+            <h4 className={styles.heading}>
+              {t("cvAnalysis.profile.experience")}
+            </h4>
             <ul className={styles.entries}>
               {experience.map((job, index) => (
                 <li key={index}>
@@ -51,7 +55,9 @@ export function ProfileSummary({ profile }) {
 
         {education.length > 0 && (
           <div>
-            <h4 className={styles.heading}>Wykształcenie</h4>
+            <h4 className={styles.heading}>
+              {t("cvAnalysis.profile.education")}
+            </h4>
             <ul className={styles.entries}>
               {education.map((item, index) => (
                 <li key={index}>
@@ -68,7 +74,7 @@ export function ProfileSummary({ profile }) {
 
         {skills.length > 0 && (
           <div>
-            <h4 className={styles.heading}>Umiejętności</h4>
+            <h4 className={styles.heading}>{t("cvAnalysis.profile.skills")}</h4>
             {skills.map((group) => (
               <div key={group.category} className={styles.skillGroup}>
                 <span className={styles.groupName}>{group.category}</span>
@@ -80,7 +86,9 @@ export function ProfileSummary({ profile }) {
 
         {languages.length > 0 && (
           <div>
-            <h4 className={styles.heading}>Języki</h4>
+            <h4 className={styles.heading}>
+              {t("cvAnalysis.profile.languages")}
+            </h4>
             <TagList
               items={languages.map((lang) =>
                 lang.level ? `${lang.name} (${lang.level})` : lang.name,
@@ -91,7 +99,9 @@ export function ProfileSummary({ profile }) {
 
         {certifications.length > 0 && (
           <div>
-            <h4 className={styles.heading}>Certyfikaty</h4>
+            <h4 className={styles.heading}>
+              {t("cvAnalysis.profile.certifications")}
+            </h4>
             <TagList items={certifications} />
           </div>
         )}

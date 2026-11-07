@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, Navigate } from "react-router";
+import { errorMessage } from "@/shared/i18n/errorMessage";
 import { Button } from "@/shared/ui/Button";
 import { useAuth } from "../hooks/useAuth";
 import {
   PASSWORD_MIN_LENGTH,
   REGISTRABLE_ROLES,
-  ROLE_LABELS,
   homePathFor,
 } from "../constants";
 import styles from "./AuthForm.module.scss";
@@ -18,6 +19,7 @@ const initialForm = {
 };
 
 export function RegisterPage() {
+  const { t } = useTranslation();
   const { status, user, register } = useAuth();
   const [form, setForm] = useState(initialForm);
   const [submitting, setSubmitting] = useState(false);
@@ -35,7 +37,7 @@ export function RegisterPage() {
   async function handleSubmit(event) {
     event.preventDefault();
     if (form.password !== form.confirmPassword) {
-      setError(new Error("Hasła nie są takie same."));
+      setError({ code: "PASSWORDS_MISMATCH" });
       return;
     }
 
@@ -61,11 +63,11 @@ export function RegisterPage() {
         </span>
         CV Reviewer
       </div>
-      <h1 className={styles.title}>Załóż konto</h1>
+      <h1 className={styles.title}>{t("auth.register.title")}</h1>
 
       <form className={styles.form} onSubmit={handleSubmit}>
         <fieldset className={styles.roles}>
-          <legend>Jestem</legend>
+          <legend>{t("auth.register.roleLegend")}</legend>
           {REGISTRABLE_ROLES.map((role) => (
             <label key={role} className={styles.role}>
               <input
@@ -75,13 +77,13 @@ export function RegisterPage() {
                 checked={form.role === role}
                 onChange={handleChange}
               />
-              {ROLE_LABELS[role]}
+              {t(`roles.${role}`)}
             </label>
           ))}
         </fieldset>
 
         <label className={styles.field}>
-          E-mail
+          {t("auth.email")}
           <input
             type="email"
             name="email"
@@ -93,7 +95,7 @@ export function RegisterPage() {
         </label>
 
         <label className={styles.field}>
-          Hasło
+          {t("auth.password")}
           <input
             type="password"
             name="password"
@@ -104,12 +106,12 @@ export function RegisterPage() {
             onChange={handleChange}
           />
           <span className={styles.hint}>
-            Co najmniej {PASSWORD_MIN_LENGTH} znaków.
+            {t("auth.register.passwordHint", { min: PASSWORD_MIN_LENGTH })}
           </span>
         </label>
 
         <label className={styles.field}>
-          Powtórz hasło
+          {t("auth.register.confirmPassword")}
           <input
             type="password"
             name="confirmPassword"
@@ -121,16 +123,19 @@ export function RegisterPage() {
         </label>
 
         <div aria-live="polite">
-          {error && <p className={styles.error}>{error.message}</p>}
+          {error && <p className={styles.error}>{errorMessage(error)}</p>}
         </div>
 
         <Button type="submit" block disabled={submitting}>
-          {submitting ? "Zakładanie konta…" : "Załóż konto"}
+          {submitting
+            ? t("auth.register.submitting")
+            : t("auth.register.submit")}
         </Button>
       </form>
 
       <p className={styles.footer}>
-        Masz już konto? <Link to="/login">Zaloguj się</Link>
+        {t("auth.register.hasAccount")}{" "}
+        <Link to="/login">{t("auth.register.loginLink")}</Link>
       </p>
     </div>
   );

@@ -1,19 +1,23 @@
+import { useTranslation } from "react-i18next";
+import { errorMessage } from "@/shared/i18n/errorMessage";
 import { Button } from "@/shared/ui/Button";
 import { EmptyState } from "@/shared/ui/EmptyState";
 
 export function AnalysisGate({ cv, analysis, startAnalysis, children }) {
+  const { t } = useTranslation();
+
   if (cv.status !== "done") {
     return (
-      <EmptyState title="Najpierw wgraj CV">
-        Wgraj plik PDF lub DOCX w panelu po lewej.
+      <EmptyState title={t("workspace.gate.noCvTitle")}>
+        {t("workspace.gate.noCvText")}
       </EmptyState>
     );
   }
 
   if (analysis.status === "loading") {
     return (
-      <EmptyState busy title="AI analizuje CV…">
-        Zwykle trwa to 5–20 sekund.
+      <EmptyState busy title={t("workspace.gate.loadingTitle")}>
+        {t("workspace.gate.loadingText")}
       </EmptyState>
     );
   }
@@ -22,10 +26,12 @@ export function AnalysisGate({ cv, analysis, startAnalysis, children }) {
     return (
       <EmptyState
         tone="error"
-        title="Analiza się nie udała"
-        action={<Button onClick={startAnalysis}>Spróbuj ponownie</Button>}
+        title={t("workspace.gate.errorTitle")}
+        action={
+          <Button onClick={startAnalysis}>{t("cvAnalysis.retry")}</Button>
+        }
       >
-        {analysis.error.message}
+        {errorMessage(analysis.error)}
       </EmptyState>
     );
   }
@@ -33,10 +39,12 @@ export function AnalysisGate({ cv, analysis, startAnalysis, children }) {
   if (analysis.status !== "done") {
     return (
       <EmptyState
-        title="CV nie jest jeszcze przeanalizowane"
-        action={<Button onClick={startAnalysis}>Analizuj CV</Button>}
+        title={t("workspace.gate.idleTitle")}
+        action={
+          <Button onClick={startAnalysis}>{t("cvAnalysis.analyze")}</Button>
+        }
       >
-        Kliknij, aby AI oceniło treść i strukturę CV.
+        {t("workspace.gate.idleText")}
       </EmptyState>
     );
   }

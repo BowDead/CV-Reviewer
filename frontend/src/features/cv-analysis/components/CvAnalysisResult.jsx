@@ -1,34 +1,34 @@
+import { useTranslation } from "react-i18next";
 import { TagList } from "@/shared/ui/TagList";
 import { AnalysisOverview } from "./AnalysisOverview";
 import { InsightList } from "./InsightList";
 import styles from "./CvAnalysisResult.module.scss";
 
 export function CvAnalysisResult({ result }) {
+  const { t } = useTranslation();
   const { analysis, truncated } = result;
 
   return (
     <div className={styles.result}>
       {truncated && (
-        <p className={styles.warning}>
-          CV jest bardzo długie, więc AI przeanalizowało tylko jego początek.
-        </p>
+        <p className={styles.warning}>{t("cvAnalysis.truncated")}</p>
       )}
 
       <AnalysisOverview analysis={analysis} />
 
       <div className={styles.columns}>
         <InsightList
-          title="Mocne strony"
+          title={t("cvAnalysis.strengths")}
           items={analysis.strengths}
           tone="positive"
         />
         <InsightList
-          title="Słabe strony"
+          title={t("cvAnalysis.weaknesses")}
           items={analysis.weaknesses}
           tone="negative"
         />
         <InsightList
-          title="Brakujące sekcje"
+          title={t("cvAnalysis.missingSections")}
           items={analysis.missingSections}
           tone="negative"
         />
@@ -38,13 +38,17 @@ export function CvAnalysisResult({ result }) {
           <div className={styles.card}>
             {analysis.suggestedRoles.length > 0 && (
               <div>
-                <h3 className={styles.cardTitle}>Sugerowane stanowiska</h3>
+                <h3 className={styles.cardTitle}>
+                  {t("cvAnalysis.suggestedRoles")}
+                </h3>
                 <TagList items={analysis.suggestedRoles} tone="primary" />
               </div>
             )}
             {analysis.skillsToAdd.length > 0 && (
               <div>
-                <h3 className={styles.cardTitle}>Warto dodać</h3>
+                <h3 className={styles.cardTitle}>
+                  {t("cvAnalysis.skillsToAdd")}
+                </h3>
                 <TagList items={analysis.skillsToAdd} tone="success" />
               </div>
             )}

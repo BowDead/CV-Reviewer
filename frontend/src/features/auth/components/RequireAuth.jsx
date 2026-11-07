@@ -1,13 +1,15 @@
+import { useTranslation } from "react-i18next";
 import { Navigate, useLocation } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 import { homePathFor } from "../constants";
 
 export function RequireAuth({ roles, children }) {
+  const { t } = useTranslation();
   const { status, user } = useAuth();
   const location = useLocation();
 
   if (status === "loading") {
-    return <p>Sprawdzanie sesji…</p>;
+    return <p>{t("auth.checkingSession")}</p>;
   }
 
   if (status === "anonymous") {

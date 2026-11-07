@@ -54,6 +54,12 @@ const RULES = [
   {
     name: "address",
     pattern:
+      /\b(?:ul\.|ulica|al\.|aleja|os\.)\s+[^\n,]{2,40}?\s\d+[a-zA-Z]?(?:\/\d+)?/gi,
+    replacement: "[ADRES]",
+  },
+  {
+    name: "address",
+    pattern:
       /(?<=^|[\n,;:|][ \t]*)[^\s,;:|][^\n,;:|]{0,40}?\s\d+[a-zA-Z]?(?:\/\d+)?[\s,]+\d{2}-\d{3}[ \t]+\p{Lu}[\p{L}-]*(?:[ \t]\p{Lu}[\p{L}-]*)?/gmu,
     replacement: "[ADRES]",
   },

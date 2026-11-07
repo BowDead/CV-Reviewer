@@ -3,9 +3,6 @@ export function cvAnalysisView(result) {
     analysis: result.analysis,
     skills: result.skills,
     unknownSkills: result.unknownSkills,
-    privacy: {
-      anonymized: result.anonymization,
-    },
     truncated: result.truncated,
     model: result.model,
   };

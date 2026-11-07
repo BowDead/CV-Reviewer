@@ -22,10 +22,10 @@ function countWords(text) {
 
 export async function parseCv(file) {
   if (!file) {
-    throw new HttpError(400, "Nie przesłano pliku.");
+    throw new HttpError(400, "FILE_MISSING");
   }
   if (file.size === 0) {
-    throw new HttpError(400, "Plik jest pusty.");
+    throw new HttpError(400, "FILE_EMPTY");
   }
   const kind = detectCvKind(file.originalname, file.buffer);
 
@@ -34,18 +34,12 @@ export async function parseCv(file) {
     parsed = await parsers[kind](file.buffer);
   } catch (err) {
     console.error("Błąd parsowania CV:", err);
-    throw new HttpError(
-      400,
-      "Nie udało się odczytać pliku. Jest uszkodzony lub ma nieprawidłowy format.",
-    );
+    throw new HttpError(400, "FILE_UNREADABLE");
   }
 
   const text = normalizeText(parsed.text);
   if (!text) {
-    throw new HttpError(
-      422,
-      "W pliku nie znaleziono tekstu. Jeśli to skan lub zdjęcie, wyeksportuj CV jako PDF z tekstem.",
-    );
+    throw new HttpError(422, "FILE_NO_TEXT");
   }
   return {
     kind,

@@ -1,0 +1,77 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+.header,
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+}
+
+.header {
+  justify-content: space-between;
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.description,
+.summary,
+.note {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.8rem;
+}
+
+.summary {
+  color: $color-text-soft;
+}
+
+.note {
+  color: $color-primary-text;
+}
+
+.text {
+  max-height: calc(100vh - 420px);
+  min-height: 300px;
+  overflow: auto;
+  padding: 0.75rem;
+  border: 1px solid $color-divider;
+  border-radius: $radius-sm;
+  background: $color-bg;
+  color: $color-text-soft;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.hidden,
+.revealed {
+  display: inline;
+  padding: 0 0.15rem;
+  border: none;
+  border-radius: $radius-sm;
+  font: inherit;
+  line-height: inherit;
+  cursor: pointer;
+}
+
+.hidden {
+  background: $color-primary-bg;
+  color: $color-primary-text;
+}
+
+.revealed {
+  background: $color-danger-bg;
+  color: $color-text-soft;
+  text-decoration: underline dashed $color-danger;
+}

@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { parseCv } from "../api/cvApi";
+import { anonymizeCv, parseCv } from "../api/cvApi";
 import { validateCvFile } from "../utils/validateCvFile";
 
 const initialState = {
@@ -51,8 +51,13 @@ export function useCvUpload() {
       });
 
       try {
-        const result = await parseCv(file, controller.signal);
-        setState((prev) => ({ ...prev, status: "done", result }));
+        const parsed = await parseCv(file, controller.signal);
+        const { segments } = await anonymizeCv(parsed.text, controller.signal);
+        setState((prev) => ({
+          ...prev,
+          status: "done",
+          result: { ...parsed, segments },
+        }));
       } catch (error) {
         if (error.name === "AbortError") return;
         setState((prev) => ({ ...prev, status: "error", error }));

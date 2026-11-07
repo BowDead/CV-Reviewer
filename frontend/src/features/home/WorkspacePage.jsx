@@ -1,26 +1,36 @@
+import { useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import { AppLayout } from "@/shared/layout/AppLayout";
 import { SidebarNav } from "@/shared/layout/SidebarNav";
 import { ApiStatus } from "@/features/health";
-import { CvUploadPanel, useCvUpload } from "@/features/cv-upload";
+import {
+  CvUploadPanel,
+  useAnonymizationReview,
+  useCvUpload,
+} from "@/features/cv-upload";
 import { CvAnalysisControls, useCvAnalysis } from "@/features/cv-analysis";
 import styles from "./WorkspacePage.module.scss";
 
 export function WorkspacePage({ actions }) {
   const cv = useCvUpload();
+  const review = useAnonymizationReview(cv);
   const analysis = useCvAnalysis();
   const navigate = useNavigate();
+  const [analyzedCv, setAnalyzedCv] = useState(null);
 
-  const cvText = cv.status === "done" ? cv.result.text : null;
-  const isCurrent = cvText !== null && analysis.analyzedText === cvText;
+  const cvText = review.text;
+  const isCurrent = cv.status === "done" && analyzedCv === cv.result;
   const currentAnalysis = {
     status: isCurrent ? analysis.status : "idle",
     result: isCurrent ? analysis.result : null,
     error: isCurrent ? analysis.error : null,
   };
+  const changedAfterAnalysis =
+    currentAnalysis.status === "done" && analysis.analyzedText !== cvText;
 
   function startAnalysis() {
     if (!cvText) return;
+    setAnalyzedCv(cv.result);
     analysis.analyze(cvText);
     navigate("/analysis");
   }
@@ -58,7 +68,15 @@ export function WorkspacePage({ actions }) {
         </>
       }
     >
-      <Outlet context={{ cv, analysis: currentAnalysis, startAnalysis }} />
+      <Outlet
+        context={{
+          cv,
+          review,
+          changedAfterAnalysis,
+          analysis: currentAnalysis,
+          startAnalysis,
+        }}
+      />
     </AppLayout>
   );
 }

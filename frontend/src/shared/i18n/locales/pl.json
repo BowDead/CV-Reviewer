@@ -1,0 +1,184 @@
+{
+  "auth": {
+    "email": "E-mail",
+    "password": "Hasło",
+    "checkingSession": "Sprawdzanie sesji…",
+    "logout": "Wyloguj",
+    "login": {
+      "title": "Logowanie",
+      "submit": "Zaloguj się",
+      "submitting": "Logowanie…",
+      "noAccount": "Nie masz konta?",
+      "registerLink": "Załóż konto"
+    },
+    "register": {
+      "title": "Załóż konto",
+      "roleLegend": "Jestem",
+      "passwordHint": "Co najmniej {{min}} znaków.",
+      "confirmPassword": "Powtórz hasło",
+      "submit": "Załóż konto",
+      "submitting": "Zakładanie konta…",
+      "hasAccount": "Masz już konto?",
+      "loginLink": "Zaloguj się"
+    }
+  },
+  "roles": {
+    "candidate": "Kandydat",
+    "employer": "Pracodawca",
+    "admin": "Administrator"
+  },
+  "workspace": {
+    "yourCv": "Twoje CV",
+    "navTitle": "Widok",
+    "nav": {
+      "preview": "Podgląd CV",
+      "analysis": "Analiza",
+      "improvements": "Poprawki",
+      "profile": "Profil"
+    },
+    "gate": {
+      "noCvTitle": "Najpierw wgraj CV",
+      "noCvText": "Wgraj plik PDF lub DOCX w panelu po lewej.",
+      "loadingTitle": "AI analizuje CV…",
+      "loadingText": "Zwykle trwa to 5–20 sekund.",
+      "errorTitle": "Analiza się nie udała",
+      "idleTitle": "CV nie jest jeszcze przeanalizowane",
+      "idleText": "Kliknij, aby AI oceniło treść i strukturę CV."
+    },
+    "preview": {
+      "title": "Podgląd CV",
+      "description": "Oryginalny plik i tekst po anonimizacji, który trafi do analizy.",
+      "readingTitle": "Odczytywanie pliku…",
+      "emptyTitle": "Nie wgrano jeszcze CV",
+      "emptyText": "Wgraj plik w panelu po lewej. Podgląd pojawi się tutaj, a w zakładkach Analiza, Poprawki i Profil zobaczysz wyniki po kliknięciu „Analizuj CV”."
+    },
+    "analysis": {
+      "title": "Analiza AI",
+      "description": "Ocena treści i struktury CV oraz dopasowane stanowiska."
+    },
+    "improvements": {
+      "title": "Poprawki",
+      "description": "Konkretne kroki i propozycje przeredagowania zdań."
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Dane, które AI odczytało z CV."
+    }
+  },
+  "cvUpload": {
+    "dropTitle": "Przeciągnij tutaj plik CV",
+    "dropHint": "PDF lub DOCX, maks. {{maxMb}} MB",
+    "chooseFile": "Wybierz plik",
+    "reading": "Odczytywanie „{{fileName}}”…",
+    "changeFile": "Zmień plik",
+    "pages": "{{pages}} str.",
+    "words_one": "{{count}} słowo",
+    "words_few": "{{count}} słowa",
+    "words_many": "{{count}} słów",
+    "words_other": "{{count}} słowa",
+    "previewTitle": "Podgląd CV: {{fileName}}",
+    "anonymized": {
+      "title": "Tekst do analizy",
+      "description": "Kliknij ukryty fragment, aby go odkryć, albo zaznacz tekst, aby go ukryć.",
+      "hidden": "Ukryto: {{list}}",
+      "noneFound": "Nie wykryto danych osobowych. Sprawdź tekst przed analizą.",
+      "changedAfterAnalysis": "Zmiany zadziałają przy następnej analizie.",
+      "hideSelection": "Ukryj zaznaczenie",
+      "hideEverywhere": "Ukryj wszędzie",
+      "restore": "Przywróć",
+      "labels": {
+        "fullName": "imię i nazwisko",
+        "email": "e-mail",
+        "phone": "telefon",
+        "pesel": "PESEL",
+        "githubLink": "link do GitHuba",
+        "linkedinLink": "link do LinkedIn",
+        "link": "inne linki",
+        "address": "adres",
+        "postalCode": "kod pocztowy",
+        "birthDate": "data urodzenia",
+        "manual": "ukryte ręcznie"
+      }
+    }
+  },
+  "cvAnalysis": {
+    "analyze": "Analizuj CV",
+    "analyzing": "Analizowanie…",
+    "analyzeAgain": "Analizuj ponownie",
+    "retry": "Spróbuj ponownie",
+    "privacyHint": "Dane osobowe są usuwane przed wysłaniem tekstu do AI.",
+    "truncated": "CV jest bardzo długie, więc AI przeanalizowało tylko jego początek.",
+    "strengths": "Mocne strony",
+    "weaknesses": "Słabe strony",
+    "missingSections": "Brakujące sekcje",
+    "suggestedRoles": "Sugerowane stanowiska",
+    "skillsToAdd": "Warto dodać",
+    "noImprovements": "AI nie zaproponowało poprawek dla tego CV.",
+    "actionItems": "Proponowane działania",
+    "rewritesTitle": "Propozycje przeredagowania",
+    "before": "Przed",
+    "after": "Po",
+    "profile": {
+      "experience": "Doświadczenie",
+      "education": "Wykształcenie",
+      "skills": "Umiejętności",
+      "languages": "Języki",
+      "certifications": "Certyfikaty"
+    }
+  },
+  "health": {
+    "checking": "Sprawdzanie połączenia z API…",
+    "unavailable": "Brak połączenia z API: {{message}}",
+    "ok": "API działa · Groq: {{groq}} · Baza: {{database}}",
+    "groqConfigured": "skonfigurowany",
+    "groqMissing": "brak klucza",
+    "databaseConnected": "połączona",
+    "databaseDisconnected": "brak połączenia"
+  },
+  "employer": {
+    "title": "Panel pracodawcy",
+    "description": "Do dokończenia"
+  },
+  "errors": {
+    "AUTH_REQUIRED": "Zaloguj się, aby kontynuować.",
+    "SESSION_EXPIRED": "Sesja wygasła. Zaloguj się ponownie.",
+    "FORBIDDEN": "Brak uprawnień do tej operacji.",
+    "EMAIL_REQUIRED": "Podaj adres e-mail.",
+    "EMAIL_TOO_LONG": "Adres e-mail jest za długi.",
+    "EMAIL_INVALID": "Nieprawidłowy adres e-mail.",
+    "EMAIL_TAKEN": "Konto z tym adresem e-mail już istnieje.",
+    "PASSWORD_REQUIRED": "Podaj hasło.",
+    "PASSWORD_TOO_SHORT": "Hasło musi mieć co najmniej {{min}} znaków.",
+    "PASSWORD_TOO_LONG": "Hasło może mieć najwyżej {{max}} znaków.",
+    "PASSWORDS_MISMATCH": "Hasła nie są takie same.",
+    "ROLE_INVALID": "Wybierz rolę: kandydat albo pracodawca.",
+    "INVALID_CREDENTIALS": "Nieprawidłowy e-mail lub hasło.",
+    "FILE_MISSING": "Nie przesłano pliku.",
+    "FILE_EMPTY": "Plik jest pusty.",
+    "FILE_TOO_LARGE": "Plik jest za duży (limit to {{maxMb}} MB).",
+    "FILE_UNSUPPORTED": "Nieobsługiwany format pliku. Wybierz PDF lub DOCX.",
+    "FILE_NOT_PDF": "Plik nie wygląda na prawidłowy PDF (niezgodna zawartość).",
+    "FILE_NOT_DOCX": "Plik nie wygląda na prawidłowy DOCX (niezgodna zawartość).",
+    "FILE_UNREADABLE": "Nie udało się odczytać pliku. Jest uszkodzony lub ma nieprawidłowy format.",
+    "FILE_NO_TEXT": "W pliku nie znaleziono tekstu. Jeśli to skan lub zdjęcie, wyeksportuj CV jako PDF z tekstem.",
+    "UPLOAD_INVALID": "Nieprawidłowe przesłanie pliku. Wyślij jeden plik w polu „file”.",
+    "CV_TEXT_MISSING": "Brak tekstu CV.",
+    "CV_TEXT_TOO_LONG": "Tekst CV jest za długi.",
+    "AI_KEY_MISSING": "Brak klucza API. Dodaj GROQ_API_KEY w backend/.env.",
+    "AI_KEY_INVALID": "{{provider}} odrzucił klucz API. Sprawdź GROQ_API_KEY w backend/.env.",
+    "AI_MODEL_UNAVAILABLE": "Model „{{model}}” jest niedostępny. Zmień GROQ_MODEL w backend/.env.",
+    "AI_RATE_LIMIT": "Przekroczono limit zapytań do {{provider}}. Odczekaj chwilę i spróbuj ponownie.",
+    "AI_TIMEOUT": "{{provider}} nie odpowiedział na czas. Spróbuj ponownie.",
+    "AI_CONNECTION": "Brak połączenia z {{provider}} API.",
+    "AI_PROVIDER_ERROR": "Usługa AI zwróciła błąd. Spróbuj ponownie później.",
+    "AI_INVALID_RESPONSE": "Model AI zwrócił niepoprawną odpowiedź. Spróbuj ponownie.",
+    "AI_EMPTY_RESPONSE": "Model AI zwrócił odpowiedź bez oceny. Spróbuj ponownie.",
+    "INVALID_INPUT": "Nieprawidłowe dane.",
+    "PAYLOAD_TOO_LARGE": "Przesłane dane są za duże.",
+    "NOT_FOUND": "Nie znaleziono: {{method}} {{path}}",
+    "INTERNAL_ERROR": "Wewnętrzny błąd serwera.",
+    "NETWORK_ERROR": "Brak połączenia z serwerem.",
+    "HTTP_ERROR": "Błąd HTTP {{status}}.",
+    "UNKNOWN": "Wystąpił nieoczekiwany błąd."
+  }
+}

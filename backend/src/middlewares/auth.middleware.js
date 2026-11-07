@@ -5,21 +5,21 @@ import { verifyAuthToken } from "../services/token.service.js";
 export function requireAuth(req, res, next) {
   const token = req.cookies?.[AUTH_COOKIE_NAME];
   if (!token) {
-    return next(new HttpError(401, "Zaloguj się, aby kontynuować."));
+    return next(new HttpError(401, "AUTH_REQUIRED"));
   }
 
   try {
     req.user = verifyAuthToken(token);
     next();
   } catch {
-    next(new HttpError(401, "Sesja wygasła. Zaloguj się ponownie."));
+    next(new HttpError(401, "SESSION_EXPIRED"));
   }
 }
 
 export function requireRole(...roles) {
   return (req, res, next) => {
     if (!roles.includes(req.user?.role)) {
-      return next(new HttpError(403, "Brak uprawnień do tej operacji."));
+      return next(new HttpError(403, "FORBIDDEN"));
     }
     next();
   };

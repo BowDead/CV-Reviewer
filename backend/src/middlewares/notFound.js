@@ -1,3 +1,6 @@
-export function notFound(req,res) {
-    res.status(404).json({error: `Nie znaleziono: ${req.method} ${req.originalUrl}` });
+export function notFound(req, res) {
+  res.status(404).json({
+    error: "NOT_FOUND",
+    params: { method: req.method, path: req.originalUrl },
+  });
 }

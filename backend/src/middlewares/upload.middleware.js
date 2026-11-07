@@ -19,18 +19,10 @@ export function uploadCvFile(req, res, next) {
     if (err instanceof multer.MulterError) {
       if (err.code === "LIMIT_FILE_SIZE") {
         return next(
-          new HttpError(
-            413,
-            `Plik jest za duży (limit to ${MAX_FILE_SIZE_MB} MB).`,
-          ),
+          new HttpError(413, "FILE_TOO_LARGE", { maxMb: MAX_FILE_SIZE_MB }),
         );
       }
-      return next(
-        new HttpError(
-          400,
-          'Nieprawidłowe przesłanie pliku. Wyślij jeden plik w polu "file".',
-        ),
-      );
+      return next(new HttpError(400, "UPLOAD_INVALID"));
     }
     next(err);
   });

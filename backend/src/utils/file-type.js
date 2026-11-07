@@ -13,10 +13,7 @@ export function detectCvKind(fileName, buffer) {
   const extension = path.extname(fileName).toLowerCase();
   if (extension === ".pdf") {
     if (!buffer.subarray(0, 1024).includes(PDF_SIGNATURE)) {
-      throw new HttpError(
-        400,
-        "Plik nie wygląda na prawidłowy plik PDF (Niezgodna zawartość).",
-      );
+      throw new HttpError(400, "FILE_NOT_PDF");
     }
     return "pdf";
   }
@@ -24,15 +21,9 @@ export function detectCvKind(fileName, buffer) {
   if (extension === ".docx") {
     const head = buffer.subarray(0, 4);
     if (!ZIP_SIGNATURES.some((signature) => head.equals(signature))) {
-      throw new HttpError(
-        400,
-        "Plik nie wygląda na prawidłowy DOCX (niezgodna zawartość).",
-      );
+      throw new HttpError(400, "FILE_NOT_DOCX");
     }
     return "docx";
   }
-  throw new HttpError(
-    415,
-    `Nieobsługiwany format pliku: ${extension || "(brak rozszerzenia)"}. Użyj PDF lub DOCX.`,
-  );
+  throw new HttpError(415, "FILE_UNSUPPORTED");
 }

@@ -29,7 +29,6 @@ const RULES = [
     pattern: /(?<![\w+])(?:\+|00)?(?:48[\s-]?)?(?:\d[\s-]?){8}\d(?!\d)/g,
     replacement: "[TELEFON]",
   },
-  // Linki
   {
     name: "githubLink",
     pattern: /(?:https?:\/\/)?(?:www\.)?github\.com\/[^\s,;)]+/gi,

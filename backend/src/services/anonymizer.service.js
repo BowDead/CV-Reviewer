@@ -128,10 +128,10 @@ export function anonymize(text) {
 
 export function anonymizeCv(text) {
   if (typeof text !== "string" || !text.trim()) {
-    throw new HttpError(400, "Brak tekstu CV.");
+    throw new HttpError(400, "CV_TEXT_MISSING");
   }
   if (text.length > MAX_INPUT_CHARS) {
-    throw new HttpError(413, "Tekst CV jest za długi.");
+    throw new HttpError(413, "CV_TEXT_TOO_LONG");
   }
   return anonymize(text);
 }

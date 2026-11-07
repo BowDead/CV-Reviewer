@@ -57,10 +57,10 @@ function groupByCategory(known, unknown) {
 
 export async function analyzeCv(text, options = {}) {
   if (typeof text !== "string" || !text.trim()) {
-    throw new HttpError(400, "Brak tekstu CV do analizy.");
+    throw new HttpError(400, "CV_TEXT_MISSING");
   }
   if (text.length > MAX_INPUT_CHARS) {
-    throw new HttpError(413, "Tekst CV jest za długi.");
+    throw new HttpError(413, "CV_TEXT_TOO_LONG");
   }
 
   const truncated = text.length > MAX_AI_CHARS;
@@ -82,10 +82,7 @@ export async function analyzeCv(text, options = {}) {
     !parsed.success ||
     (parsed.data.overallScore === null && !parsed.data.summary)
   ) {
-    throw new HttpError(
-      502,
-      "Model AI zwrócił odpowiedź bez oceny. Spróbuj ponownie.",
-    );
+    throw new HttpError(502, "AI_EMPTY_RESPONSE");
   }
 
   const { skillReview, ...analysis } = parsed.data;

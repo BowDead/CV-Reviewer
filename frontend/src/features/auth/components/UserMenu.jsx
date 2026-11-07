@@ -1,9 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "@/shared/ui/Button";
 import { useAuth } from "../hooks/useAuth";
-import { ROLE_LABELS } from "../constants";
 import styles from "./UserMenu.module.scss";
 
 export function UserMenu() {
+  const { t } = useTranslation();
   const { status, user, logout } = useAuth();
 
   if (status !== "authenticated") {
@@ -14,10 +15,10 @@ export function UserMenu() {
     <div className={styles.menu}>
       <div className={styles.user}>
         <span className={styles.email}>{user.email}</span>
-        <span className={styles.role}>{ROLE_LABELS[user.role]}</span>
+        <span className={styles.role}>{t(`roles.${user.role}`)}</span>
       </div>
       <Button variant="ghost" size="sm" onClick={logout}>
-        Wyloguj
+        {t("auth.logout")}
       </Button>
     </div>
   );

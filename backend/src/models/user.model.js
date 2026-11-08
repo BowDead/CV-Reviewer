@@ -31,6 +31,13 @@ export async function findUserById(id) {
   return toUser(rows[0]);
 }
 
+export async function findDataKeyEnc(userId) {
+  const { rows } = await query("SELECT data_key_enc FROM users WHERE id = $1", [
+    userId,
+  ]);
+  return rows[0]?.data_key_enc ?? null;
+}
+
 export async function createUser({ email, passwordHash, role, dataKeyEnc }) {
   const { rows } = await query(
     `INSERT INTO users (email, password_hash, role, data_key_enc)

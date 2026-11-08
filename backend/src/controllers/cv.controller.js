@@ -15,6 +15,6 @@ export async function postAnonymizeCv(req, res) {
 }
 
 export async function postAnalyzeCv(req, res) {
-  const result = await analyzeCv(req.body?.text);
+  const result = await analyzeCv(req.body?.text, { userId: req.user.id });
   res.json(cvAnalysisView(result));
 }

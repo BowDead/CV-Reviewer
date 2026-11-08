@@ -1,10 +1,12 @@
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 import { errorMessage } from "@/shared/i18n/errorMessage";
 import { Button } from "@/shared/ui/Button";
 import { EmptyState } from "@/shared/ui/EmptyState";
 
 export function AnalysisGate({ cv, analysis, startAnalysis, children }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   if (cv.status !== "done") {
     return (
@@ -18,6 +20,24 @@ export function AnalysisGate({ cv, analysis, startAnalysis, children }) {
     return (
       <EmptyState busy title={t("workspace.gate.loadingTitle")}>
         {t("workspace.gate.loadingText")}
+      </EmptyState>
+    );
+  }
+
+  if (
+    analysis.status === "error" &&
+    analysis.error.code === "LLM_KEY_REQUIRED"
+  ) {
+    return (
+      <EmptyState
+        title={t("workspace.gate.keyRequiredTitle")}
+        action={
+          <Button onClick={() => navigate("/keys")}>
+            {t("workspace.gate.goToKeys")}
+          </Button>
+        }
+      >
+        {errorMessage(analysis.error)}
       </EmptyState>
     );
   }

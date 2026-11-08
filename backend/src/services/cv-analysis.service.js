@@ -7,7 +7,7 @@ import { cvAnalysisSchema } from "./ai/cv-analysis.schema.js";
 import { resolveLlm } from "./llm-key.service.js";
 import { detectSkills, findSkill } from "./skills/skill-detector.service.js";
 
-const MAX_AI_CHARS = 14_000;
+const MAX_AI_CHARS = 10_000;
 const MAX_INPUT_CHARS = 50_000;
 
 function mergeSkills(detected, review) {

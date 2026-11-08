@@ -1,0 +1,121 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+  max-width: 720px;
+}
+
+.error {
+  margin: 0;
+  padding: $space-xs 0.75rem;
+  border: 1px solid;
+  border-radius: $radius;
+  background: $color-danger-bg;
+  color: $color-danger;
+  font-size: 0.875rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  @include card;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-sm;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+  font-weight: 600;
+}
+
+.badge {
+  padding: 0 0.375rem;
+  border-radius: $radius-sm;
+  background: $color-primary-bg;
+  color: $color-primary-text;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.meta {
+  color: $color-muted-text;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.form {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $space-md;
+}
+
+.formTitle {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  input,
+  select {
+    min-height: 2.5rem;
+    padding: $space-xs 0.75rem;
+    border: 1px solid $color-border-strong;
+    border-radius: $radius;
+    background: $color-bg;
+    color: $color-text;
+    font: inherit;
+    font-weight: 400;
+
+    &:focus {
+      border-color: $color-primary;
+      outline: none;
+    }
+  }
+}
+
+.hint {
+  color: $color-muted-text;
+  font-size: 0.85rem;
+  font-weight: 400;
+
+  a {
+    color: $color-primary-text;
+  }
+}

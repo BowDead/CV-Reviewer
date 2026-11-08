@@ -1,19 +1,14 @@
-import { env } from "../config/env.js";
 import { HttpError } from "../errors/HttpError.js";
-import { completeJson } from "./ai/groq.client.js";
 import {
   CV_ANALYSIS_SYSTEM_PROMPT,
   buildCvAnalysisUserMessage,
 } from "./ai/cv-analysis.prompt.js";
 import { cvAnalysisSchema } from "./ai/cv-analysis.schema.js";
+import { resolveLlm } from "./llm-key.service.js";
 import { detectSkills, findSkill } from "./skills/skill-detector.service.js";
 
 const MAX_AI_CHARS = 14_000;
 const MAX_INPUT_CHARS = 50_000;
-
-function resolveGroqApiKey({ userApiKey } = {}) {
-  return userApiKey || env.groqApiKey;
-}
 
 function mergeSkills(detected, review) {
   const rejected = new Set(
@@ -55,7 +50,7 @@ function groupByCategory(known, unknown) {
   return [...groups].map(([category, items]) => ({ category, items }));
 }
 
-export async function analyzeCv(text, options = {}) {
+export async function analyzeCv(text, { userId }) {
   if (typeof text !== "string" || !text.trim()) {
     throw new HttpError(400, "CV_TEXT_MISSING");
   }
@@ -68,8 +63,9 @@ export async function analyzeCv(text, options = {}) {
 
   const detected = detectSkills(text);
 
-  const raw = await completeJson({
-    apiKey: resolveGroqApiKey(options),
+  const llm = await resolveLlm(userId);
+
+  const raw = await llm.completeJson({
     system: CV_ANALYSIS_SYSTEM_PROMPT,
     user: buildCvAnalysisUserMessage(
       cvText,
@@ -101,6 +97,6 @@ export async function analyzeCv(text, options = {}) {
     })),
     unknownSkills: unknown,
     truncated,
-    model: env.groqModel,
+    model: llm.model,
   };
 }

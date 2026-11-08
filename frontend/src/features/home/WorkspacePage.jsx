@@ -48,6 +48,7 @@ export function WorkspacePage({ actions }) {
       badge: rewritesCount || null,
     },
     { to: "/profile", label: t("workspace.nav.profile") },
+    { to: "/keys", label: t("workspace.nav.keys") },
   ];
 
   return (

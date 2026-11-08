@@ -34,7 +34,8 @@
       "preview": "Podgląd CV",
       "analysis": "Analiza",
       "improvements": "Poprawki",
-      "profile": "Profil"
+      "profile": "Profil",
+      "keys": "Klucze AI"
     },
     "gate": {
       "noCvTitle": "Najpierw wgraj CV",
@@ -43,7 +44,9 @@
       "loadingText": "Zwykle trwa to 5–20 sekund.",
       "errorTitle": "Analiza się nie udała",
       "idleTitle": "CV nie jest jeszcze przeanalizowane",
-      "idleText": "Kliknij, aby AI oceniło treść i strukturę CV."
+      "idleText": "Kliknij, aby AI oceniło treść i strukturę CV.",
+      "keyRequiredTitle": "Dodaj klucz API",
+      "goToKeys": "Przejdź do kluczy"
     },
     "preview": {
       "title": "Podgląd CV",
@@ -63,6 +66,10 @@
     "profile": {
       "title": "Profil",
       "description": "Dane, które AI odczytało z CV."
+    },
+    "keys": {
+      "title": "Klucze AI",
+      "description": "Analizy korzystają z klucza domyślnego, czyli pierwszego na liście."
     }
   },
   "cvUpload": {
@@ -124,17 +131,34 @@
       "skills": "Umiejętności",
       "languages": "Języki",
       "certifications": "Certyfikaty"
+    },
+    "llmKeys": {
+      "loading": "Wczytywanie kluczy…",
+      "loadFailed": "Nie udało się wczytać kluczy",
+      "emptyTitle": "Nie masz jeszcze żadnego klucza",
+      "emptyText": "Dodaj klucz API poniżej. Analizy będą korzystać z Twojego limitu u dostawcy.",
+      "default": "Domyślny",
+      "moveUp": "W górę",
+      "moveDown": "W dół",
+      "remove": "Usuń",
+      "formTitle": "Dodaj klucz",
+      "provider": "Dostawca",
+      "model": "Model",
+      "label": "Nazwa (opcjonalnie)",
+      "apiKey": "Klucz API",
+      "keysHint": "Klucz utworzysz na <0>stronie dostawcy</0>. Zapisujemy go w postaci zaszyfrowanej.",
+      "submit": "Sprawdź i zapisz",
+      "submitting": "Sprawdzanie klucza…"
     }
   },
   "health": {
     "checking": "Sprawdzanie połączenia z API…",
     "unavailable": "Brak połączenia z API: {{message}}",
-    "ok": "API działa · Groq: {{groq}} · Baza: {{database}}",
-    "groqConfigured": "skonfigurowany",
-    "groqMissing": "brak klucza",
+    "ok": "API działa · Baza: {{database}}",
     "databaseConnected": "połączona",
     "databaseDisconnected": "brak połączenia"
   },
+
   "employer": {
     "title": "Panel pracodawcy",
     "description": "Do dokończenia"
@@ -164,9 +188,8 @@
     "UPLOAD_INVALID": "Nieprawidłowe przesłanie pliku. Wyślij jeden plik w polu „file”.",
     "CV_TEXT_MISSING": "Brak tekstu CV.",
     "CV_TEXT_TOO_LONG": "Tekst CV jest za długi.",
-    "AI_KEY_MISSING": "Brak klucza API. Dodaj GROQ_API_KEY w backend/.env.",
-    "AI_KEY_INVALID": "{{provider}} odrzucił klucz API. Sprawdź GROQ_API_KEY w backend/.env.",
-    "AI_MODEL_UNAVAILABLE": "Model „{{model}}” jest niedostępny. Zmień GROQ_MODEL w backend/.env.",
+    "AI_KEY_INVALID": "{{provider}} odrzucił klucz API. Sprawdź go w zakładce „Klucze AI”.",
+    "AI_MODEL_UNAVAILABLE": "Model „{{model}}” jest niedostępny. Sprawdź jego nazwę w zakładce „Klucze AI”.",
     "AI_RATE_LIMIT": "Przekroczono limit zapytań do {{provider}}. Odczekaj chwilę i spróbuj ponownie.",
     "AI_TIMEOUT": "{{provider}} nie odpowiedział na czas. Spróbuj ponownie.",
     "AI_CONNECTION": "Brak połączenia z {{provider}} API.",
@@ -179,6 +202,20 @@
     "INTERNAL_ERROR": "Wewnętrzny błąd serwera.",
     "NETWORK_ERROR": "Brak połączenia z serwerem.",
     "HTTP_ERROR": "Błąd HTTP {{status}}.",
+    "PROVIDER_REQUIRED": "Wybierz dostawcę.",
+    "PROVIDER_UNSUPPORTED": "Dostawca „{{provider}}” nie jest obsługiwany.",
+    "MODEL_REQUIRED": "Podaj nazwę modelu.",
+    "MODEL_TOO_LONG": "Nazwa modelu jest za długa.",
+    "LLM_KEY_LABEL_TOO_LONG": "Nazwa klucza może mieć najwyżej {{max}} znaków.",
+    "API_KEY_REQUIRED": "Podaj klucz API.",
+    "API_KEY_TOO_LONG": "Klucz API jest za długi.",
+    "API_KEY_INVALID_CHARS": "Klucz API zawiera niedozwolone znaki.",
+    "LLM_KEY_LIMIT": "Możesz zapisać najwyżej {{max}} kluczy.",
+    "LLM_KEY_SAVE_FAILED": "Nie udało się zapisać klucza. Spróbuj ponownie.",
+    "LLM_KEY_NOT_FOUND": "Nie znaleziono klucza.",
+    "LLM_KEY_ORDER_INVALID": "Nieprawidłowa kolejność kluczy.",
+    "LLM_KEY_REQUIRED": "Do analizy potrzebny jest klucz API. Dodaj go w zakładce „Klucze AI”.",
+
     "UNKNOWN": "Wystąpił nieoczekiwany błąd."
   }
 }

@@ -10,7 +10,7 @@ Do uruchomienia wymagany Docker Desktop (Compose 2.22+).
 copy backend\.env.example backend\.env
 ```
 
-W pliku `backend\.env` należy podać klucz do Groq API (https://console.groq.com/keys) oraz dwa różne sekrety: `JWT_SECRET` i `MASTER_KEY`. Każdy z nich można wygenerować poleceniem:
+W pliku `backend\.env` należy podać dwa różne sekrety: `JWT_SECRET` i `MASTER_KEY`. Klucz do Groq API (https://console.groq.com/keys) jest opcjonalny i służy tylko do developmentu, ponieważ użytkownicy dodają własne klucze w zakładce „Klucze AI”. Każdy z sekretów można wygenerować poleceniem:
 
 ```powershell
 node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"

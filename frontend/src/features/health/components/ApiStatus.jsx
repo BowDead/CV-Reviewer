@@ -22,9 +22,6 @@ export function ApiStatus() {
   return (
     <p className={`${styles.status} ${styles.ok}`}>
       {t("health.ok", {
-        groq: t(
-          data.groqConfigured ? "health.groqConfigured" : "health.groqMissing",
-        ),
         database: t(
           data.databaseConnected
             ? "health.databaseConnected"

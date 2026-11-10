@@ -1,0 +1,2445 @@
+openapi: 3.1.0
+info:
+  title: CV Reviewer API
+  version: 1.0.0
+  description: |
+    REST API aplikacji CV Reviewer: analiza CV przez model językowy, repozytoria GitHub, oferty pracy oraz strona pracodawcy i administratora.
+
+    Sesja jest przechowywana w ciasteczku `cvr_session` (httpOnly), ustawianym przy logowaniu i rejestracji.
+
+    Błąd ma postać `{ "error": "KOD", "params": { … } }`. Komunikat dla użytkownika dobiera frontend na podstawie kodu.
+
+tags:
+  - name: Stan serwera
+  - name: Konto i sesja
+  - name: Klucze do modelu
+  - name: CV i analizy
+  - name: Słownik umiejętności
+  - name: Repozytoria GitHub
+  - name: Oferty pracy
+  - name: Profil kandydata
+  - name: Zaproszenia (kandydat)
+  - name: Stanowiska i kandydaci (pracodawca)
+  - name: Administracja
+
+security:
+  - cookieAuth: []
+
+paths:
+  /api/health:
+    get:
+      tags: [Stan serwera]
+      summary: Sprawdzenie działania serwera i połączenia z bazą
+      security: []
+      responses:
+        "200":
+          description: Serwer działa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  databaseConnected:
+                    type: boolean
+
+  /api/auth/register:
+    post:
+      tags: [Konto i sesja]
+      summary: Rejestracja konta z wybraną rolą
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: Konto utworzone, ustawione ciasteczko sesji
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "400":
+          description: "`EMAIL_REQUIRED`, `EMAIL_INVALID`, `EMAIL_TOO_LONG`, `PASSWORD_REQUIRED`, `PASSWORD_TOO_SHORT`, `PASSWORD_TOO_LONG`, `ROLE_INVALID`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: "`EMAIL_TAKEN`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/auth/login:
+    post:
+      tags: [Konto i sesja]
+      summary: Logowanie i ustawienie ciasteczka sesji
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Zalogowano, ustawione ciasteczko sesji
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          description: "`INVALID_CREDENTIALS`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/auth/logout:
+    post:
+      tags: [Konto i sesja]
+      summary: Wylogowanie i usunięcie ciasteczka sesji
+      security: []
+      responses:
+        "204":
+          description: Wylogowano
+
+  /api/auth/me:
+    get:
+      tags: [Konto i sesja]
+      summary: Dane zalogowanego użytkownika
+      responses:
+        "200":
+          description: Dane użytkownika
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    delete:
+      tags: [Konto i sesja]
+      summary: Usunięcie konta wraz z danymi
+      description: Usuwa konto i wszystkie dane użytkownika. Razem z kontem znika klucz danych, więc zaszyfrowane dane stają się nieczytelne.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [password]
+              properties:
+                password:
+                  type: string
+                  format: password
+      responses:
+        "204":
+          description: Konto usunięte, ciasteczko sesji usunięte
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/llm-keys:
+    get:
+      tags: [Klucze do modelu]
+      summary: Lista kluczy (bez ich wartości) i dostępnych dostawców
+      responses:
+        "200":
+          description: Klucze w kolejności priorytetu i obsługiwani dostawcy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  keys:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/LlmKey"
+                  providers:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Provider"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [Klucze do modelu]
+      summary: Sprawdzenie klucza u dostawcy i zapisanie go
+      description: Klucz jest sprawdzany krótkim zapytaniem do dostawcy, a potem zapisywany w postaci zaszyfrowanej.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LlmKeyInput"
+      responses:
+        "201":
+          description: Klucz zapisany
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    $ref: "#/components/schemas/LlmKey"
+        "400":
+          description: "`PROVIDER_REQUIRED`, `MODEL_REQUIRED`, `MODEL_TOO_LONG`, `LLM_KEY_LABEL_TOO_LONG`, `API_KEY_REQUIRED`, `API_KEY_TOO_LONG`, `API_KEY_INVALID_CHARS`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          description: "`LLM_KEY_LIMIT`, `LLM_KEY_SAVE_FAILED`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "422":
+          description: "`AI_KEY_INVALID`, `AI_MODEL_UNAVAILABLE`, `PROVIDER_UNSUPPORTED`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/llm-keys/order:
+    put:
+      tags: [Klucze do modelu]
+      summary: Zmiana kolejności kluczy; pierwszy jest domyślny
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ids]
+              properties:
+                ids:
+                  type: array
+                  description: Identyfikatory wszystkich kluczy użytkownika w nowej kolejności
+                  items:
+                    type: string
+                    format: uuid
+      responses:
+        "200":
+          description: Klucze w nowej kolejności
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  keys:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/LlmKey"
+        "400":
+          description: "`LLM_KEY_ORDER_INVALID`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/llm-keys/{id}:
+    delete:
+      tags: [Klucze do modelu]
+      summary: Usunięcie klucza
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Klucz usunięty
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/cv/parse:
+    post:
+      tags: [CV i analizy]
+      summary: Odczyt tekstu z pliku PDF lub DOCX bez zapisywania pliku
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CvUpload"
+      responses:
+        "200":
+          description: Tekst odczytany z pliku
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ParsedCv"
+        "400":
+          description: "`FILE_MISSING`, `FILE_EMPTY`, `FILE_NOT_PDF`, `FILE_NOT_DOCX`, `FILE_UNREADABLE`, `UPLOAD_INVALID`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "413":
+          description: "`FILE_TOO_LARGE`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "415":
+          description: "`FILE_UNSUPPORTED`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "422":
+          description: "`FILE_NO_TEXT`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/cv/anonymize:
+    post:
+      tags: [CV i analizy]
+      summary: Anonimizacja tekstu CV
+      description: Dzieli tekst na fragmenty zwykłe i ukryte (typ danych i etykieta). Użytkownik może przed analizą odkryć ukryty fragment albo ukryć kolejny.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CvTextRequest"
+      responses:
+        "200":
+          description: Tekst podzielony na fragmenty
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  segments:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Segment"
+        "400":
+          description: "`CV_TEXT_MISSING`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "413":
+          description: "`CV_TEXT_TOO_LONG`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/cv/analyze:
+    post:
+      tags: [CV i analizy]
+      summary: Analiza tekstu CV przez model językowy
+      description: Analizuje tekst zanonimizowany i zatwierdzony przez użytkownika. Wynik jest zapisywany w historii analiz.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/CvTextRequest"
+                - type: object
+                  properties:
+                    cvFileId:
+                      type: [string, "null"]
+                      format: uuid
+                      description: Zapisane CV, z którego pochodzi tekst
+      responses:
+        "200":
+          description: Wynik analizy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalysisResult"
+        "400":
+          description: "`CV_TEXT_MISSING`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          description: "`LLM_KEY_REQUIRED`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "413":
+          description: "`CV_TEXT_TOO_LONG`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "422":
+          description: "`AI_KEY_INVALID`, `AI_MODEL_UNAVAILABLE`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "429":
+          description: "`AI_RATE_LIMIT`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "502":
+          description: "`AI_CONNECTION`, `AI_EMPTY_RESPONSE`, `AI_INVALID_RESPONSE`, `AI_PROVIDER_ERROR`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "504":
+          description: "`AI_TIMEOUT`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/cv/files:
+    get:
+      tags: [CV i analizy]
+      summary: Lista zapisanych CV
+      responses:
+        "200":
+          description: Zapisane CV, od najnowszego
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CvFile"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [CV i analizy]
+      summary: Zapisanie przesłanego pliku CV za zgodą użytkownika
+      description: Plik i jego nazwa są szyfrowane kluczem danych użytkownika.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CvUpload"
+      responses:
+        "201":
+          description: CV zapisane
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  file:
+                    $ref: "#/components/schemas/CvFile"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "413":
+          description: "`FILE_TOO_LARGE`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "415":
+          description: "`FILE_UNSUPPORTED`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/cv/files/creator:
+    post:
+      tags: [CV i analizy]
+      summary: Zapisanie CV utworzonego w kreatorze
+      description: Na podstawie danych z kreatora powstaje plik CV, zapisywany tak jak przesłany plik.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CvCreatorInput"
+      responses:
+        "201":
+          description: CV utworzone i zapisane
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  file:
+                    $ref: "#/components/schemas/CvFile"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/cv/files/{id}/content:
+    get:
+      tags: [CV i analizy]
+      summary: Pobranie odszyfrowanego pliku CV
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Zawartość pliku
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema:
+                type: string
+                format: binary
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/cv/files/{id}:
+    delete:
+      tags: [CV i analizy]
+      summary: Usunięcie zapisanego CV
+      description: Analizy tego CV zostają w historii. Pracodawca traci dostęp do CV udostępnionego w zaproszeniu.
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: CV usunięte
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/analyses:
+    get:
+      tags: [CV i analizy]
+      summary: Historia analiz
+      responses:
+        "200":
+          description: Analizy użytkownika, od najnowszej
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  analyses:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/AnalysisSummary"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/analyses/{id}:
+    get:
+      tags: [CV i analizy]
+      summary: Wynik wybranej analizy
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Analiza z pełnym wynikiem
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalysisDetail"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [CV i analizy]
+      summary: Usunięcie analizy niebędącej źródłem profilu
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Analiza usunięta
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: Analiza jest źródłem profilu kandydata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/skills:
+    get:
+      tags: [Słownik umiejętności]
+      summary: Lista zatwierdzonych umiejętności
+      description: Służy np. do filtrów wyszukiwania i formularzy.
+      responses:
+        "200":
+          description: Zatwierdzone umiejętności
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  skills:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Skill"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/github/account:
+    put:
+      tags: [Repozytoria GitHub]
+      summary: Podanie lub zmiana loginu GitHub
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [login]
+              properties:
+                login:
+                  type: string
+                  maxLength: 39
+                  example: octocat
+      responses:
+        "200":
+          description: Login zapisany
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  login:
+                    type: string
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: Konto GitHub nie istnieje
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags: [Repozytoria GitHub]
+      summary: Usunięcie loginu GitHub i danych repozytoriów
+      responses:
+        "204":
+          description: Login i dane repozytoriów usunięte
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/github/repositories:
+    get:
+      tags: [Repozytoria GitHub]
+      summary: Lista repozytoriów ze stanem analizy i umiejętnościami
+      responses:
+        "200":
+          description: Repozytoria użytkownika
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  repositories:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Repository"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/github/repositories/analyze:
+    post:
+      tags: [Repozytoria GitHub]
+      summary: Analiza nowych i zmienionych repozytoriów
+      description: Pobiera listę publicznych repozytoriów z GitHuba i analizuje tylko te, które są nowe albo zmieniły się od ostatniej analizy. Forki i puste repozytoria są pomijane.
+      responses:
+        "200":
+          description: Podsumowanie analizy i aktualna lista repozytoriów
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  analyzed:
+                    type: integer
+                  unchanged:
+                    type: integer
+                  failed:
+                    type: integer
+                  repositories:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Repository"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          description: Nie podano loginu GitHub albo brak klucza do modelu (`LLM_KEY_REQUIRED`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "502":
+          description: Błąd GitHub API albo modelu językowego
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/offers:
+    get:
+      tags: [Oferty pracy]
+      summary: Oferty z Solid.Jobs uszeregowane według dopasowania
+      description: Kolejność ustala system na podstawie pokrycia umiejętności oferty umiejętnościami z analizy i repozytoriów.
+      parameters:
+        - name: analysisId
+          in: query
+          description: Analiza, do której dopasowywane są oferty. Domyślnie analiza źródłowa profilu.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Oferty od najlepiej dopasowanej
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  offers:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Offer"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "502":
+          description: Błąd Solid.Jobs API
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/offers/{offerKey}/insight:
+    post:
+      tags: [Oferty pracy]
+      summary: Uzasadnienie dopasowania oferty od modelu językowego
+      description: Zwraca zapisane uzasadnienie albo generuje je przez model, jeśli go nie ma lub oferta zmieniła się później.
+      parameters:
+        - $ref: "#/components/parameters/OfferKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [analysisId]
+              properties:
+                analysisId:
+                  type: string
+                  format: uuid
+      responses:
+        "200":
+          description: Uzasadnienie dopasowania
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfferInsight"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: "`LLM_KEY_REQUIRED`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "502":
+          description: Błąd modelu językowego albo Solid.Jobs API
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/offers/{offerKey}/repositories:
+    get:
+      tags: [Oferty pracy]
+      summary: Repozytoria najlepiej pasujące do wymagań oferty
+      parameters:
+        - $ref: "#/components/parameters/OfferKey"
+      responses:
+        "200":
+          description: Repozytoria z umiejętnościami pasującymi do oferty
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  repositories:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/OfferRepository"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/profile:
+    get:
+      tags: [Profil kandydata]
+      summary: Własny profil
+      responses:
+        "200":
+          description: Profil kandydata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          description: Profil jeszcze nie istnieje
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags: [Profil kandydata]
+      summary: Utworzenie profilu z wybranej analizy albo zmiana analizy źródłowej
+      description: Nagłówek, poziom, lokalizacja, ocena i umiejętności są przepisywane z analizy.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [analysisId]
+              properties:
+                analysisId:
+                  type: string
+                  format: uuid
+      responses:
+        "200":
+          description: Profil utworzony lub zaktualizowany
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags: [Profil kandydata]
+      summary: Zmiana nagłówka i lokalizacji
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                headline:
+                  type: string
+                  maxLength: 150
+                location:
+                  type: string
+                  maxLength: 100
+      responses:
+        "200":
+          description: Profil po zmianie
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/profile/skills:
+    put:
+      tags: [Profil kandydata]
+      summary: Zmiana listy umiejętności profilu
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [skillIds]
+              properties:
+                skillIds:
+                  type: array
+                  description: Umiejętności z listy zatwierdzonych
+                  items:
+                    type: integer
+      responses:
+        "200":
+          description: Profil po zmianie
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/profile/publication:
+    put:
+      tags: [Profil kandydata]
+      summary: Opublikowanie albo wycofanie profilu
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [published]
+              properties:
+                published:
+                  type: boolean
+      responses:
+        "200":
+          description: Profil po zmianie
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/invitations:
+    get:
+      tags: [Zaproszenia (kandydat)]
+      summary: Lista otrzymanych zaproszeń
+      responses:
+        "200":
+          description: Zaproszenia, od najnowszego
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitations:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ReceivedInvitation"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /api/invitations/{id}/respond:
+    post:
+      tags: [Zaproszenia (kandydat)]
+      summary: Akceptacja zaproszenia z udostępnieniem CV albo jego odrzucenie
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [accept]
+              properties:
+                accept:
+                  type: boolean
+                cvFileId:
+                  type: string
+                  format: uuid
+                  description: Zapisane CV udostępniane pracodawcy; wymagane przy akceptacji
+      responses:
+        "200":
+          description: Zaproszenie po odpowiedzi
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReceivedInvitation"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: Na zaproszenie już odpowiedziano
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/invitations/{id}/report:
+    post:
+      tags: [Zaproszenia (kandydat)]
+      summary: Zgłoszenie zaproszenia administratorowi
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason:
+                  type: string
+                  maxLength: 1000
+      responses:
+        "201":
+          description: Zgłoszenie przyjęte
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/invitations/{id}/cv:
+    get:
+      tags: [Stanowiska i kandydaci (pracodawca)]
+      summary: Pobranie CV udostępnionego w zaakceptowanym zaproszeniu
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Zawartość pliku CV
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema:
+                type: string
+                format: binary
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          description: Zaproszenie nie istnieje, nie zostało zaakceptowane albo CV usunięto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/positions:
+    get:
+      tags: [Stanowiska i kandydaci (pracodawca)]
+      summary: Lista własnych stanowisk
+      responses:
+        "200":
+          description: Stanowiska pracodawcy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  positions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Position"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      tags: [Stanowiska i kandydaci (pracodawca)]
+      summary: Utworzenie stanowiska z wymaganymi umiejętnościami
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PositionInput"
+      responses:
+        "201":
+          description: Stanowisko utworzone
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Position"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /api/positions/{id}:
+    get:
+      tags: [Stanowiska i kandydaci (pracodawca)]
+      summary: Szczegóły stanowiska
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Stanowisko
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Position"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags: [Stanowiska i kandydaci (pracodawca)]
+      summary: Edycja stanowiska
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PositionInput"
+      responses:
+        "200":
+          description: Stanowisko po zmianie
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Position"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Stanowiska i kandydaci (pracodawca)]
+      summary: Usunięcie stanowiska
+      description: Usuwa też zaproszenia wysłane do tego stanowiska.
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Stanowisko usunięte
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/positions/{id}/invitations:
+    get:
+      tags: [Stanowiska i kandydaci (pracodawca)]
+      summary: Zaproszenia wysłane do stanowiska
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Zaproszenia do stanowiska
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitations:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/SentInvitation"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags: [Stanowiska i kandydaci (pracodawca)]
+      summary: Wysłanie zaproszenia do kandydata
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [candidateId]
+              properties:
+                candidateId:
+                  type: string
+                  format: uuid
+                note:
+                  type: string
+                  maxLength: 2000
+      responses:
+        "201":
+          description: Zaproszenie wysłane
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SentInvitation"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: Kandydat ma już zaproszenie do tego stanowiska
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/candidates:
+    get:
+      tags: [Stanowiska i kandydaci (pracodawca)]
+      summary: Wyszukiwanie opublikowanych profili według filtrów
+      description: Z parametrem `positionId` kandydaci są uszeregowani według dopasowania do wymagań stanowiska.
+      parameters:
+        - name: skills
+          in: query
+          description: Identyfikatory umiejętności, które musi mieć kandydat
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: seniority
+          in: query
+          schema:
+            $ref: "#/components/schemas/Seniority"
+        - name: location
+          in: query
+          schema:
+            type: string
+        - name: positionId
+          in: query
+          description: Stanowisko, do którego dopasowywani są kandydaci
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Zanonimizowane profile kandydatów
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  candidates:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CandidateProfile"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /api/candidates/{id}:
+    get:
+      tags: [Stanowiska i kandydaci (pracodawca)]
+      summary: Zanonimizowany profil kandydata
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Profil kandydata bez danych kontaktowych
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CandidateProfile"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/admin/reports:
+    get:
+      tags: [Administracja]
+      summary: Lista zgłoszeń
+      parameters:
+        - name: resolved
+          in: query
+          description: "`false` – tylko oczekujące, `true` – tylko rozpatrzone"
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Zgłoszenia, od najstarszego oczekującego
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reports:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Report"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /api/admin/reports/{id}/resolve:
+    post:
+      tags: [Administracja]
+      summary: Oznaczenie zgłoszenia jako rozpatrzonego
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Zgłoszenie po rozpatrzeniu
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Report"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/admin/users:
+    get:
+      tags: [Administracja]
+      summary: Wyszukiwanie kont
+      parameters:
+        - name: email
+          in: query
+          description: Fragment adresu e-mail
+          schema:
+            type: string
+        - name: role
+          in: query
+          schema:
+            $ref: "#/components/schemas/Role"
+        - name: blocked
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Konta spełniające filtry
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/AdminUser"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /api/admin/users/{id}/block:
+    put:
+      tags: [Administracja]
+      summary: Zablokowanie albo odblokowanie konta
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlockRequest"
+      responses:
+        "200":
+          description: Konto po zmianie
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUser"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/admin/positions/{id}/block:
+    put:
+      tags: [Administracja]
+      summary: Zablokowanie albo odblokowanie stanowiska
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlockRequest"
+      responses:
+        "200":
+          description: Stanowisko po zmianie
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Position"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/admin/skills:
+    get:
+      tags: [Administracja]
+      summary: Lista umiejętności ze słownika według filtrów
+      parameters:
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/SkillStatus"
+        - name: q
+          in: query
+          description: Fragment nazwy lub aliasu
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Umiejętności spełniające filtry
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  skills:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/DictionarySkill"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      tags: [Administracja]
+      summary: Dodanie umiejętności do słownika
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DictionarySkillInput"
+      responses:
+        "201":
+          description: Umiejętność dodana jako zatwierdzona
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DictionarySkill"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          description: Umiejętność o tej nazwie już istnieje
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/admin/skills/{id}:
+    patch:
+      tags: [Administracja]
+      summary: Zatwierdzenie, odrzucenie lub edycja umiejętności i jej aliasów
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/DictionarySkillInput"
+                - type: object
+                  properties:
+                    status:
+                      $ref: "#/components/schemas/SkillStatus"
+      responses:
+        "200":
+          description: Umiejętność po zmianie
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DictionarySkill"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: cvr_session
+      description: Token JWT ustawiany przy logowaniu i rejestracji
+
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    OfferKey:
+      name: offerKey
+      in: path
+      required: true
+      description: "`jobOfferKey` oferty z Solid.Jobs"
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    BadRequest:
+      description: Niepoprawne dane wejściowe
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error: INVALID_INPUT
+    Unauthorized:
+      description: "`AUTH_REQUIRED` – brak sesji, `SESSION_EXPIRED` – sesja wygasła"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error: AUTH_REQUIRED
+    Forbidden:
+      description: "`FORBIDDEN` – rola użytkownika nie ma dostępu"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error: FORBIDDEN
+    NotFound:
+      description: Nie znaleziono zasobu albo należy on do innego użytkownika
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+          description: Kod błędu tłumaczony przez frontend
+          example: FILE_TOO_LARGE
+        params:
+          type: object
+          description: Wartości wstawiane do komunikatu
+          additionalProperties: true
+          example:
+            maxMb: 10
+
+    Role:
+      type: string
+      enum: [candidate, employer, admin]
+
+    Seniority:
+      type: string
+      enum: [Stażysta, Junior, Mid, Senior, Lead]
+
+    SkillStatus:
+      type: string
+      enum: [approved, pending, rejected]
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        role:
+          $ref: "#/components/schemas/Role"
+        createdAt:
+          type: string
+          format: date-time
+
+    UserResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+
+    RegisterRequest:
+      type: object
+      required: [email, password, role]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 128
+        role:
+          type: string
+          enum: [candidate, employer]
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    LlmKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        provider:
+          type: string
+          example: groq
+        model:
+          type: string
+          example: openai/gpt-oss-120b
+        label:
+          type: [string, "null"]
+        priority:
+          type: integer
+          description: Kolejność na liście; najniższa wartość to klucz domyślny
+        createdAt:
+          type: string
+          format: date-time
+
+    LlmKeyInput:
+      type: object
+      required: [provider, model, apiKey]
+      properties:
+        provider:
+          type: string
+          example: groq
+        model:
+          type: string
+          maxLength: 100
+          example: openai/gpt-oss-120b
+        label:
+          type: string
+          maxLength: 100
+        apiKey:
+          type: string
+          format: password
+          maxLength: 500
+
+    Provider:
+      type: object
+      properties:
+        id:
+          type: string
+          example: groq
+        label:
+          type: string
+          example: Groq
+        defaultModel:
+          type: string
+          example: openai/gpt-oss-120b
+        keysUrl:
+          type: string
+          format: uri
+          example: https://console.groq.com/keys
+
+    CvUpload:
+      type: object
+      required: [file]
+      properties:
+        file:
+          type: string
+          format: binary
+          description: Plik PDF lub DOCX, najwyżej 10 MB
+
+    ParsedCv:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum: [pdf, docx]
+        text:
+          type: string
+        pageCount:
+          type: [integer, "null"]
+        stats:
+          type: object
+          properties:
+            characters:
+              type: integer
+            words:
+              type: integer
+
+    CvTextRequest:
+      type: object
+      required: [text]
+      properties:
+        text:
+          type: string
+          maxLength: 50000
+
+    Segment:
+      type: object
+      required: [text]
+      description: Fragment tekstu CV. Fragment z polem `label` zawiera dane osobowe.
+      properties:
+        text:
+          type: string
+          example: jan.kowalski@example.com
+        type:
+          type: string
+          example: email
+        label:
+          type: string
+          example: "[EMAIL]"
+
+    DetectedSkill:
+      type: object
+      properties:
+        name:
+          type: string
+          example: React
+        category:
+          type: string
+          example: Frontend
+        source:
+          type: string
+          enum: [system, llm]
+          description: Rozpoznał system według słownika czy model językowy
+
+    CvAnalysis:
+      type: object
+      properties:
+        overallScore:
+          type: [number, "null"]
+          minimum: 1
+          maximum: 10
+          example: 7.5
+        seniority:
+          oneOf:
+            - $ref: "#/components/schemas/Seniority"
+            - type: "null"
+        summary:
+          type: string
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              score:
+                type: [number, "null"]
+              comment:
+                type: string
+        strengths:
+          type: array
+          items:
+            type: string
+        weaknesses:
+          type: array
+          items:
+            type: string
+        missingSections:
+          type: array
+          items:
+            type: string
+        actionItems:
+          type: array
+          items:
+            type: string
+        rewrites:
+          type: array
+          items:
+            type: object
+            properties:
+              original:
+                type: string
+              improved:
+                type: string
+              reason:
+                type: string
+        suggestedRoles:
+          type: array
+          items:
+            type: string
+        skillsToAdd:
+          type: array
+          items:
+            type: string
+        profile:
+          type: object
+          properties:
+            headline:
+              type: string
+            location:
+              type: string
+            experience:
+              type: array
+              items:
+                type: object
+                properties:
+                  title:
+                    type: string
+                  company:
+                    type: string
+                  start:
+                    type: string
+                  end:
+                    type: string
+                  highlights:
+                    type: array
+                    items:
+                      type: string
+            education:
+              type: array
+              items:
+                type: object
+                properties:
+                  degree:
+                    type: string
+                  school:
+                    type: string
+                  start:
+                    type: string
+                  end:
+                    type: string
+            skills:
+              type: array
+              items:
+                type: object
+                properties:
+                  category:
+                    type: string
+                  items:
+                    type: array
+                    items:
+                      type: string
+            languages:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  level:
+                    type: string
+            certifications:
+              type: array
+              items:
+                type: string
+
+    AnalysisResult:
+      type: object
+      properties:
+        analysisId:
+          type: string
+          format: uuid
+          description: Identyfikator analizy zapisanej w historii
+        analysis:
+          $ref: "#/components/schemas/CvAnalysis"
+        skills:
+          type: array
+          items:
+            $ref: "#/components/schemas/DetectedSkill"
+        unknownSkills:
+          type: array
+          description: Umiejętności wskazane przez model, których nie ma w słowniku
+          items:
+            type: string
+        truncated:
+          type: boolean
+          description: Czy do modelu trafił tylko początek tekstu
+        model:
+          type: string
+          example: openai/gpt-oss-120b
+
+    CvFile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        fileName:
+          type: string
+          example: cv-2026.pdf
+        mimeType:
+          type: string
+          example: application/pdf
+        createdAt:
+          type: string
+          format: date-time
+
+    CvCreatorInput:
+      type: object
+      required: [fileName, headline]
+      properties:
+        fileName:
+          type: string
+          maxLength: 255
+        headline:
+          type: string
+          maxLength: 150
+        summary:
+          type: string
+        experience:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              company:
+                type: string
+              start:
+                type: string
+              end:
+                type: string
+              highlights:
+                type: array
+                items:
+                  type: string
+        education:
+          type: array
+          items:
+            type: object
+            properties:
+              degree:
+                type: string
+              school:
+                type: string
+              start:
+                type: string
+              end:
+                type: string
+        skills:
+          type: array
+          items:
+            type: string
+        languages:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              level:
+                type: string
+
+    AnalysisSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        cvFileId:
+          type: [string, "null"]
+          format: uuid
+          description: Pusty, gdy plik nie był zapisany albo został usunięty
+        model:
+          type: string
+        language:
+          type: string
+          example: pl
+        overallScore:
+          type: [number, "null"]
+        seniority:
+          oneOf:
+            - $ref: "#/components/schemas/Seniority"
+            - type: "null"
+        isProfileSource:
+          type: boolean
+          description: Czy analiza jest źródłem profilu kandydata
+        createdAt:
+          type: string
+          format: date-time
+
+    AnalysisDetail:
+      allOf:
+        - $ref: "#/components/schemas/AnalysisSummary"
+        - type: object
+          properties:
+            result:
+              $ref: "#/components/schemas/AnalysisResult"
+
+    Skill:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          example: React
+        category:
+          type: [string, "null"]
+          example: Frontend
+
+    Repository:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        githubRepoId:
+          type: integer
+        name:
+          type: string
+        description:
+          type: [string, "null"]
+        languages:
+          type: object
+          description: Udział języków w bajtach kodu
+          additionalProperties:
+            type: integer
+          example:
+            JavaScript: 52340
+            SCSS: 8120
+        topics:
+          type: array
+          items:
+            type: string
+        pushedAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, done, failed]
+        analyzedAt:
+          type: [string, "null"]
+          format: date-time
+        skills:
+          type: array
+          items:
+            allOf:
+              - $ref: "#/components/schemas/Skill"
+              - type: object
+                properties:
+                  source:
+                    type: string
+                    enum: [system, llm]
+
+    Offer:
+      type: object
+      properties:
+        offerKey:
+          type: string
+          format: uuid
+        title:
+          type: string
+        company:
+          type: string
+        location:
+          type: string
+        url:
+          type: string
+          format: uri
+        updatedAt:
+          type: string
+          format: date-time
+        requiredSkills:
+          type: array
+          items:
+            type: string
+        niceToHaveSkills:
+          type: array
+          items:
+            type: string
+        match:
+          $ref: "#/components/schemas/Match"
+
+    Match:
+      type: object
+      description: Dopasowanie policzone przez system
+      properties:
+        score:
+          type: number
+          minimum: 0
+          maximum: 100
+        matched:
+          type: array
+          items:
+            type: string
+        missing:
+          type: array
+          items:
+            type: string
+
+    OfferInsight:
+      type: object
+      properties:
+        comment:
+          type: string
+          description: Uzasadnienie dopasowania od modelu językowego
+        createdAt:
+          type: string
+          format: date-time
+        cached:
+          type: boolean
+          description: Czy uzasadnienie pochodzi z zapisu, bez nowego zapytania do modelu
+
+    OfferRepository:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        matchedSkills:
+          type: array
+          items:
+            type: string
+
+    Profile:
+      type: object
+      properties:
+        sourceAnalysisId:
+          type: string
+          format: uuid
+        headline:
+          type: [string, "null"]
+        seniority:
+          oneOf:
+            - $ref: "#/components/schemas/Seniority"
+            - type: "null"
+        location:
+          type: [string, "null"]
+        score:
+          type: [number, "null"]
+        isPublished:
+          type: boolean
+        publishedAt:
+          type: [string, "null"]
+          format: date-time
+        skills:
+          type: array
+          items:
+            $ref: "#/components/schemas/Skill"
+
+    CandidateProfile:
+      type: object
+      description: Profil bez imienia, nazwiska i danych kontaktowych
+      properties:
+        id:
+          type: string
+          format: uuid
+        headline:
+          type: [string, "null"]
+        seniority:
+          oneOf:
+            - $ref: "#/components/schemas/Seniority"
+            - type: "null"
+        location:
+          type: [string, "null"]
+        score:
+          type: [number, "null"]
+        skills:
+          type: array
+          items:
+            $ref: "#/components/schemas/Skill"
+        match:
+          $ref: "#/components/schemas/Match"
+
+    InvitationStatus:
+      type: string
+      enum: [pending, accepted, declined]
+
+    ReceivedInvitation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        position:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            title:
+              type: string
+            description:
+              type: string
+            url:
+              type: [string, "null"]
+              format: uri
+        note:
+          type: [string, "null"]
+        status:
+          $ref: "#/components/schemas/InvitationStatus"
+        sharedCvId:
+          type: [string, "null"]
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        respondedAt:
+          type: [string, "null"]
+          format: date-time
+
+    SentInvitation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        candidate:
+          $ref: "#/components/schemas/CandidateProfile"
+        note:
+          type: [string, "null"]
+        status:
+          $ref: "#/components/schemas/InvitationStatus"
+        hasSharedCv:
+          type: boolean
+          description: Czy kandydat udostępnił CV, które można pobrać
+        createdAt:
+          type: string
+          format: date-time
+        respondedAt:
+          type: [string, "null"]
+          format: date-time
+
+    Position:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        url:
+          type: [string, "null"]
+          format: uri
+        isBlocked:
+          type: boolean
+        skills:
+          type: array
+          items:
+            allOf:
+              - $ref: "#/components/schemas/Skill"
+              - type: object
+                properties:
+                  isRequired:
+                    type: boolean
+                    description: "`false` – umiejętność mile widziana"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    PositionInput:
+      type: object
+      required: [title, description]
+      properties:
+        title:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+          maxLength: 4000
+          description: Opis stanowiska z danymi kontaktowymi pracodawcy
+        url:
+          type: string
+          format: uri
+          maxLength: 2048
+        skills:
+          type: array
+          items:
+            type: object
+            required: [skillId]
+            properties:
+              skillId:
+                type: integer
+              isRequired:
+                type: boolean
+                default: true
+
+    Report:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        reason:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        resolvedAt:
+          type: [string, "null"]
+          format: date-time
+        invitation:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            note:
+              type: [string, "null"]
+            position:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                title:
+                  type: string
+                employerId:
+                  type: string
+                  format: uuid
+                isBlocked:
+                  type: boolean
+
+    AdminUser:
+      allOf:
+        - $ref: "#/components/schemas/User"
+        - type: object
+          properties:
+            isBlocked:
+              type: boolean
+
+    BlockRequest:
+      type: object
+      required: [blocked]
+      properties:
+        blocked:
+          type: boolean
+
+    DictionarySkill:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          example: React
+        category:
+          type: [string, "null"]
+          example: Frontend
+        githubLanguage:
+          type: [string, "null"]
+          example: JavaScript
+        aliases:
+          type: array
+          items:
+            type: string
+          example: [react.js, ReactJS]
+        status:
+          $ref: "#/components/schemas/SkillStatus"
+
+    DictionarySkillInput:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        category:
+          type: string
+          maxLength: 50
+        githubLanguage:
+          type: string
+          maxLength: 50
+        aliases:
+          type: array
+          items:
+            type: string

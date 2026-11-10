@@ -12,15 +12,19 @@ info:
 tags:
   - name: Stan serwera
   - name: Konto i sesja
-  - name: Klucze do modelu
+  - name: Klucze do modelu językowego
   - name: CV i analizy
   - name: Słownik umiejętności
   - name: Repozytoria GitHub
   - name: Oferty pracy
   - name: Profil kandydata
-  - name: Zaproszenia (kandydat)
-  - name: Stanowiska i kandydaci (pracodawca)
+    description: "Dostęp: kandydat, administrator"
+  - name: Zaproszenia
+    description: "Dostęp: kandydat, administrator"
+  - name: Stanowiska i kandydaci
+    description: "Dostęp: pracodawca, administrator"
   - name: Administracja
+    description: "Dostęp: administrator"
 
 security:
   - cookieAuth: []
@@ -29,7 +33,7 @@ paths:
   /api/health:
     get:
       tags: [Stan serwera]
-      summary: Sprawdzenie działania serwera i połączenia z bazą
+      summary: Sprawdzanie działania serwera i połączenia z bazą
       security: []
       responses:
         "200":
@@ -48,7 +52,7 @@ paths:
   /api/auth/register:
     post:
       tags: [Konto i sesja]
-      summary: Rejestracja konta z wybraną rolą
+      summary: Rejestracja konta z wybraną rolą użytkownika
       security: []
       requestBody:
         required: true
@@ -79,7 +83,7 @@ paths:
   /api/auth/login:
     post:
       tags: [Konto i sesja]
-      summary: Logowanie i ustawienie ciasteczka sesji
+      summary: Logowanie oraz ustawianie ciasteczka sesji
       security: []
       requestBody:
         required: true
@@ -106,7 +110,7 @@ paths:
   /api/auth/logout:
     post:
       tags: [Konto i sesja]
-      summary: Wylogowanie i usunięcie ciasteczka sesji
+      summary: Wylogowanie oraz usunięcie ciasteczka sesji
       security: []
       responses:
         "204":
@@ -115,7 +119,7 @@ paths:
   /api/auth/me:
     get:
       tags: [Konto i sesja]
-      summary: Dane zalogowanego użytkownika
+      summary: Pobieranie danych zalogowanego użytkownika
       responses:
         "200":
           description: Dane użytkownika
@@ -127,7 +131,7 @@ paths:
           $ref: "#/components/responses/Unauthorized"
     delete:
       tags: [Konto i sesja]
-      summary: Usunięcie konta wraz z danymi
+      summary: Usunięcie konta użytkownika i jego danych
       description: Usuwa konto i wszystkie dane użytkownika. Razem z kontem znika klucz danych, więc zaszyfrowane dane stają się nieczytelne.
       requestBody:
         required: true
@@ -148,8 +152,9 @@ paths:
 
   /api/llm-keys:
     get:
-      tags: [Klucze do modelu]
-      summary: Lista kluczy (bez ich wartości) i dostępnych dostawców
+      tags: [Klucze do modelu językowego]
+      summary: Lista kluczy API użytkownika do modeli językowych oraz dostępnych dostawców
+      description: Wartości kluczy nie są zwracane.
       responses:
         "200":
           description: Klucze w kolejności priorytetu i obsługiwani dostawcy
@@ -169,8 +174,8 @@ paths:
         "401":
           $ref: "#/components/responses/Unauthorized"
     post:
-      tags: [Klucze do modelu]
-      summary: Sprawdzenie klucza u dostawcy i zapisanie go
+      tags: [Klucze do modelu językowego]
+      summary: Sprawdzanie klucza u dostawcy i zapisanie go
       description: Klucz jest sprawdzany krótkim zapytaniem do dostawcy, a potem zapisywany w postaci zaszyfrowanej.
       requestBody:
         required: true
@@ -211,8 +216,9 @@ paths:
 
   /api/llm-keys/order:
     put:
-      tags: [Klucze do modelu]
-      summary: Zmiana kolejności kluczy; pierwszy jest domyślny
+      tags: [Klucze do modelu językowego]
+      summary: Zmiana kolejności kluczy
+      description: Pierwszy klucz na liście jest używany domyślnie.
       requestBody:
         required: true
         content:
@@ -250,7 +256,7 @@ paths:
 
   /api/llm-keys/{id}:
     delete:
-      tags: [Klucze do modelu]
+      tags: [Klucze do modelu językowego]
       summary: Usunięcie klucza
       parameters:
         - $ref: "#/components/parameters/Id"
@@ -265,7 +271,8 @@ paths:
   /api/cv/parse:
     post:
       tags: [CV i analizy]
-      summary: Odczyt tekstu z pliku PDF lub DOCX bez zapisywania pliku
+      summary: Odczyt tekstu z pliku PDF lub DOCX
+      description: Plik nie jest zapisywany.
       requestBody:
         required: true
         content:
@@ -311,7 +318,7 @@ paths:
   /api/cv/anonymize:
     post:
       tags: [CV i analizy]
-      summary: Anonimizacja tekstu CV
+      summary: Anonimizacja tekstu CV przez system
       description: Dzieli tekst na fragmenty zwykłe i ukryte (typ danych i etykieta). Użytkownik może przed analizą odkryć ukryty fragment albo ukryć kolejny.
       requestBody:
         required: true
@@ -542,7 +549,7 @@ paths:
   /api/analyses:
     get:
       tags: [CV i analizy]
-      summary: Historia analiz
+      summary: Historia analiz CV
       responses:
         "200":
           description: Analizy użytkownika, od najnowszej
@@ -577,7 +584,8 @@ paths:
           $ref: "#/components/responses/NotFound"
     delete:
       tags: [CV i analizy]
-      summary: Usunięcie analizy niebędącej źródłem profilu
+      summary: Usunięcie wybranej analizy
+      description: Nie można usunąć analizy, która jest źródłem profilu kandydata.
       parameters:
         - $ref: "#/components/parameters/Id"
       responses:
@@ -617,7 +625,7 @@ paths:
   /api/github/account:
     put:
       tags: [Repozytoria GitHub]
-      summary: Podanie lub zmiana loginu GitHub
+      summary: Podanie loginu lub zmiana loginu GitHub
       requestBody:
         required: true
         content:
@@ -662,7 +670,7 @@ paths:
   /api/github/repositories:
     get:
       tags: [Repozytoria GitHub]
-      summary: Lista repozytoriów ze stanem analizy i umiejętnościami
+      summary: Lista repozytoriów ze stanem analizy i listą umiejętności
       responses:
         "200":
           description: Repozytoria użytkownika
@@ -681,7 +689,7 @@ paths:
   /api/github/repositories/analyze:
     post:
       tags: [Repozytoria GitHub]
-      summary: Analiza nowych i zmienionych repozytoriów
+      summary: Aktualizacja danych i analiza repozytoriów
       description: Pobiera listę publicznych repozytoriów z GitHuba i analizuje tylko te, które są nowe albo zmieniły się od ostatniej analizy. Forki i puste repozytoria są pomijane.
       responses:
         "200":
@@ -719,7 +727,7 @@ paths:
   /api/offers:
     get:
       tags: [Oferty pracy]
-      summary: Oferty z Solid.Jobs uszeregowane według dopasowania
+      summary: Lista ofert z Solid.Jobs
       description: Kolejność ustala system na podstawie pokrycia umiejętności oferty umiejętnościami z analizy i repozytoriów.
       parameters:
         - name: analysisId
@@ -754,7 +762,7 @@ paths:
   /api/offers/{offerKey}/insight:
     post:
       tags: [Oferty pracy]
-      summary: Uzasadnienie dopasowania oferty od modelu językowego
+      summary: Zwrócenie zapisanego uzasadnienia lub wygenerowanie uzasadnienia dla nowej oferty
       description: Zwraca zapisane uzasadnienie albo generuje je przez model, jeśli go nie ma lub oferta zmieniła się później.
       parameters:
         - $ref: "#/components/parameters/OfferKey"
@@ -796,7 +804,7 @@ paths:
   /api/offers/{offerKey}/repositories:
     get:
       tags: [Oferty pracy]
-      summary: Repozytoria najlepiej pasujące do wymagań oferty
+      summary: Lista repozytoriów najlepiej dopasowanych do wybranej oferty
       parameters:
         - $ref: "#/components/parameters/OfferKey"
       responses:
@@ -819,7 +827,7 @@ paths:
   /api/profile:
     get:
       tags: [Profil kandydata]
-      summary: Własny profil
+      summary: Profil zalogowanego kandydata
       responses:
         "200":
           description: Profil kandydata
@@ -839,7 +847,7 @@ paths:
                 $ref: "#/components/schemas/Error"
     put:
       tags: [Profil kandydata]
-      summary: Utworzenie profilu z wybranej analizy albo zmiana analizy źródłowej
+      summary: Utworzenie lub aktualizacja profilu z wybranej analizy
       description: Nagłówek, poziom, lokalizacja, ocena i umiejętności są przepisywane z analizy.
       requestBody:
         required: true
@@ -867,7 +875,7 @@ paths:
           $ref: "#/components/responses/NotFound"
     patch:
       tags: [Profil kandydata]
-      summary: Zmiana nagłówka i lokalizacji
+      summary: Aktualizacja nagłówka i lokalizacji profilu
       requestBody:
         required: true
         content:
@@ -900,7 +908,7 @@ paths:
   /api/profile/skills:
     put:
       tags: [Profil kandydata]
-      summary: Zmiana listy umiejętności profilu
+      summary: Aktualizacja listy umiejętności profilu
       requestBody:
         required: true
         content:
@@ -933,7 +941,7 @@ paths:
   /api/profile/publication:
     put:
       tags: [Profil kandydata]
-      summary: Opublikowanie albo wycofanie profilu
+      summary: Opublikowanie lub wycofanie publikacji profilu
       requestBody:
         required: true
         content:
@@ -960,7 +968,7 @@ paths:
 
   /api/invitations:
     get:
-      tags: [Zaproszenia (kandydat)]
+      tags: [Zaproszenia]
       summary: Lista otrzymanych zaproszeń
       responses:
         "200":
@@ -981,8 +989,8 @@ paths:
 
   /api/invitations/{id}/respond:
     post:
-      tags: [Zaproszenia (kandydat)]
-      summary: Akceptacja zaproszenia z udostępnieniem CV albo jego odrzucenie
+      tags: [Zaproszenia]
+      summary: Odpowiedź pozytywna lub negatywna na zaproszenie z udostępnieniem CV przy akceptacji
       parameters:
         - $ref: "#/components/parameters/Id"
       requestBody:
@@ -1023,8 +1031,8 @@ paths:
 
   /api/invitations/{id}/report:
     post:
-      tags: [Zaproszenia (kandydat)]
-      summary: Zgłoszenie zaproszenia administratorowi
+      tags: [Zaproszenia]
+      summary: Zgłoszenie zaproszenia do administracji
       parameters:
         - $ref: "#/components/parameters/Id"
       requestBody:
@@ -1050,39 +1058,10 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
-  /api/invitations/{id}/cv:
-    get:
-      tags: [Stanowiska i kandydaci (pracodawca)]
-      summary: Pobranie CV udostępnionego w zaakceptowanym zaproszeniu
-      parameters:
-        - $ref: "#/components/parameters/Id"
-      responses:
-        "200":
-          description: Zawartość pliku CV
-          content:
-            application/pdf:
-              schema:
-                type: string
-                format: binary
-            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
-              schema:
-                type: string
-                format: binary
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          description: Zaproszenie nie istnieje, nie zostało zaakceptowane albo CV usunięto
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
   /api/positions:
     get:
-      tags: [Stanowiska i kandydaci (pracodawca)]
-      summary: Lista własnych stanowisk
+      tags: [Stanowiska i kandydaci]
+      summary: Lista stanowisk zalogowanego pracodawcy
       responses:
         "200":
           description: Stanowiska pracodawcy
@@ -1100,8 +1079,8 @@ paths:
         "403":
           $ref: "#/components/responses/Forbidden"
     post:
-      tags: [Stanowiska i kandydaci (pracodawca)]
-      summary: Utworzenie stanowiska z wymaganymi umiejętnościami
+      tags: [Stanowiska i kandydaci]
+      summary: Utworzenie nowego stanowiska z wymaganymi umiejętnościami
       requestBody:
         required: true
         content:
@@ -1124,8 +1103,8 @@ paths:
 
   /api/positions/{id}:
     get:
-      tags: [Stanowiska i kandydaci (pracodawca)]
-      summary: Szczegóły stanowiska
+      tags: [Stanowiska i kandydaci]
+      summary: Szczegóły wybranego stanowiska
       parameters:
         - $ref: "#/components/parameters/Id"
       responses:
@@ -1142,8 +1121,8 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
     put:
-      tags: [Stanowiska i kandydaci (pracodawca)]
-      summary: Edycja stanowiska
+      tags: [Stanowiska i kandydaci]
+      summary: Edycja wybranego stanowiska
       parameters:
         - $ref: "#/components/parameters/Id"
       requestBody:
@@ -1168,7 +1147,7 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
     delete:
-      tags: [Stanowiska i kandydaci (pracodawca)]
+      tags: [Stanowiska i kandydaci]
       summary: Usunięcie stanowiska
       description: Usuwa też zaproszenia wysłane do tego stanowiska.
       parameters:
@@ -1185,8 +1164,8 @@ paths:
 
   /api/positions/{id}/invitations:
     get:
-      tags: [Stanowiska i kandydaci (pracodawca)]
-      summary: Zaproszenia wysłane do stanowiska
+      tags: [Stanowiska i kandydaci]
+      summary: Lista wysłanych zaproszeń na stanowisko
       parameters:
         - $ref: "#/components/parameters/Id"
       responses:
@@ -1208,7 +1187,7 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
     post:
-      tags: [Stanowiska i kandydaci (pracodawca)]
+      tags: [Stanowiska i kandydaci]
       summary: Wysłanie zaproszenia do kandydata
       parameters:
         - $ref: "#/components/parameters/Id"
@@ -1250,8 +1229,8 @@ paths:
 
   /api/candidates:
     get:
-      tags: [Stanowiska i kandydaci (pracodawca)]
-      summary: Wyszukiwanie opublikowanych profili według filtrów
+      tags: [Stanowiska i kandydaci]
+      summary: Lista publicznych profili według zastosowanych filtrów
       description: Z parametrem `positionId` kandydaci są uszeregowani według dopasowania do wymagań stanowiska.
       parameters:
         - name: skills
@@ -1296,7 +1275,7 @@ paths:
 
   /api/candidates/{id}:
     get:
-      tags: [Stanowiska i kandydaci (pracodawca)]
+      tags: [Stanowiska i kandydaci]
       summary: Zanonimizowany profil kandydata
       parameters:
         - $ref: "#/components/parameters/Id"
@@ -1314,10 +1293,40 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
+  /api/invitations/{id}/cv:
+    get:
+      tags: [Stanowiska i kandydaci]
+      summary: Pobranie udostępnionego dokumentu CV
+      description: CV, które kandydat udostępnił, akceptując to zaproszenie.
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Zawartość pliku CV
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema:
+                type: string
+                format: binary
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          description: Zaproszenie nie istnieje, nie zostało zaakceptowane albo CV usunięto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /api/admin/reports:
     get:
       tags: [Administracja]
-      summary: Lista zgłoszeń
+      summary: Lista otrzymanych zgłoszeń
       parameters:
         - name: resolved
           in: query
@@ -1344,7 +1353,7 @@ paths:
   /api/admin/reports/{id}/resolve:
     post:
       tags: [Administracja]
-      summary: Oznaczenie zgłoszenia jako rozpatrzonego
+      summary: Zamknięcie zgłoszenia po jego rozpatrzeniu
       parameters:
         - $ref: "#/components/parameters/Id"
       responses:
@@ -1364,7 +1373,7 @@ paths:
   /api/admin/users:
     get:
       tags: [Administracja]
-      summary: Wyszukiwanie kont
+      summary: Lista użytkowników
       parameters:
         - name: email
           in: query
@@ -1399,7 +1408,7 @@ paths:
   /api/admin/users/{id}/block:
     put:
       tags: [Administracja]
-      summary: Zablokowanie albo odblokowanie konta
+      summary: Zablokowanie lub odblokowanie konta
       parameters:
         - $ref: "#/components/parameters/Id"
       requestBody:
@@ -1425,7 +1434,7 @@ paths:
   /api/admin/positions/{id}/block:
     put:
       tags: [Administracja]
-      summary: Zablokowanie albo odblokowanie stanowiska
+      summary: Zablokowanie lub odblokowanie stanowiska
       parameters:
         - $ref: "#/components/parameters/Id"
       requestBody:
@@ -1451,7 +1460,7 @@ paths:
   /api/admin/skills:
     get:
       tags: [Administracja]
-      summary: Lista umiejętności ze słownika według filtrów
+      summary: Słownik umiejętności z zastosowanymi filtrami
       parameters:
         - name: status
           in: query
@@ -1514,7 +1523,7 @@ paths:
   /api/admin/skills/{id}:
     patch:
       tags: [Administracja]
-      summary: Zatwierdzenie, odrzucenie lub edycja umiejętności i jej aliasów
+      summary: Zatwierdzenie, odrzucenie lub edycja umiejętności słownika
       parameters:
         - name: id
           in: path

@@ -9,6 +9,7 @@ const upload = multer({
     fileSize: MAX_FILE_SIZE_MB * 1024 * 1024,
     files: 1,
   },
+  defParamCharset: "utf8",
 }).single("file");
 
 export function uploadCvFile(req, res, next) {

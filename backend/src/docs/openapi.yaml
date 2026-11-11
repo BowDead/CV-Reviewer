@@ -10,6 +10,8 @@ info:
     Błąd ma postać `{ "error": "KOD", "params": { … } }`. Komunikat dla użytkownika dobiera frontend na podstawie kodu.
 
 tags:
+  - name: CV i analizy
+    description: "Dostęp: kandydat, administrator"
   - name: Stan serwera
   - name: Konto i sesja
   - name: Klucze do modelu językowego
@@ -372,7 +374,11 @@ paths:
                     cvFileId:
                       type: [string, "null"]
                       format: uuid
-                      description: Zapisane CV, z którego pochodzi tekst
+                      description: Zapisane CV, z którego pochodzi tekst. Nieznany identyfikator jest pomijany.
+                    fileName:
+                      type: [string, "null"]
+                      maxLength: 255
+                      description: Nazwa pliku pokazywana w historii analiz
       responses:
         "200":
           description: Wynik analizy
@@ -445,10 +451,12 @@ paths:
                       $ref: "#/components/schemas/CvFile"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
     post:
       tags: [CV i analizy]
       summary: Zapisanie przesłanego pliku CV za zgodą użytkownika
-      description: Plik i jego nazwa są szyfrowane kluczem danych użytkownika.
+      description: Plik jest najpierw odczytywany tak jak w `/api/cv/parse`, więc zapisany zostanie tylko poprawny PDF lub DOCX z tekstem. Plik i jego nazwa są szyfrowane kluczem danych użytkownika.
       requestBody:
         required: true
         content:
@@ -466,9 +474,21 @@ paths:
                   file:
                     $ref: "#/components/schemas/CvFile"
         "400":
-          $ref: "#/components/responses/BadRequest"
+          description: "`FILE_MISSING`, `FILE_EMPTY`, `FILE_NOT_PDF`, `FILE_NOT_DOCX`, `FILE_UNREADABLE`, `UPLOAD_INVALID`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          description: "`CV_FILE_LIMIT` – zapisano już najwięcej plików"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "413":
           description: "`FILE_TOO_LARGE`"
           content:
@@ -477,6 +497,12 @@ paths:
                 $ref: "#/components/schemas/Error"
         "415":
           description: "`FILE_UNSUPPORTED`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "422":
+          description: "`FILE_NO_TEXT`"
           content:
             application/json:
               schema:
@@ -528,8 +554,14 @@ paths:
                 format: binary
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
-          $ref: "#/components/responses/NotFound"
+          description: "`CV_FILE_NOT_FOUND`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /api/cv/files/{id}:
     delete:
@@ -543,13 +575,20 @@ paths:
           description: CV usunięte
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
-          $ref: "#/components/responses/NotFound"
+          description: "`CV_FILE_NOT_FOUND`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /api/analyses:
     get:
       tags: [CV i analizy]
       summary: Historia analiz CV
+      description: Każda analiza z `/api/cv/analyze` trafia tu automatycznie. Lista nie zawiera pełnego wyniku.
       responses:
         "200":
           description: Analizy użytkownika, od najnowszej
@@ -564,6 +603,8 @@ paths:
                       $ref: "#/components/schemas/AnalysisSummary"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
 
   /api/analyses/{id}:
     get:
@@ -580,8 +621,14 @@ paths:
                 $ref: "#/components/schemas/AnalysisDetail"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
-          $ref: "#/components/responses/NotFound"
+          description: "`ANALYSIS_NOT_FOUND`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     delete:
       tags: [CV i analizy]
       summary: Usunięcie wybranej analizy
@@ -593,10 +640,16 @@ paths:
           description: Analiza usunięta
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
-          $ref: "#/components/responses/NotFound"
+          description: "`ANALYSIS_NOT_FOUND`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "409":
-          description: Analiza jest źródłem profilu kandydata
+          description: "`ANALYSIS_IS_PROFILE_SOURCE` – analiza jest źródłem profilu kandydata"
           content:
             application/json:
               schema:
@@ -2037,10 +2090,14 @@ components:
         id:
           type: string
           format: uuid
-        cvFileId:
+                cvFileId:
           type: [string, "null"]
           format: uuid
           description: Pusty, gdy plik nie był zapisany albo został usunięty
+        fileName:
+          type: [string, "null"]
+          description: Nazwa pliku z chwili analizy, zostaje także po usunięciu pliku
+          example: cv-2026.pdf
         model:
           type: string
         language:

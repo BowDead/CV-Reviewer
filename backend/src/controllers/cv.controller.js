@@ -1,6 +1,6 @@
 import { parseCv } from "../services/cv.service.js";
 import { anonymizeCv } from "../services/anonymizer.service.js";
-import { analyzeCv } from "../services/cv-analysis.service.js";
+import { analyzeAndSave } from "../services/analysis.service.js";
 import { anonymizedCvView, parsedCvView } from "../views/cv.view.js";
 import { cvAnalysisView } from "../views/cv-analysis.view.js";
 
@@ -15,6 +15,6 @@ export async function postAnonymizeCv(req, res) {
 }
 
 export async function postAnalyzeCv(req, res) {
-  const result = await analyzeCv(req.body?.text, { userId: req.user.id });
+  const result = await analyzeAndSave(req.user.id, req.body);
   res.json(cvAnalysisView(result));
 }

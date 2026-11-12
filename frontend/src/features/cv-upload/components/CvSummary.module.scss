@@ -37,3 +37,15 @@
   color: $color-muted-text;
   font-size: 0.8rem;
 }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-xs;
+}
+
+.saved {
+  color: $color-success;
+  font-size: 0.8rem;
+}

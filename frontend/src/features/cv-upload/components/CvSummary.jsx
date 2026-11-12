@@ -7,7 +7,14 @@ const KIND_LABELS = {
   docx: "DOCX",
 };
 
-export function CvSummary({ fileName, result, onReset }) {
+export function CvSummary({
+  fileName,
+  result,
+  saved,
+  saving,
+  onSave,
+  onReset,
+}) {
   const { t } = useTranslation();
   const { kind, pageCount, stats } = result;
 
@@ -43,9 +50,18 @@ export function CvSummary({ fileName, result, onReset }) {
         </div>
       </div>
 
-      <Button variant="ghost" size="sm" onClick={onReset}>
-        {t("cvUpload.changeFile")}
-      </Button>
+      <div className={styles.actions}>
+        <Button variant="ghost" size="sm" onClick={onReset}>
+          {t("cvUpload.changeFile")}
+        </Button>
+        {saved ? (
+          <span className={styles.saved}>{t("cvUpload.saved")}</span>
+        ) : (
+          <Button variant="ghost" size="sm" onClick={onSave} disabled={saving}>
+            {saving ? t("cvUpload.saving") : t("cvUpload.save")}
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

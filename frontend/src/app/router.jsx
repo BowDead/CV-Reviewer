@@ -7,6 +7,9 @@ import {
   ImprovementsTab,
   ProfileTab,
   KeysTab,
+  FilesTab,
+  HistoryTab,
+  HistoryDetailTab,
 } from "@/features/home";
 import { EmployerPage } from "@/features/employer";
 import {
@@ -29,6 +32,9 @@ export const router = createBrowserRouter([
       { path: "/analysis", element: <AnalysisTab /> },
       { path: "/improvements", element: <ImprovementsTab /> },
       { path: "/profile", element: <ProfileTab /> },
+      { path: "/files", element: <FilesTab /> },
+      { path: "/history", element: <HistoryTab /> },
+      { path: "/history/:id", element: <HistoryDetailTab /> },
       { path: "/keys", element: <KeysTab /> },
     ],
   },

@@ -35,6 +35,8 @@
       "analysis": "Analiza",
       "improvements": "Poprawki",
       "profile": "Profil",
+      "files": "Moje CV",
+      "history": "Historia analiz",
       "keys": "Klucze AI"
     },
     "gate": {
@@ -67,6 +69,19 @@
       "title": "Profil",
       "description": "Dane, które AI odczytało z CV."
     },
+    "files": {
+      "title": "Moje CV",
+      "description": "Pliki zapisane za Twoją zgodą, przechowywane w postaci zaszyfrowanej. Wczytaj plik, aby go przeanalizować."
+    },
+    "history": {
+      "title": "Historia analiz",
+      "description": "Każda analiza zapisuje się tutaj automatycznie. Otwórz ją, aby zobaczyć pełny wynik."
+    },
+    "historyDetail": {
+      "title": "Wynik z historii",
+      "description": "Zapisany wynik analizy. Nie zmienia się po ponownej analizie CV.",
+      "back": "Wróć do historii"
+    },
     "keys": {
       "title": "Klucze AI",
       "description": "Analizy korzystają z klucza domyślnego, czyli pierwszego na liście."
@@ -78,6 +93,10 @@
     "chooseFile": "Wybierz plik",
     "reading": "Odczytywanie „{{fileName}}”…",
     "changeFile": "Zmień plik",
+    "fromSaved": "Wybierz z Moich CV",
+    "save": "Zapisz w Moich CV",
+    "saving": "Zapisywanie…",
+    "saved": "Zapisane w Moich CV",
     "pages": "{{pages}} str.",
     "words_one": "{{count}} słowo",
     "words_few": "{{count}} słowa",
@@ -131,25 +150,49 @@
       "skills": "Umiejętności",
       "languages": "Języki",
       "certifications": "Certyfikaty"
-    },
-    "llmKeys": {
-      "loading": "Wczytywanie kluczy…",
-      "loadFailed": "Nie udało się wczytać kluczy",
-      "emptyTitle": "Nie masz jeszcze żadnego klucza",
-      "emptyText": "Dodaj klucz API poniżej. Analizy będą korzystać z Twojego limitu u dostawcy.",
-      "default": "Domyślny",
-      "moveUp": "W górę",
-      "moveDown": "W dół",
-      "remove": "Usuń",
-      "formTitle": "Dodaj klucz",
-      "provider": "Dostawca",
-      "model": "Model",
-      "label": "Nazwa (opcjonalnie)",
-      "apiKey": "Klucz API",
-      "keysHint": "Klucz utworzysz na <0>stronie dostawcy</0>. Zapisujemy go w postaci zaszyfrowanej.",
-      "submit": "Sprawdź i zapisz",
-      "submitting": "Sprawdzanie klucza…"
     }
+  },
+  "llmKeys": {
+    "loading": "Wczytywanie kluczy…",
+    "loadFailed": "Nie udało się wczytać kluczy",
+    "emptyTitle": "Nie masz jeszcze żadnego klucza",
+    "emptyText": "Dodaj klucz API poniżej. Analizy będą korzystać z Twojego limitu u dostawcy.",
+    "default": "Domyślny",
+    "moveUp": "W górę",
+    "moveDown": "W dół",
+    "remove": "Usuń",
+    "formTitle": "Dodaj klucz",
+    "provider": "Dostawca",
+    "model": "Model",
+    "label": "Nazwa (opcjonalnie)",
+    "apiKey": "Klucz API",
+    "keysHint": "Klucz utworzysz na <0>stronie dostawcy</0>. Zapisujemy go w postaci zaszyfrowanej.",
+    "submit": "Sprawdź i zapisz",
+    "submitting": "Sprawdzanie klucza…"
+  },
+  "cvFiles": {
+    "loading": "Wczytywanie listy CV…",
+    "loadFailed": "Nie udało się wczytać listy CV",
+    "emptyTitle": "Nie masz zapisanych CV",
+    "emptyText": "Wgraj plik w panelu po lewej i kliknij „Zapisz w Moich CV”.",
+    "active": "Wczytane",
+    "savedAt": "zapisano {{date}}",
+    "load": "Wczytaj",
+    "loadingFile": "Wczytywanie…",
+    "remove": "Usuń",
+    "confirmRemove": "Usunąć „{{fileName}}”? Analizy tego CV zostaną w historii."
+  },
+  "analysisHistory": {
+    "loading": "Wczytywanie historii…",
+    "loadingDetail": "Wczytywanie analizy…",
+    "loadFailed": "Nie udało się wczytać historii",
+    "emptyTitle": "Historia jest pusta",
+    "emptyText": "Każda analiza CV zapisze się tutaj automatycznie.",
+    "noFileName": "CV bez nazwy",
+    "profileSource": "Źródło profilu",
+    "open": "Otwórz",
+    "remove": "Usuń",
+    "confirmRemove": "Usunąć analizę z {{date}}?"
   },
   "health": {
     "checking": "Sprawdzanie połączenia z API…",
@@ -158,7 +201,6 @@
     "databaseConnected": "połączona",
     "databaseDisconnected": "brak połączenia"
   },
-
   "employer": {
     "title": "Panel pracodawcy",
     "description": "Do dokończenia"
@@ -215,7 +257,10 @@
     "LLM_KEY_NOT_FOUND": "Nie znaleziono klucza.",
     "LLM_KEY_ORDER_INVALID": "Nieprawidłowa kolejność kluczy.",
     "LLM_KEY_REQUIRED": "Do analizy potrzebny jest klucz API. Dodaj go w zakładce „Klucze AI”.",
-
+    "CV_FILE_NOT_FOUND": "Nie znaleziono zapisanego CV.",
+    "CV_FILE_LIMIT": "Możesz zapisać najwyżej {{max}} plików CV. Usuń któryś w zakładce „Moje CV”.",
+    "ANALYSIS_NOT_FOUND": "Nie znaleziono analizy.",
+    "ANALYSIS_IS_PROFILE_SOURCE": "Tej analizy nie można usunąć, bo jest źródłem Twojego profilu.",
     "UNKNOWN": "Wystąpił nieoczekiwany błąd."
   }
 }

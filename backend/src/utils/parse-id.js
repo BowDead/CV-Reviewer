@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { HttpError } from "../errors/HttpError.js";
-import { ne } from "zod/v4/locales";
 
 const idSchema = z.uuid();
 

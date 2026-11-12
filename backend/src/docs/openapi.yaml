@@ -10,12 +10,11 @@ info:
     Błąd ma postać `{ "error": "KOD", "params": { … } }`. Komunikat dla użytkownika dobiera frontend na podstawie kodu.
 
 tags:
-  - name: CV i analizy
-    description: "Dostęp: kandydat, administrator"
   - name: Stan serwera
   - name: Konto i sesja
   - name: Klucze do modelu językowego
   - name: CV i analizy
+    description: "Dostęp: kandydat, administrator"
   - name: Słownik umiejętności
   - name: Repozytoria GitHub
   - name: Oferty pracy
@@ -2090,7 +2089,7 @@ components:
         id:
           type: string
           format: uuid
-                cvFileId:
+        cvFileId:
           type: [string, "null"]
           format: uuid
           description: Pusty, gdy plik nie był zapisany albo został usunięty

@@ -10,3 +10,8 @@
     grid-template-columns: 1fr;
   }
 }
+
+.toolbar {
+  display: flex;
+  gap: $space-xs;
+}

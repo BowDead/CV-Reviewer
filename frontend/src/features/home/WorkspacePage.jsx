@@ -33,7 +33,11 @@ export function WorkspacePage({ actions }) {
   function startAnalysis() {
     if (!cvText) return;
     setAnalyzedCv(cv.result);
-    analysis.analyze(cvText);
+    analysis.analyze(cvText, {
+      cvFileId: cv.savedFileId,
+      fileName: cv.file.name,
+    });
+
     navigate("/analysis");
   }
 
@@ -48,6 +52,8 @@ export function WorkspacePage({ actions }) {
       badge: rewritesCount || null,
     },
     { to: "/profile", label: t("workspace.nav.profile") },
+    { to: "/files", label: t("workspace.nav.files") },
+    { to: "/history", label: t("workspace.nav.history") },
     { to: "/keys", label: t("workspace.nav.keys") },
   ];
 

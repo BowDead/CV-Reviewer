@@ -1,0 +1,56 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.error {
+  max-width: 720px;
+  margin: 0;
+  padding: $space-xs 0.75rem;
+  border: 1px solid;
+  border-radius: $radius;
+  background: $color-danger-bg;
+  color: $color-danger;
+  font-size: 0.875rem;
+}
+
+.score {
+  min-width: 3.5rem;
+  color: $color-primary;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.scoreMax {
+  color: $color-muted-text;
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xl;
+}
+
+.source {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.sectionTitle {
+  @include section-label;
+}

@@ -12,7 +12,7 @@ export function useCvAnalysis() {
   const [state, setState] = useState(initialState);
   const controllerRef = useRef(null);
 
-  const analyze = useCallback(async (text) => {
+  const analyze = useCallback(async (text, source = {}) => {
     controllerRef.current?.abort();
     const controller = new AbortController();
     controllerRef.current = controller;
@@ -25,7 +25,7 @@ export function useCvAnalysis() {
     });
 
     try {
-      const result = await analyzeCv(text, controller.signal);
+      const result = await analyzeCv(text, source, controller.signal);
       setState({ status: "done", analyzedText: text, result, error: null });
     } catch (error) {
       if (error.name === "AbortError") return;

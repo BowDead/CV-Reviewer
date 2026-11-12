@@ -8,7 +8,7 @@ export class ApiError extends Error {
   }
 }
 
-export async function request(path, { method = "GET", body, signal } = {}) {
+async function send(path, { method = "GET", body, signal } = {}) {
   const isFormData = body instanceof FormData;
 
   let response;
@@ -27,9 +27,8 @@ export async function request(path, { method = "GET", body, signal } = {}) {
     throw new ApiError(0, "NETWORK_ERROR");
   }
 
-  const data = await response.json().catch(() => null);
-
   if (!response.ok) {
+    const data = await response.json().catch(() => null);
     throw data?.error
       ? new ApiError(response.status, data.error, data.params)
       : new ApiError(response.status, "HTTP_ERROR", {
@@ -37,5 +36,15 @@ export async function request(path, { method = "GET", body, signal } = {}) {
         });
   }
 
-  return data;
+  return response;
+}
+
+export async function request(path, options) {
+  const response = await send(path, options);
+  return response.json().catch(() => null);
+}
+
+export async function requestBlob(path, options) {
+  const response = await send(path, options);
+  return response.blob();
 }

@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { anonymizeCv, parseCv } from "../api/cvApi";
+import { anonymizeCv, parseCv, saveCvFile } from "../api/cvApi";
 import { validateCvFile } from "../utils/validateCvFile";
 
 const initialState = {
@@ -8,6 +8,9 @@ const initialState = {
   previewUrl: null,
   result: null,
   error: null,
+  savedFileId: null,
+  saveStatus: "idle",
+  saveError: null,
 };
 
 export function useCvUpload() {
@@ -24,7 +27,7 @@ export function useCvUpload() {
   }, []);
 
   const upload = useCallback(
-    async (file) => {
+    async (file, savedFileId = null) => {
       controllerRef.current?.abort();
 
       const validationError = validateCvFile(file);
@@ -43,11 +46,11 @@ export function useCvUpload() {
 
       const previewUrl = replacePreviewUrl(file);
       setState({
+        ...initialState,
         status: "uploading",
         file,
         previewUrl,
-        result: null,
-        error: null,
+        savedFileId,
       });
 
       try {
@@ -72,5 +75,32 @@ export function useCvUpload() {
     setState(initialState);
   }, [replacePreviewUrl]);
 
-  return { ...state, upload, reset };
+  const save = useCallback(async () => {
+    const file = state.file;
+    if (!file) return;
+
+    setState((prev) => ({ ...prev, saveStatus: "saving", saveError: null }));
+    try {
+      const { file: saved } = await saveCvFile(file);
+      setState((prev) =>
+        prev.file === file
+          ? { ...prev, savedFileId: saved.id, saveStatus: "idle" }
+          : prev,
+      );
+    } catch (error) {
+      setState((prev) =>
+        prev.file === file
+          ? { ...prev, saveStatus: "error", saveError: error }
+          : prev,
+      );
+    }
+  }, [state.file]);
+
+  const forgetSavedFile = useCallback((id) => {
+    setState((prev) =>
+      prev.savedFileId === id ? { ...prev, savedFileId: null } : prev,
+    );
+  }, []);
+
+  return { ...state, upload, reset, save, forgetSavedFile };
 }

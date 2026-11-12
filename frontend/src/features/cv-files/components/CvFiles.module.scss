@@ -1,0 +1,22 @@
+@use "@/shared/styles/variables" as *;
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.error {
+  max-width: 720px;
+  margin: 0;
+  padding: $space-xs 0.75rem;
+  border: 1px solid;
+  border-radius: $radius;
+  background: $color-danger-bg;
+  color: $color-danger;
+  font-size: 0.875rem;
+}
+
+.icon {
+  color: $color-primary;
+}

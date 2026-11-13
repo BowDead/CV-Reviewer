@@ -4,12 +4,7 @@ export function AppLayout({ sidebar, footer, children }) {
   return (
     <div className={styles.shell}>
       <aside className={styles.sidebar}>
-        <div className={styles.brand}>
-          <span className={styles.logo} aria-hidden="true">
-            CV
-          </span>
-          CV Reviewer
-        </div>
+        <div className={styles.brand}>CV Reviewer</div>
 
         {sidebar}
 

@@ -1,7 +1,7 @@
 import { escapeRegExp } from "../../utils/regexp.js";
 
-const BEFORE = "(?<![\p{L}\p{N}_])";
-const AFTER = "(?![\p{L}\p{N}_+#])";
+const BEFORE = "(?<![\\p{L}\\p{N}_])";
+const AFTER = "(?![\\p{L}\\p{N}_+#])";
 
 export function createSkillDetector(skills) {
   const matchers = skills.map((skill) => {

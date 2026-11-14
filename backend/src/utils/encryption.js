@@ -22,6 +22,14 @@ export function decryptBytes(stored, key) {
   return Buffer.concat([decipher.update(encrypted), decipher.final()]);
 }
 
+export function encryptJson(value, key) {
+  return encryptBytes(Buffer.from(JSON.stringify(value), "utf8"), key);
+}
+
+export function decryptJson(stored, key) {
+  return JSON.parse(decryptBytes(stored, key).toString("utf8"));
+}
+
 export function createDataKeyEnc() {
   return encryptBytes(randomBytes(DATA_KEY_LENGTH), env.masterKey);
 }

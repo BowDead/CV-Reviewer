@@ -6,7 +6,7 @@ import {
   insertAnalysis,
   listAnalyses,
 } from "../models/analysis.model.js";
-import { decryptBytes, encryptBytes } from "../utils/encryption.js";
+import { decryptJson, encryptJson } from "../utils/encryption.js";
 import { parseId } from "../utils/parse-id.js";
 import { parseInput } from "../utils/parse-input.js";
 import { analyzeCv } from "./cv-analysis.service.js";
@@ -19,14 +19,6 @@ const sourceSchema = z.object({
   cvFileId: z.uuid().nullish().catch(null),
   fileName: z.string().trim().max(255).nullish().catch(null),
 });
-
-function encryptJson(value, dataKey) {
-  return encryptBytes(Buffer.from(JSON.stringify(value), "utf8"), dataKey);
-}
-
-function decryptJson(stored, dataKey) {
-  return JSON.parse(decryptBytes(stored, dataKey).toString("utf8"));
-}
 
 function readAnalysis(analysis, dataKey) {
   const { fileName, result } = decryptJson(analysis.resultEnc, dataKey);

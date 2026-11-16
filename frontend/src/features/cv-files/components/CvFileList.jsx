@@ -5,12 +5,6 @@ import { EmptyState } from "@/shared/ui/EmptyState";
 import { ItemList, ListItem } from "@/shared/ui/ItemList";
 import styles from "./CvFiles.module.scss";
 
-const KIND_LABELS = {
-  "application/pdf": "PDF",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-    "DOCX",
-};
-
 function FileIcon() {
   return (
     <svg
@@ -31,16 +25,10 @@ function FileIcon() {
   );
 }
 
-export function CvFileList({
-  files,
-  activeFileId,
-  loadingId,
-  onLoad,
-  onRemove,
-}) {
+export function CvFileList({ cvs, activeFileId, loadingId, onLoad, onRemove }) {
   const { t } = useTranslation();
 
-  if (!files.length) {
+  if (!cvs.length) {
     return (
       <EmptyState title={t("cvFiles.emptyTitle")}>
         {t("cvFiles.emptyText")}
@@ -50,27 +38,25 @@ export function CvFileList({
 
   return (
     <ItemList>
-      {files.map((file) => (
+      {cvs.map((cv) => (
         <ListItem
-          key={file.id}
+          key={cv.id}
           leading={<FileIcon />}
-          title={file.fileName}
-          badge={file.id === activeFileId ? t("cvFiles.active") : null}
-          meta={`${KIND_LABELS[file.mimeType]} · ${t("cvFiles.savedAt", {
-            date: formatDateTime(file.createdAt),
-          })}`}
+          title={cv.name}
+          badge={cv.id === activeFileId ? t("cvFiles.active") : null}
+          meta={t("cvFiles.savedAt", { date: formatDateTime(cv.createdAt) })}
           actions={
             <>
               <Button
                 size="sm"
                 disabled={loadingId !== null}
-                onClick={() => onLoad(file)}
+                onClick={() => onLoad(cv)}
               >
-                {loadingId === file.id
+                {loadingId === cv.id
                   ? t("cvFiles.loadingFile")
                   : t("cvFiles.load")}
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => onRemove(file)}>
+              <Button variant="ghost" size="sm" onClick={() => onRemove(cv)}>
                 {t("cvFiles.remove")}
               </Button>
             </>

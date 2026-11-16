@@ -7,11 +7,11 @@ import {
   postAnalyzeCv,
 } from "../controllers/cv.controller.js";
 import {
-  deleteFile,
-  getFileContent,
-  getFiles,
-  postFile,
-} from "../controllers/cv-file.controller.js";
+  deleteSavedItem,
+  getSavedItem,
+  getSavedList,
+  postSaved,
+} from "../controllers/saved-cv.controller.js";
 
 export const cvRouter = Router();
 
@@ -21,7 +21,7 @@ cvRouter.post("/parse", uploadCvFile, postParseCv);
 cvRouter.post("/anonymize", postAnonymizeCv);
 cvRouter.post("/analyze", postAnalyzeCv);
 
-cvRouter.get("/files", getFiles);
-cvRouter.post("/files", uploadCvFile, postFile);
-cvRouter.get("/files/:id/content", getFileContent);
-cvRouter.delete("/files/:id", deleteFile);
+cvRouter.get("/saved", getSavedList);
+cvRouter.post("/saved", postSaved);
+cvRouter.get("/saved/:id", getSavedItem);
+cvRouter.delete("/saved/:id", deleteSavedItem);

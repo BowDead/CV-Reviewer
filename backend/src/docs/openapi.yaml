@@ -658,7 +658,7 @@ paths:
     get:
       tags: [Słownik umiejętności]
       summary: Lista zatwierdzonych umiejętności
-      description: Służy np. do filtrów wyszukiwania i formularzy.
+      description: Zwraca tylko umiejętności o statusie `approved`, w kolejności dodania. Nazwy spoza słownika, które model znalazł w CV, czekają w bazie jako `pending` na decyzję administratora. Służy np. do filtrów wyszukiwania i formularzy.
       responses:
         "200":
           description: Zatwierdzone umiejętności

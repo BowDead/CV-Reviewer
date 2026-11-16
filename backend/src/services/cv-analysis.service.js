@@ -5,12 +5,15 @@ import {
 } from "./ai/cv-analysis.prompt.js";
 import { cvAnalysisSchema } from "./ai/cv-analysis.schema.js";
 import { resolveLlm } from "./llm-key.service.js";
-import { detectSkills, findSkill } from "./skills/skill-detector.service.js";
+import {
+  getSkillDetector,
+  savePendingSkills,
+} from "./skills/skill-dictionary.service.js";
 
 const MAX_AI_CHARS = 10_000;
 const MAX_INPUT_CHARS = 50_000;
 
-function mergeSkills(detected, review) {
+function mergeSkills(detected, review, detector) {
   const rejected = new Set(
     review.falsePositives.map((name) => name.toLowerCase()),
   );
@@ -23,7 +26,7 @@ function mergeSkills(detected, review) {
 
   const unknown = [];
   for (const name of review.additional) {
-    const skill = findSkill(name);
+    const skill = detector.find(name);
     if (skill) {
       if (!known.has(skill.name))
         known.set(skill.name, { skill, source: "llm" });
@@ -61,7 +64,8 @@ export async function analyzeCv(text, { userId }) {
   const truncated = text.length > MAX_AI_CHARS;
   const cvText = truncated ? text.slice(0, MAX_AI_CHARS) : text;
 
-  const detected = detectSkills(text);
+  const detector = await getSkillDetector();
+  const detected = detector.detect(text);
 
   const llm = await resolveLlm(userId);
 
@@ -82,7 +86,8 @@ export async function analyzeCv(text, { userId }) {
   }
 
   const { skillReview, ...analysis } = parsed.data;
-  const { known, unknown } = mergeSkills(detected, skillReview);
+  const { known, unknown } = mergeSkills(detected, skillReview, detector);
+  await savePendingSkills(unknown);
   analysis.profile = {
     ...analysis.profile,
     skills: groupByCategory(known, unknown),

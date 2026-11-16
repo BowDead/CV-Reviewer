@@ -40,12 +40,7 @@ export function LoginPage() {
 
   return (
     <div className={styles.card}>
-      <div className={styles.brand}>
-        <span className={styles.logo} aria-hidden="true">
-          CV
-        </span>
-        CV Reviewer
-      </div>
+      <div className={styles.brand}>CV Reviewer</div>
       <h1 className={styles.title}>{t("auth.login.title")}</h1>
 
       <form className={styles.form} onSubmit={handleSubmit}>

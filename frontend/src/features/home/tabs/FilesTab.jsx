@@ -9,8 +9,8 @@ export function FilesTab() {
   const { cv } = useWorkspace();
   const navigate = useNavigate();
 
-  function handleLoad(file, savedFileId) {
-    cv.upload(file, savedFileId);
+  function handleLoad(saved) {
+    cv.loadSaved(saved);
     navigate("/cv");
   }
 
@@ -18,9 +18,9 @@ export function FilesTab() {
     <>
       <PageHeader title={t("workspace.files.title")} />
       <CvFilesPanel
-        activeFileId={cv.savedFileId}
+        activeFileId={cv.savedCvId}
         onLoad={handleLoad}
-        onRemoved={cv.forgetSavedFile}
+        onRemoved={cv.forgetSavedCv}
       />
     </>
   );

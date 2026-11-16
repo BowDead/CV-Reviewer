@@ -166,13 +166,13 @@
     "loading": "Wczytywanie listy CV…",
     "loadFailed": "Nie udało się wczytać listy CV",
     "emptyTitle": "Nie masz zapisanych CV",
-    "emptyText": "Wgraj plik w panelu po lewej i kliknij „Zapisz w Moich CV”.",
+    "emptyText": "Wgraj plik w panelu po lewej i kliknij „Zapisz CV”.",
     "active": "Wczytane",
     "savedAt": "zapisano {{date}}",
     "load": "Wczytaj",
     "loadingFile": "Wczytywanie…",
     "remove": "Usuń",
-    "confirmRemove": "Usunąć „{{fileName}}”? Analizy tego CV zostaną w historii."
+    "confirmRemove": "Usunąć „{{name}}”? Analizy tego CV zostaną w historii."
   },
   "analysisHistory": {
     "loading": "Wczytywanie historii…",
@@ -248,8 +248,12 @@
     "LLM_KEY_NOT_FOUND": "Nie znaleziono klucza.",
     "LLM_KEY_ORDER_INVALID": "Nieprawidłowa kolejność kluczy.",
     "LLM_KEY_REQUIRED": "Do analizy potrzebny jest klucz API. Dodaj go w zakładce „Klucze AI”.",
-    "CV_FILE_NOT_FOUND": "Nie znaleziono zapisanego CV.",
-    "CV_FILE_LIMIT": "Możesz zapisać najwyżej {{max}} plików CV. Usuń któryś w zakładce „Moje CV”.",
+    "CV_NOT_FOUND": "Nie znaleziono zapisanego CV.",
+    "CV_LIMIT": "Możesz zapisać najwyżej {{max}} CV. Usuń któreś w zakładce „Moje CV”.",
+    "CV_NAME_REQUIRED": "Brakuje nazwy CV.",
+    "CV_NAME_TOO_LONG": "Nazwa CV może mieć najwyżej {{max}} znaków.",
+    "CV_CONTENT_REQUIRED": "CV nie zawiera tekstu.",
+    "CV_CONTENT_TOO_LONG": "CV jest za długie (limit to {{max}} znaków).",
     "ANALYSIS_NOT_FOUND": "Nie znaleziono analizy.",
     "ANALYSIS_IS_PROFILE_SOURCE": "Tej analizy nie można usunąć, bo jest źródłem Twojego profilu.",
     "UNKNOWN": "Wystąpił nieoczekiwany błąd."

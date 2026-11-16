@@ -19,7 +19,7 @@ export function PreviewTab() {
             kind={cv.result.kind}
             previewUrl={cv.previewUrl}
             text={cv.result.text}
-            fileName={cv.file.name}
+            fileName={cv.name}
           />
           <CvAnonymizedText
             review={review}
@@ -30,7 +30,7 @@ export function PreviewTab() {
 
       {cv.status === "uploading" && (
         <EmptyState busy title={t("workspace.preview.readingTitle")}>
-          {cv.file.name}
+          {cv.name}
         </EmptyState>
       )}
 

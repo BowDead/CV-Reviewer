@@ -9,12 +9,12 @@ export function CvUploadPanel({ cv }) {
   const { t } = useTranslation();
   const {
     status,
-    file,
+    name,
     result,
     error,
     upload,
     reset,
-    savedFileId,
+    savedCvId,
     saveStatus,
     saveError,
     save,
@@ -24,9 +24,9 @@ export function CvUploadPanel({ cv }) {
     return (
       <div className={styles.upload}>
         <CvSummary
-          fileName={file.name}
+          fileName={name}
           result={result}
-          saved={savedFileId !== null}
+          saved={savedCvId !== null}
           saving={saveStatus === "saving"}
           onSave={save}
           onReset={reset}
@@ -50,7 +50,7 @@ export function CvUploadPanel({ cv }) {
       <div aria-live="polite">
         {status === "uploading" && (
           <p className={styles.info}>
-            {t("cvUpload.reading", { fileName: file.name })}
+            {t("cvUpload.reading", { fileName: name })}
           </p>
         )}
         {status === "error" && (

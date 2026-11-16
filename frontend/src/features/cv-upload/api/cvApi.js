@@ -18,8 +18,9 @@ export function anonymizeCv(text, signal) {
   });
 }
 
-export function saveCvFile(file) {
-  const body = new FormData();
-  body.append("file", file);
-  return request("/cv/files", { method: "POST", body });
+export function saveCv({ name, content }) {
+  return request("/cv/saved", {
+    method: "POST",
+    body: { name, content },
+  });
 }

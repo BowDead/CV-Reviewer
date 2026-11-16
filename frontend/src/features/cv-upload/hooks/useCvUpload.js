@@ -1,17 +1,21 @@
 import { useCallback, useRef, useState } from "react";
-import { anonymizeCv, parseCv, saveCvFile } from "../api/cvApi";
+import { anonymizeCv, parseCv, saveCv } from "../api/cvApi";
 import { validateCvFile } from "../utils/validateCvFile";
 
 const initialState = {
-  status: "idle", // idle | uploading | done | error
-  file: null,
+  status: "idle",
+  name: null,
   previewUrl: null,
   result: null,
   error: null,
-  savedFileId: null,
+  savedCvId: null,
   saveStatus: "idle",
   saveError: null,
 };
+
+function countWords(text) {
+  return text.split(/\s+/).filter(Boolean).length;
+}
 
 export function useCvUpload() {
   const [state, setState] = useState(initialState);
@@ -26,47 +30,61 @@ export function useCvUpload() {
     return previewUrlRef.current;
   }, []);
 
-  const upload = useCallback(
-    async (file, savedFileId = null) => {
-      controllerRef.current?.abort();
+  const start = useCallback((nextState) => {
+    controllerRef.current?.abort();
+    const controller = new AbortController();
+    controllerRef.current = controller;
+    setState({ ...initialState, status: "uploading", ...nextState });
+    return controller.signal;
+  }, []);
 
+  const finish = useCallback(async (signal, readText) => {
+    try {
+      const parsed = await readText();
+      const { segments } = await anonymizeCv(parsed.text, signal);
+      setState((prev) => ({
+        ...prev,
+        status: "done",
+        result: { ...parsed, segments },
+      }));
+    } catch (error) {
+      if (error.name === "AbortError") return;
+      setState((prev) => ({ ...prev, status: "error", error }));
+    }
+  }, []);
+
+  const upload = useCallback(
+    async (file) => {
       const validationError = validateCvFile(file);
       if (validationError) {
+        controllerRef.current?.abort();
         replacePreviewUrl(null);
-        setState({
-          ...initialState,
-          status: "error",
-          error: validationError,
-        });
+        setState({ ...initialState, status: "error", error: validationError });
         return;
       }
 
-      const controller = new AbortController();
-      controllerRef.current = controller;
-
       const previewUrl = replacePreviewUrl(file);
-      setState({
-        ...initialState,
-        status: "uploading",
-        file,
-        previewUrl,
-        savedFileId,
-      });
-
-      try {
-        const parsed = await parseCv(file, controller.signal);
-        const { segments } = await anonymizeCv(parsed.text, controller.signal);
-        setState((prev) => ({
-          ...prev,
-          status: "done",
-          result: { ...parsed, segments },
-        }));
-      } catch (error) {
-        if (error.name === "AbortError") return;
-        setState((prev) => ({ ...prev, status: "error", error }));
-      }
+      const signal = start({ name: file.name, previewUrl });
+      await finish(signal, () => parseCv(file, signal));
     },
-    [replacePreviewUrl],
+    [replacePreviewUrl, start, finish],
+  );
+
+  const loadSaved = useCallback(
+    async (saved) => {
+      replacePreviewUrl(null);
+      const signal = start({ name: saved.name, savedCvId: saved.id });
+      await finish(signal, async () => ({
+        kind: "saved",
+        text: saved.content,
+        pageCount: null,
+        stats: {
+          characters: saved.content.length,
+          words: countWords(saved.content),
+        },
+      }));
+    },
+    [replacePreviewUrl, start, finish],
   );
 
   const reset = useCallback(() => {
@@ -76,31 +94,31 @@ export function useCvUpload() {
   }, [replacePreviewUrl]);
 
   const save = useCallback(async () => {
-    const file = state.file;
-    if (!file) return;
+    const { result, name } = state;
+    if (!result) return;
 
     setState((prev) => ({ ...prev, saveStatus: "saving", saveError: null }));
     try {
-      const { file: saved } = await saveCvFile(file);
+      const { cv } = await saveCv({ name, content: result.text });
       setState((prev) =>
-        prev.file === file
-          ? { ...prev, savedFileId: saved.id, saveStatus: "idle" }
+        prev.result === result
+          ? { ...prev, savedCvId: cv.id, saveStatus: "idle" }
           : prev,
       );
     } catch (error) {
       setState((prev) =>
-        prev.file === file
+        prev.result === result
           ? { ...prev, saveStatus: "error", saveError: error }
           : prev,
       );
     }
-  }, [state.file]);
+  }, [state]);
 
-  const forgetSavedFile = useCallback((id) => {
+  const forgetSavedCv = useCallback((id) => {
     setState((prev) =>
-      prev.savedFileId === id ? { ...prev, savedFileId: null } : prev,
+      prev.savedCvId === id ? { ...prev, savedCvId: null } : prev,
     );
   }, []);
 
-  return { ...state, upload, reset, save, forgetSavedFile };
+  return { ...state, upload, loadSaved, reset, save, forgetSavedCv };
 }

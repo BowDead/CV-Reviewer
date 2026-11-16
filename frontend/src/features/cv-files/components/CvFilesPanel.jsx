@@ -8,7 +8,7 @@ import styles from "./CvFiles.module.scss";
 
 export function CvFilesPanel({ activeFileId, onLoad, onRemoved }) {
   const { t } = useTranslation();
-  const { status, files, error, actionError, load, remove } = useCvFiles();
+  const { status, cvs, error, actionError, load, remove } = useCvFiles();
   const [loadingId, setLoadingId] = useState(null);
 
   if (status === "loading") {
@@ -23,23 +23,21 @@ export function CvFilesPanel({ activeFileId, onLoad, onRemoved }) {
     );
   }
 
-  async function handleLoad(file) {
-    setLoadingId(file.id);
-    const loaded = await load(file);
+  async function handleLoad(cv) {
+    setLoadingId(cv.id);
+    const loaded = await load(cv.id);
     setLoadingId(null);
     if (loaded) {
-      onLoad(loaded, file.id);
+      onLoad(loaded);
     }
   }
 
-  async function handleRemove(file) {
-    if (
-      !window.confirm(t("cvFiles.confirmRemove", { fileName: file.fileName }))
-    ) {
+  async function handleRemove(cv) {
+    if (!window.confirm(t("cvFiles.confirmRemove", { name: cv.name }))) {
       return;
     }
-    if (await remove(file.id)) {
-      onRemoved(file.id);
+    if (await remove(cv.id)) {
+      onRemoved(cv.id);
     }
   }
 
@@ -51,7 +49,7 @@ export function CvFilesPanel({ activeFileId, onLoad, onRemoved }) {
         )}
       </div>
       <CvFileList
-        files={files}
+        cvs={cvs}
         activeFileId={activeFileId}
         loadingId={loadingId}
         onLoad={handleLoad}

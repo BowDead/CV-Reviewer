@@ -34,8 +34,8 @@ export function WorkspacePage({ actions }) {
     if (!cvText) return;
     setAnalyzedCv(cv.result);
     analysis.analyze(cvText, {
-      cvFileId: cv.savedFileId,
-      fileName: cv.file.name,
+      cvId: cv.savedCvId,
+      fileName: cv.name,
     });
 
     navigate("/analysis");

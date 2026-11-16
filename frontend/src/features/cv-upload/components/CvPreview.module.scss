@@ -14,6 +14,38 @@
 .text {
   overflow-y: auto;
   padding: $space-lg;
-  white-space: pre-wrap; // zachowuje akapity i podziały linii z tekstu
   line-height: 1.6;
+
+  h1,
+  h2,
+  h3 {
+    margin: $space-lg 0 $space-xs;
+  }
+
+  h1 {
+    font-size: 1.375rem;
+  }
+
+  h2 {
+    font-size: 1.125rem;
+  }
+
+  h3 {
+    font-size: 1rem;
+  }
+
+  p,
+  ul,
+  ol {
+    margin: 0 0 $space-sm;
+  }
+
+  ul,
+  ol {
+    padding-left: $space-lg;
+  }
+
+  > :first-child {
+    margin-top: 0;
+  }
 }

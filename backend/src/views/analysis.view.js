@@ -3,7 +3,7 @@ import { cvAnalysisView } from "./cv-analysis.view.js";
 export function analysisSummaryView(analysis) {
   return {
     id: analysis.id,
-    cvFileId: analysis.cvFileId,
+    cvId: analysis.cvId,
     fileName: analysis.fileName,
     model: analysis.model,
     language: analysis.language,

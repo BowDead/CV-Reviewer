@@ -16,7 +16,7 @@ const ANALYSIS_LANGUAGE = "pl";
 const FOREIGN_KEY_VIOLATION = "23503";
 
 const sourceSchema = z.object({
-  cvFileId: z.uuid().nullish().catch(null),
+  cvId: z.uuid().nullish().catch(null),
   fileName: z.string().trim().max(255).nullish().catch(null),
 });
 
@@ -32,7 +32,7 @@ function readAnalysis(analysis, dataKey) {
   const { fileName, result } = decryptJson(analysis.resultEnc, dataKey);
   return {
     id: analysis.id,
-    cvFileId: analysis.cvFileId,
+    cvId: analysis.cvId,
     fileName,
     model: analysis.model,
     language: analysis.language,
@@ -43,13 +43,13 @@ function readAnalysis(analysis, dataKey) {
 }
 
 export async function analyzeAndSave(userId, input) {
-  const { cvFileId, fileName } = parseInput(sourceSchema, input);
+  const { cvId, fileName } = parseInput(sourceSchema, input);
   const result = await analyzeCv(input?.text, { userId });
 
   const dataKey = await getUserDataKey(userId);
   const analysisId = await insertAnalysis({
     userId,
-    cvFileId: cvFileId ?? null,
+    cvId: cvId ?? null,
     model: result.model,
     language: ANALYSIS_LANGUAGE,
     resultEnc: encryptJson({ fileName: fileName || null, result }, dataKey),

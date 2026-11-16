@@ -1,6 +1,6 @@
 import { query } from "./db.js";
 
-const COLUMNS = `a.id, a.cv_file_id, a.model, a.language, a.result_enc, a.created_at,
+const COLUMNS = `a.id, a.cv_id, a.model, a.language, a.result_enc, a.created_at,
   EXISTS (
     SELECT 1 FROM candidate_profiles p WHERE p.source_analysis_id = a.id
   ) AS is_profile_source`;
@@ -8,7 +8,7 @@ const COLUMNS = `a.id, a.cv_file_id, a.model, a.language, a.result_enc, a.create
 function toAnalysis(row) {
   return {
     id: row.id,
-    cvFileId: row.cv_file_id,
+    cvId: row.cv_id,
     model: row.model,
     language: row.language,
     resultEnc: row.result_enc,
@@ -38,20 +38,20 @@ export async function findAnalysis(userId, analysisId) {
 
 export async function insertAnalysis({
   userId,
-  cvFileId,
+  cvId,
   model,
   language,
   resultEnc,
 }) {
   const { rows } = await query(
-    `INSERT INTO analyses (user_id, cv_file_id, model, language, result_enc)
+    `INSERT INTO analyses (user_id, cv_id, model, language, result_enc)
      VALUES (
        $1,
-       (SELECT id FROM cv_files WHERE id = $2 AND user_id = $1),
+       (SELECT id FROM cvs WHERE id = $2 AND user_id = $1),
        $3, $4, $5
      )
      RETURNING id`,
-    [userId, cvFileId, model, language, resultEnc],
+    [userId, cvId, model, language, resultEnc],
   );
   return rows[0].id;
 }

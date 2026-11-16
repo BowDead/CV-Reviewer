@@ -52,39 +52,31 @@
     },
     "preview": {
       "title": "Podgląd CV",
-      "description": "Oryginalny plik i tekst po anonimizacji, który trafi do analizy.",
       "readingTitle": "Odczytywanie pliku…",
       "emptyTitle": "Nie wgrano jeszcze CV",
       "emptyText": "Wgraj plik w panelu po lewej. Podgląd pojawi się tutaj, a w zakładkach Analiza, Poprawki i Profil zobaczysz wyniki po kliknięciu „Analizuj CV”."
     },
     "analysis": {
-      "title": "Analiza AI",
-      "description": "Ocena treści i struktury CV oraz dopasowane stanowiska."
+      "title": "Analiza AI"
     },
     "improvements": {
-      "title": "Poprawki",
-      "description": "Konkretne kroki i propozycje przeredagowania zdań."
+      "title": "Poprawki"
     },
     "profile": {
-      "title": "Profil",
-      "description": "Dane, które AI odczytało z CV."
+      "title": "Profil"
     },
     "files": {
-      "title": "Moje CV",
-      "description": "Pliki zapisane za Twoją zgodą, przechowywane w postaci zaszyfrowanej. Wczytaj plik, aby go przeanalizować."
+      "title": "Moje CV"
     },
     "history": {
-      "title": "Historia analiz",
-      "description": "Każda analiza zapisuje się tutaj automatycznie. Otwórz ją, aby zobaczyć pełny wynik."
+      "title": "Historia analiz"
     },
     "historyDetail": {
       "title": "Wynik z historii",
-      "description": "Zapisany wynik analizy. Nie zmienia się po ponownej analizie CV.",
       "back": "Wróć do historii"
     },
     "keys": {
-      "title": "Klucze AI",
-      "description": "Analizy korzystają z klucza domyślnego, czyli pierwszego na liście."
+      "title": "Klucze AI"
     }
   },
   "cvUpload": {
@@ -202,8 +194,7 @@
     "databaseDisconnected": "brak połączenia"
   },
   "employer": {
-    "title": "Panel pracodawcy",
-    "description": "Do dokończenia"
+    "title": "Panel pracodawcy"
   },
   "errors": {
     "AUTH_REQUIRED": "Zaloguj się, aby kontynuować.",

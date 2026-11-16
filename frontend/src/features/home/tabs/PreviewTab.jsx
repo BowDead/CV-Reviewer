@@ -11,10 +11,7 @@ export function PreviewTab() {
 
   return (
     <>
-      <PageHeader
-        title={t("workspace.preview.title")}
-        description={t("workspace.preview.description")}
-      />
+      <PageHeader title={t("workspace.preview.title")} />
 
       {cv.status === "done" && (
         <div className={styles.split}>

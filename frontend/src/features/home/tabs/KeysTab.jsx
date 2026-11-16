@@ -7,10 +7,7 @@ export function KeysTab() {
 
   return (
     <>
-      <PageHeader
-        title={t("workspace.keys.title")}
-        description={t("workspace.keys.description")}
-      />
+      <PageHeader title={t("workspace.keys.title")} />
       <LlmKeysPanel />
     </>
   );

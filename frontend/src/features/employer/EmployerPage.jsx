@@ -5,9 +5,6 @@ export function EmployerPage() {
   const { t } = useTranslation();
 
   return (
-    <PageHeader
-      title={t("employer.title")}
-      description={t("employer.description")}
-    />
+    <PageHeader title={t("employer.title")} />
   );
 }

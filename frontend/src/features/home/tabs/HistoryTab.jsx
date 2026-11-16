@@ -7,10 +7,7 @@ export function HistoryTab() {
 
   return (
     <>
-      <PageHeader
-        title={t("workspace.history.title")}
-        description={t("workspace.history.description")}
-      />
+      <PageHeader title={t("workspace.history.title")} />
       <AnalysisHistoryPanel />
     </>
   );

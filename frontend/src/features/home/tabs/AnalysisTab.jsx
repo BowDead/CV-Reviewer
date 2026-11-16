@@ -10,10 +10,7 @@ export function AnalysisTab() {
 
   return (
     <>
-      <PageHeader
-        title={t("workspace.analysis.title")}
-        description={t("workspace.analysis.description")}
-      />
+      <PageHeader title={t("workspace.analysis.title")} />
       <AnalysisGate {...workspace}>
         {(result) => <CvAnalysisResult result={result} />}
       </AnalysisGate>

@@ -113,9 +113,11 @@ export function LlmKeyForm({ providers, onAdd }) {
         )}
       </label>
 
-      <div aria-live="polite">
-        {error && <p className={styles.error}>{errorMessage(error)}</p>}
-      </div>
+      {error && (
+        <p className={styles.error} role="alert">
+          {errorMessage(error)}
+        </p>
+      )}
 
       <Button type="submit" disabled={submitting}>
         {submitting ? t("llmKeys.submitting") : t("llmKeys.submit")}

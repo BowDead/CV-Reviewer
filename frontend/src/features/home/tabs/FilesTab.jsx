@@ -16,10 +16,7 @@ export function FilesTab() {
 
   return (
     <>
-      <PageHeader
-        title={t("workspace.files.title")}
-        description={t("workspace.files.description")}
-      />
+      <PageHeader title={t("workspace.files.title")} />
       <CvFilesPanel
         activeFileId={cv.savedFileId}
         onLoad={handleLoad}

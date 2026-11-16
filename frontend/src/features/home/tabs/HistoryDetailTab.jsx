@@ -12,10 +12,7 @@ export function HistoryDetailTab() {
 
   return (
     <>
-      <PageHeader
-        title={t("workspace.historyDetail.title")}
-        description={t("workspace.historyDetail.description")}
-      />
+      <PageHeader title={t("workspace.historyDetail.title")} />
       <div className={styles.toolbar}>
         <Button variant="ghost" size="sm" onClick={() => navigate("/history")}>
           {t("workspace.historyDetail.back")}

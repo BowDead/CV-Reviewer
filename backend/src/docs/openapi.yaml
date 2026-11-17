@@ -374,10 +374,6 @@ paths:
                       type: [string, "null"]
                       format: uuid
                       description: Zapisane CV, z którego pochodzi tekst. Nieznany identyfikator jest pomijany.
-                    fileName:
-                      type: [string, "null"]
-                      maxLength: 255
-                      description: Nazwa pliku pokazywana w historii analiz
       responses:
         "200":
           description: Wynik analizy
@@ -528,8 +524,8 @@ paths:
   /api/cv/saved/{id}:
     get:
       tags: [CV i analizy]
-      summary: Treść zapisanego CV
-      description: Zwraca odszyfrowany tekst. Front przepuszcza go tylko przez `/api/cv/anonymize`, bez ponownego parsowania pliku.
+      summary: Treść zapisanego CV i jego najnowsza analiza
+      description: Zwraca odszyfrowany tekst i najnowszą analizę tego CV. Front przepuszcza tekst tylko przez `/api/cv/anonymize`, bez ponownego parsowania pliku, a analizę pokazuje od razu.
       parameters:
         - $ref: "#/components/parameters/Id"
       responses:
@@ -573,7 +569,7 @@ paths:
     get:
       tags: [CV i analizy]
       summary: Historia analiz CV
-      description: Każda analiza z `/api/cv/analyze` trafia tu automatycznie. Lista nie zawiera pełnego wyniku.
+      description: Każda analiza z `/api/cv/analyze` trafia tu automatycznie. Lista nie zawiera pełnego wyniku, a ocenę i poziom baza wyciąga z kolumny `result`.
       responses:
         "200":
           description: Analizy użytkownika, od najnowszej
@@ -2023,6 +2019,13 @@ components:
         model:
           type: string
           example: openai/gpt-oss-120b
+        cached:
+          type: boolean
+          description: Czy wynik pochodzi z historii (wczytane CV albo otwarta analiza), a nie z nowego zapytania do modelu
+        analyzedAt:
+          type: [string, "null"]
+          format: date-time
+          description: Data analizy, gdy wynik pochodzi z historii
 
     SavedCvSummary:
       type: object
@@ -2048,6 +2051,11 @@ components:
             content:
               type: string
               description: Tekst CV w formacie Markdown
+            latestAnalysis:
+              description: Najnowsza analiza tego CV (`cached` równe `true`) albo `null`. Front pokazuje ją od razu po wczytaniu, bez zapytania do modelu.
+              oneOf:
+                - $ref: "#/components/schemas/AnalysisResult"
+                - type: "null"
 
     CvCreatorInput:
       type: object
@@ -2115,10 +2123,6 @@ components:
           type: [string, "null"]
           format: uuid
           description: Pusty, gdy CV nie było zapisane albo zostało usunięte
-        fileName:
-          type: [string, "null"]
-          description: Nazwa pliku z chwili analizy, zostaje także po usunięciu pliku
-          example: cv-2026.pdf
         model:
           type: string
         language:

@@ -4,6 +4,4 @@ export { AnalysisTab } from "./tabs/AnalysisTab";
 export { ImprovementsTab } from "./tabs/ImprovementsTab";
 export { ProfileTab } from "./tabs/ProfileTab";
 export { FilesTab } from "./tabs/FilesTab";
-export { HistoryTab } from "./tabs/HistoryTab";
-export { HistoryDetailTab } from "./tabs/HistoryDetailTab";
 export { KeysTab } from "./tabs/KeysTab";

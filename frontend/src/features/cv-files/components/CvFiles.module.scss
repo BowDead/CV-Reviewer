@@ -1,9 +1,10 @@
 @use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
 
 .panel {
   display: flex;
   flex-direction: column;
-  gap: $space-md;
+  gap: $space-lg;
 }
 
 .error {
@@ -18,4 +19,40 @@
 
 .icon {
   color: $color-primary;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+.groupTitle {
+  @include section-label;
+}
+
+.analyses {
+  margin-left: $space-lg;
+  padding-left: $space-md;
+  border-left: 2px solid $color-border;
+}
+
+.noAnalyses {
+  margin: 0;
+  color: $color-faint-text;
+  font-size: 0.85rem;
+}
+
+.score {
+  min-width: 3.5rem;
+  color: $color-primary;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.scoreMax {
+  color: $color-muted-text;
+  font-size: 0.8rem;
+  font-weight: 400;
 }

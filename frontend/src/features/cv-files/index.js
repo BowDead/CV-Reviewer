@@ -1,1 +1,1 @@
-export { CvFilesPanel } from "./components/CvFilesPanel";
+export { CvLibraryPanel } from "./components/CvLibraryPanel";

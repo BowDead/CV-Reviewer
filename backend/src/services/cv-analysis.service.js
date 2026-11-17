@@ -4,6 +4,7 @@ import {
   buildCvAnalysisUserMessage,
 } from "./ai/cv-analysis.prompt.js";
 import { cvAnalysisSchema } from "./ai/cv-analysis.schema.js";
+import { keepRewritesFromCv, scoreCv } from "./cv-scoring.service.js";
 import { resolveLlm } from "./llm-key.service.js";
 import {
   getSkillDetector,
@@ -12,6 +13,7 @@ import {
 
 const MAX_AI_CHARS = 10_000;
 const MAX_INPUT_CHARS = 50_000;
+const ANALYSIS_SEED = 7;
 
 function mergeSkills(detected, review, detector) {
   const rejected = new Set(
@@ -75,26 +77,36 @@ export async function analyzeCv(text, { userId }) {
       cvText,
       detected.map((skill) => skill.name),
     ),
+    temperature: 0,
+    seed: ANALYSIS_SEED,
   });
 
   const parsed = cvAnalysisSchema.safeParse(raw);
   if (
     !parsed.success ||
-    (parsed.data.overallScore === null && !parsed.data.summary)
+    (parsed.data.criteria.length === 0 && !parsed.data.summary)
   ) {
     throw new HttpError(502, "AI_EMPTY_RESPONSE");
   }
 
-  const { skillReview, ...analysis } = parsed.data;
+  const { skillReview, criteria, rewrites, ...analysis } = parsed.data;
   const { known, unknown } = mergeSkills(detected, skillReview, detector);
   await savePendingSkills(unknown);
-  analysis.profile = {
-    ...analysis.profile,
-    skills: groupByCategory(known, unknown),
-  };
+
+  const skillNames = known.map(({ skill }) => skill.name);
+  const { overallScore, categories } = scoreCv(text, criteria, skillNames);
 
   return {
-    analysis,
+    analysis: {
+      ...analysis,
+      overallScore,
+      categories,
+      rewrites: keepRewritesFromCv(rewrites, text),
+      profile: {
+        ...analysis.profile,
+        skills: groupByCategory(known, unknown),
+      },
+    },
     skills: known.map(({ skill, source }) => ({
       name: skill.name,
       category: skill.category,

@@ -1,3 +1,5 @@
+import { storedAnalysisView } from "./analysis.view.js";
+
 export function savedCvSummaryView(cv) {
   return {
     id: cv.id,
@@ -11,5 +13,8 @@ export function savedCvView(cv) {
   return {
     ...savedCvSummaryView(cv),
     content: cv.content,
+    latestAnalysis: cv.latestAnalysis
+      ? storedAnalysisView(cv.latestAnalysis)
+      : null,
   };
 }

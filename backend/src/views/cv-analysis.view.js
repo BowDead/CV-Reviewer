@@ -6,5 +6,7 @@ export function cvAnalysisView(result) {
     unknownSkills: result.unknownSkills,
     truncated: result.truncated,
     model: result.model,
+    cached: result.cached ?? false,
+    analyzedAt: result.analyzedAt ?? null,
   };
 }

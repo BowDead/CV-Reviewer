@@ -32,9 +32,9 @@
 }
 
 .analyses {
-  margin-left: $space-lg;
-  padding-left: $space-md;
-  border-left: 2px solid $color-border;
+  margin: 0 $space-lg;
+  padding: 0 $space-md;
+  border-inline: 2px solid $color-border;
 }
 
 .noAnalyses {

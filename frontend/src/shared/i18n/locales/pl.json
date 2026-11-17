@@ -126,7 +126,7 @@
     "noImprovements": "AI nie zaproponowało poprawek dla tego CV.",
     "actionItems": "Proponowane działania",
     "rewritesTitle": "Propozycje przeredagowania",
-    "cached": "Wynik analizy z {{date}}, odczytany z historii bez ponownego zapytania do modelu.",
+    "cached": "Analiza z {{date}}",
     "criteria": {
       "met": "Spełnione",
       "partial": "Częściowo",

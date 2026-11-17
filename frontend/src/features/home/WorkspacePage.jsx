@@ -22,21 +22,26 @@ export function WorkspacePage({ actions }) {
 
   const cvText = review.text;
   const isCurrent = cv.status === "done" && analyzedCv === cv.result;
-  const currentAnalysis = {
-    status: isCurrent ? analysis.status : "idle",
-    result: isCurrent ? analysis.result : null,
-    error: isCurrent ? analysis.error : null,
-  };
-  const changedAfterAnalysis =
-    currentAnalysis.status === "done" && analysis.analyzedText !== cvText;
+  const savedAnalysis = cv.savedAnalysis;
+  const currentAnalysis = isCurrent
+    ? {
+        status: analysis.status,
+        result: analysis.result,
+        error: analysis.error,
+      }
+    : {
+        status: savedAnalysis ? "done" : "idle",
+        result: savedAnalysis,
+        error: null,
+      };
+  const changedAfterAnalysis = isCurrent
+    ? currentAnalysis.status === "done" && analysis.analyzedText !== cvText
+    : savedAnalysis !== null && review.edited;
 
   function startAnalysis() {
     if (!cvText) return;
     setAnalyzedCv(cv.result);
-    analysis.analyze(cvText, {
-      cvId: cv.savedCvId,
-      fileName: cv.name,
-    });
+    analysis.analyze(cvText, { cvId: cv.savedCvId });
 
     navigate("/analysis");
   }
@@ -53,7 +58,6 @@ export function WorkspacePage({ actions }) {
     },
     { to: "/profile", label: t("workspace.nav.profile") },
     { to: "/files", label: t("workspace.nav.files") },
-    { to: "/history", label: t("workspace.nav.history") },
     { to: "/keys", label: t("workspace.nav.keys") },
   ];
 

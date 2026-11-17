@@ -9,6 +9,7 @@ const initialState = {
   result: null,
   error: null,
   savedCvId: null,
+  savedAnalysis: null,
   saveStatus: "idle",
   saveError: null,
 };
@@ -73,7 +74,11 @@ export function useCvUpload() {
   const loadSaved = useCallback(
     async (saved) => {
       replacePreviewUrl(null);
-      const signal = start({ name: saved.name, savedCvId: saved.id });
+      const signal = start({
+        name: saved.name,
+        savedCvId: saved.id,
+        savedAnalysis: saved.latestAnalysis,
+      });
       await finish(signal, async () => ({
         kind: "saved",
         text: saved.content,
@@ -85,6 +90,15 @@ export function useCvUpload() {
       }));
     },
     [replacePreviewUrl, start, finish],
+  );
+
+  const showAnalysis = useCallback(
+    (analysis) => {
+      controllerRef.current?.abort();
+      replacePreviewUrl(null);
+      setState({ ...initialState, savedAnalysis: analysis });
+    },
+    [replacePreviewUrl],
   );
 
   const reset = useCallback(() => {
@@ -120,5 +134,13 @@ export function useCvUpload() {
     );
   }, []);
 
-  return { ...state, upload, loadSaved, reset, save, forgetSavedCv };
+  return {
+    ...state,
+    upload,
+    loadSaved,
+    showAnalysis,
+    reset,
+    save,
+    forgetSavedCv,
+  };
 }

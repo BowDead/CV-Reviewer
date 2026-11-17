@@ -1,8 +1,10 @@
 import { useTranslation } from "react-i18next";
+import { formatDateTime } from "@/shared/i18n/formatDateTime";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { CvAnalysisResult } from "@/features/cv-analysis";
 import { useWorkspace } from "./useWorkspace";
 import { AnalysisGate } from "./AnalysisGate";
+import styles from "./tabs.module.scss";
 
 export function AnalysisTab() {
   const { t } = useTranslation();
@@ -12,7 +14,18 @@ export function AnalysisTab() {
     <>
       <PageHeader title={t("workspace.analysis.title")} />
       <AnalysisGate {...workspace}>
-        {(result) => <CvAnalysisResult result={result} />}
+        {(result) => (
+          <>
+            {result.cached && (
+              <p className={styles.notice}>
+                {t("cvAnalysis.cached", {
+                  date: formatDateTime(result.analyzedAt),
+                })}
+              </p>
+            )}
+            <CvAnalysisResult result={result} />
+          </>
+        )}
       </AnalysisGate>
     </>
   );

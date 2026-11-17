@@ -15,3 +15,13 @@
   display: flex;
   gap: $space-xs;
 }
+
+.notice {
+  margin: 0;
+  padding: $space-xs 0.75rem;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-surface;
+  color: $color-muted-text;
+  font-size: 0.9rem;
+}

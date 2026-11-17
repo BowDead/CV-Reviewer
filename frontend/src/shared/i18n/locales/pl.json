@@ -134,6 +134,13 @@
     "noImprovements": "AI nie zaproponowało poprawek dla tego CV.",
     "actionItems": "Proponowane działania",
     "rewritesTitle": "Propozycje przeredagowania",
+    "criteria": {
+      "met": "Spełnione",
+      "partial": "Częściowo",
+      "notMet": "Niespełnione",
+      "notRated": "Nie oceniono",
+      "system": "sprawdza system"
+    },
     "before": "Przed",
     "after": "Po",
     "profile": {

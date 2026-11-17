@@ -1,3 +1,4 @@
+import { CriteriaList } from "./CriteriaList";
 import styles from "./AnalysisOverview.module.scss";
 
 function formatScore(score) {
@@ -36,6 +37,9 @@ export function AnalysisOverview({ analysis }) {
                 </div>
                 {category.comment && (
                   <p className={styles.categoryComment}>{category.comment}</p>
+                )}
+                {category.criteria && (
+                  <CriteriaList criteria={category.criteria} />
                 )}
               </li>
             ))}

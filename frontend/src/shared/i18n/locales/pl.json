@@ -35,8 +35,7 @@
       "analysis": "Analiza",
       "improvements": "Poprawki",
       "profile": "Profil",
-      "files": "Moje CV",
-      "history": "Historia analiz",
+      "files": "CV i analizy",
       "keys": "Klucze AI"
     },
     "gate": {
@@ -66,14 +65,7 @@
       "title": "Profil"
     },
     "files": {
-      "title": "Moje CV"
-    },
-    "history": {
-      "title": "Historia analiz"
-    },
-    "historyDetail": {
-      "title": "Wynik z historii",
-      "back": "Wróć do historii"
+      "title": "CV i analizy"
     },
     "keys": {
       "title": "Klucze AI"
@@ -85,7 +77,7 @@
     "chooseFile": "Wybierz plik",
     "reading": "Odczytywanie „{{fileName}}”…",
     "changeFile": "Zmień plik",
-    "fromSaved": "Wybierz z Moich CV",
+    "fromSaved": "Wybierz z zapisanych CV",
     "save": "Zapisz CV",
     "saving": "Zapisywanie…",
     "saved": "Zapisane",
@@ -134,12 +126,12 @@
     "noImprovements": "AI nie zaproponowało poprawek dla tego CV.",
     "actionItems": "Proponowane działania",
     "rewritesTitle": "Propozycje przeredagowania",
+    "cached": "Wynik analizy z {{date}}, odczytany z historii bez ponownego zapytania do modelu.",
     "criteria": {
       "met": "Spełnione",
       "partial": "Częściowo",
       "notMet": "Niespełnione",
-      "notRated": "Nie oceniono",
-      "system": "sprawdza system"
+      "notRated": "Nie oceniono"
     },
     "before": "Przed",
     "after": "Po",
@@ -170,29 +162,28 @@
     "submitting": "Sprawdzanie klucza…"
   },
   "cvFiles": {
-    "loading": "Wczytywanie listy CV…",
-    "loadFailed": "Nie udało się wczytać listy CV",
-    "emptyTitle": "Nie masz zapisanych CV",
-    "emptyText": "Wgraj plik w panelu po lewej i kliknij „Zapisz CV”.",
+    "loading": "Wczytywanie CV i analiz…",
+    "loadFailed": "Nie udało się wczytać CV i analiz",
+    "emptyTitle": "Nie masz jeszcze zapisanych CV ani analiz",
+    "emptyText": "Wgraj plik w panelu po lewej. „Zapisz CV” doda go tutaj, a każda analiza pojawi się pod swoim CV.",
     "active": "Wczytane",
+    "shown": "Wyświetlana",
     "savedAt": "zapisano {{date}}",
     "load": "Wczytaj",
     "loadingFile": "Wczytywanie…",
+    "openAnalysis": "Otwórz",
+    "opening": "Otwieranie…",
     "remove": "Usuń",
-    "confirmRemove": "Usunąć „{{name}}”? Analizy tego CV zostaną w historii."
+    "noAnalyses": "To CV nie ma jeszcze analiz.",
+    "withoutCvTitle": "Analizy bez zapisanego CV",
+    "confirmRemove": "Usunąć „{{name}}”? Analizy tego CV zostaną i przejdą do grupy „Analizy bez zapisanego CV”.",
+    "confirmRemoveAnalysis": "Usunąć analizę z {{date}}?"
   },
+
   "analysisHistory": {
-    "loading": "Wczytywanie historii…",
-    "loadingDetail": "Wczytywanie analizy…",
-    "loadFailed": "Nie udało się wczytać historii",
-    "emptyTitle": "Historia jest pusta",
-    "emptyText": "Każda analiza CV zapisze się tutaj automatycznie.",
-    "noFileName": "CV bez nazwy",
-    "profileSource": "Źródło profilu",
-    "open": "Otwórz",
-    "remove": "Usuń",
-    "confirmRemove": "Usunąć analizę z {{date}}?"
+    "profileSource": "Źródło profilu"
   },
+
   "health": {
     "checking": "Sprawdzanie połączenia z API…",
     "unavailable": "Brak połączenia z API: {{message}}",
@@ -256,7 +247,7 @@
     "LLM_KEY_ORDER_INVALID": "Nieprawidłowa kolejność kluczy.",
     "LLM_KEY_REQUIRED": "Do analizy potrzebny jest klucz API. Dodaj go w zakładce „Klucze AI”.",
     "CV_NOT_FOUND": "Nie znaleziono zapisanego CV.",
-    "CV_LIMIT": "Możesz zapisać najwyżej {{max}} CV. Usuń któreś w zakładce „Moje CV”.",
+    "CV_LIMIT": "Możesz zapisać najwyżej {{max}} CV. Usuń któreś w zakładce „CV i analizy”.",
     "CV_NAME_REQUIRED": "Brakuje nazwy CV.",
     "CV_NAME_TOO_LONG": "Nazwa CV może mieć najwyżej {{max}} znaków.",
     "CV_CONTENT_REQUIRED": "CV nie zawiera tekstu.",

@@ -21,14 +21,7 @@ export function CriteriaList({ criteria }) {
               {t(`cvAnalysis.criteria.${level}`)}
             </span>
             <div className={styles.body}>
-              <p className={styles.label}>
-                {criterion.label}
-                {isSystem && (
-                  <span className={styles.system}>
-                    {t("cvAnalysis.criteria.system")}
-                  </span>
-                )}
-              </p>
+              <p className={styles.label}>{criterion.label}</p>
               {criterion.comment && (
                 <p className={styles.comment}>{criterion.comment}</p>
               )}

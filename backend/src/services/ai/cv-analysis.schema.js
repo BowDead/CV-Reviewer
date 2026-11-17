@@ -4,12 +4,6 @@ export const SENIORITY_LEVELS = ["Stażysta", "Junior", "Mid", "Senior", "Lead"]
 
 const text = z.string().trim().catch("");
 
-const score = z
-  .union([z.number(), z.string().trim().min(1).pipe(z.coerce.number())])
-  .refine(Number.isFinite)
-  .transform((value) => Math.min(10, Math.max(1, Math.round(value * 10) / 10)))
-  .catch(null);
-
 const stringList = z
   .array(z.unknown())
   .catch([])
@@ -52,11 +46,19 @@ const skillReviewSchema = z.object({
   additional: stringList,
 });
 
+const level = z.coerce.number().int().min(0).max(2);
+
+const criterionSchema = z.object({
+  id: z.string().trim(),
+  level,
+  evidence: text,
+  comment: text,
+});
+
 export const cvAnalysisSchema = z.object({
-  overallScore: score,
+  criteria: listOf(criterionSchema),
   seniority: z.enum(SENIORITY_LEVELS).catch(null),
   summary: text,
-  categories: listOf(z.object({ name: text, score, comment: text })),
   strengths: stringList,
   weaknesses: stringList,
   missingSections: stringList,

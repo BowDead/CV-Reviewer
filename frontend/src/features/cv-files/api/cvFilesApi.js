@@ -1,13 +1,13 @@
-import { request, requestBlob } from "@/shared/api/httpClient";
+import { request } from "@/shared/api/httpClient";
 
-export function fetchCvFiles(signal) {
-  return request("/cv/files", { signal });
+export function fetchSavedCvs(signal) {
+  return request("/cv/saved", { signal });
 }
 
-export function fetchCvFileContent(id) {
-  return requestBlob(`/cv/files/${id}/content`);
+export function fetchSavedCv(id) {
+  return request(`/cv/saved/${id}`);
 }
 
-export function deleteCvFile(id) {
-  return request(`/cv/files/${id}`, { method: "DELETE" });
+export function deleteSavedCv(id) {
+  return request(`/cv/saved/${id}`, { method: "DELETE" });
 }

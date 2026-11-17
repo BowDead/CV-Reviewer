@@ -1,20 +1,27 @@
 import { useTranslation } from "react-i18next";
 import { formatDateTime } from "@/shared/i18n/formatDateTime";
 import { Button } from "@/shared/ui/Button";
-import { EmptyState } from "@/shared/ui/EmptyState";
 import { ItemList, ListItem } from "@/shared/ui/ItemList";
-import styles from "./AnalysisHistory.module.scss";
+import styles from "./CvFiles.module.scss";
 
-export function AnalysisHistoryList({ analyses, onOpen, onRemove }) {
-  const { t } = useTranslation();
-
-  if (!analyses.length) {
-    return (
-      <EmptyState title={t("analysisHistory.emptyTitle")}>
-        {t("analysisHistory.emptyText")}
-      </EmptyState>
-    );
+function badgeFor(analysis, activeAnalysisId, t) {
+  if (analysis.isProfileSource) {
+    return t("analysisHistory.profileSource");
   }
+  if (analysis.id === activeAnalysisId) {
+    return t("cvFiles.shown");
+  }
+  return null;
+}
+
+export function AnalysisRows({
+  analyses,
+  activeAnalysisId,
+  openingId,
+  onOpen,
+  onRemove,
+}) {
+  const { t } = useTranslation();
 
   return (
     <ItemList>
@@ -27,21 +34,21 @@ export function AnalysisHistoryList({ analyses, onOpen, onRemove }) {
               <span className={styles.scoreMax}>/10</span>
             </span>
           }
-          title={analysis.fileName ?? t("analysisHistory.noFileName")}
-          badge={
-            analysis.isProfileSource ? t("analysisHistory.profileSource") : null
-          }
-          meta={[
-            formatDateTime(analysis.createdAt),
-            analysis.seniority,
-            analysis.model,
-          ]
+          title={formatDateTime(analysis.createdAt)}
+          badge={badgeFor(analysis, activeAnalysisId, t)}
+          meta={[analysis.seniority, analysis.model]
             .filter(Boolean)
             .join(" · ")}
           actions={
             <>
-              <Button size="sm" onClick={() => onOpen(analysis.id)}>
-                {t("analysisHistory.open")}
+              <Button
+                size="sm"
+                disabled={openingId !== null}
+                onClick={() => onOpen(analysis)}
+              >
+                {openingId === analysis.id
+                  ? t("cvFiles.opening")
+                  : t("cvFiles.openAnalysis")}
               </Button>
               <Button
                 variant="ghost"
@@ -49,7 +56,7 @@ export function AnalysisHistoryList({ analyses, onOpen, onRemove }) {
                 disabled={analysis.isProfileSource}
                 onClick={() => onRemove(analysis)}
               >
-                {t("analysisHistory.remove")}
+                {t("cvFiles.remove")}
               </Button>
             </>
           }

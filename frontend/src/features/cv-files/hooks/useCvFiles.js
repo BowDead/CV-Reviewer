@@ -1,14 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  deleteCvFile,
-  fetchCvFileContent,
-  fetchCvFiles,
-} from "../api/cvFilesApi";
+import { deleteSavedCv, fetchSavedCv, fetchSavedCvs } from "../api/cvFilesApi";
 
 export function useCvFiles() {
   const [state, setState] = useState({
     status: "loading",
-    files: [],
+    cvs: [],
     error: null,
   });
   const [actionError, setActionError] = useState(null);
@@ -16,21 +12,20 @@ export function useCvFiles() {
   useEffect(() => {
     const controller = new AbortController();
 
-    fetchCvFiles(controller.signal)
-      .then(({ files }) => setState({ status: "done", files, error: null }))
+    fetchSavedCvs(controller.signal)
+      .then(({ cvs }) => setState({ status: "done", cvs, error: null }))
       .catch((error) => {
         if (error.name === "AbortError") return;
-        setState({ status: "error", files: [], error });
+        setState({ status: "error", cvs: [], error });
       });
 
     return () => controller.abort();
   }, []);
 
-  const load = useCallback(async (file) => {
+  const load = useCallback(async (id) => {
     setActionError(null);
     try {
-      const blob = await fetchCvFileContent(file.id);
-      return new File([blob], file.fileName, { type: file.mimeType });
+      return await fetchSavedCv(id);
     } catch (error) {
       setActionError(error);
       return null;
@@ -40,10 +35,10 @@ export function useCvFiles() {
   const remove = useCallback(async (id) => {
     setActionError(null);
     try {
-      await deleteCvFile(id);
+      await deleteSavedCv(id);
       setState((current) => ({
         ...current,
-        files: current.files.filter((file) => file.id !== id),
+        cvs: current.cvs.filter((cv) => cv.id !== id),
       }));
       return true;
     } catch (error) {

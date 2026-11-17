@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { deleteAnalysis, fetchAnalyses } from "../api/analysisHistoryApi";
+import {
+  deleteAnalysis,
+  fetchAnalyses,
+  fetchAnalysis,
+} from "../api/analysisHistoryApi";
 
 export function useAnalysisHistory() {
   const [state, setState] = useState({
@@ -37,5 +41,24 @@ export function useAnalysisHistory() {
     }
   }, []);
 
-  return { ...state, actionError, remove };
+  const open = useCallback(async (id) => {
+    setActionError(null);
+    try {
+      return await fetchAnalysis(id);
+    } catch (error) {
+      setActionError(error);
+      return null;
+    }
+  }, []);
+
+  const detachCv = useCallback((cvId) => {
+    setState((current) => ({
+      ...current,
+      analyses: current.analyses.map((analysis) =>
+        analysis.cvId === cvId ? { ...analysis, cvId: null } : analysis,
+      ),
+    }));
+  }, []);
+
+  return { ...state, actionError, remove, open, detachCv };
 }

@@ -35,8 +35,7 @@
       "analysis": "Analiza",
       "improvements": "Poprawki",
       "profile": "Profil",
-      "files": "Moje CV",
-      "history": "Historia analiz",
+      "files": "CV i analizy",
       "keys": "Klucze AI"
     },
     "gate": {
@@ -52,39 +51,24 @@
     },
     "preview": {
       "title": "Podgląd CV",
-      "description": "Oryginalny plik i tekst po anonimizacji, który trafi do analizy.",
       "readingTitle": "Odczytywanie pliku…",
       "emptyTitle": "Nie wgrano jeszcze CV",
       "emptyText": "Wgraj plik w panelu po lewej. Podgląd pojawi się tutaj, a w zakładkach Analiza, Poprawki i Profil zobaczysz wyniki po kliknięciu „Analizuj CV”."
     },
     "analysis": {
-      "title": "Analiza AI",
-      "description": "Ocena treści i struktury CV oraz dopasowane stanowiska."
+      "title": "Analiza AI"
     },
     "improvements": {
-      "title": "Poprawki",
-      "description": "Konkretne kroki i propozycje przeredagowania zdań."
+      "title": "Poprawki"
     },
     "profile": {
-      "title": "Profil",
-      "description": "Dane, które AI odczytało z CV."
+      "title": "Profil"
     },
     "files": {
-      "title": "Moje CV",
-      "description": "Pliki zapisane za Twoją zgodą, przechowywane w postaci zaszyfrowanej. Wczytaj plik, aby go przeanalizować."
-    },
-    "history": {
-      "title": "Historia analiz",
-      "description": "Każda analiza zapisuje się tutaj automatycznie. Otwórz ją, aby zobaczyć pełny wynik."
-    },
-    "historyDetail": {
-      "title": "Wynik z historii",
-      "description": "Zapisany wynik analizy. Nie zmienia się po ponownej analizie CV.",
-      "back": "Wróć do historii"
+      "title": "CV i analizy"
     },
     "keys": {
-      "title": "Klucze AI",
-      "description": "Analizy korzystają z klucza domyślnego, czyli pierwszego na liście."
+      "title": "Klucze AI"
     }
   },
   "cvUpload": {
@@ -93,7 +77,7 @@
     "chooseFile": "Wybierz plik",
     "reading": "Odczytywanie „{{fileName}}”…",
     "changeFile": "Zmień plik",
-    "fromSaved": "Wybierz z Moich CV",
+    "fromSaved": "Wybierz z zapisanych CV",
     "save": "Zapisz CV",
     "saving": "Zapisywanie…",
     "saved": "Zapisane",
@@ -142,6 +126,13 @@
     "noImprovements": "AI nie zaproponowało poprawek dla tego CV.",
     "actionItems": "Proponowane działania",
     "rewritesTitle": "Propozycje przeredagowania",
+    "cached": "Analiza z {{date}}",
+    "criteria": {
+      "met": "Spełnione",
+      "partial": "Częściowo",
+      "notMet": "Niespełnione",
+      "notRated": "Nie oceniono"
+    },
     "before": "Przed",
     "after": "Po",
     "profile": {
@@ -171,29 +162,28 @@
     "submitting": "Sprawdzanie klucza…"
   },
   "cvFiles": {
-    "loading": "Wczytywanie listy CV…",
-    "loadFailed": "Nie udało się wczytać listy CV",
-    "emptyTitle": "Nie masz zapisanych CV",
-    "emptyText": "Wgraj plik w panelu po lewej i kliknij „Zapisz w Moich CV”.",
+    "loading": "Wczytywanie CV i analiz…",
+    "loadFailed": "Nie udało się wczytać CV i analiz",
+    "emptyTitle": "Nie masz jeszcze zapisanych CV ani analiz",
+    "emptyText": "Wgraj plik w panelu po lewej. „Zapisz CV” doda go tutaj, a każda analiza pojawi się pod swoim CV.",
     "active": "Wczytane",
+    "shown": "Wyświetlana",
     "savedAt": "zapisano {{date}}",
     "load": "Wczytaj",
     "loadingFile": "Wczytywanie…",
+    "openAnalysis": "Otwórz",
+    "opening": "Otwieranie…",
     "remove": "Usuń",
-    "confirmRemove": "Usunąć „{{fileName}}”? Analizy tego CV zostaną w historii."
+    "noAnalyses": "To CV nie ma jeszcze analiz.",
+    "withoutCvTitle": "Analizy bez zapisanego CV",
+    "confirmRemove": "Usunąć „{{name}}”? Analizy tego CV zostaną i przejdą do grupy „Analizy bez zapisanego CV”.",
+    "confirmRemoveAnalysis": "Usunąć analizę z {{date}}?"
   },
+
   "analysisHistory": {
-    "loading": "Wczytywanie historii…",
-    "loadingDetail": "Wczytywanie analizy…",
-    "loadFailed": "Nie udało się wczytać historii",
-    "emptyTitle": "Historia jest pusta",
-    "emptyText": "Każda analiza CV zapisze się tutaj automatycznie.",
-    "noFileName": "CV bez nazwy",
-    "profileSource": "Źródło profilu",
-    "open": "Otwórz",
-    "remove": "Usuń",
-    "confirmRemove": "Usunąć analizę z {{date}}?"
+    "profileSource": "Źródło profilu"
   },
+
   "health": {
     "checking": "Sprawdzanie połączenia z API…",
     "unavailable": "Brak połączenia z API: {{message}}",
@@ -202,8 +192,7 @@
     "databaseDisconnected": "brak połączenia"
   },
   "employer": {
-    "title": "Panel pracodawcy",
-    "description": "Do dokończenia"
+    "title": "Panel pracodawcy"
   },
   "errors": {
     "AUTH_REQUIRED": "Zaloguj się, aby kontynuować.",
@@ -257,8 +246,12 @@
     "LLM_KEY_NOT_FOUND": "Nie znaleziono klucza.",
     "LLM_KEY_ORDER_INVALID": "Nieprawidłowa kolejność kluczy.",
     "LLM_KEY_REQUIRED": "Do analizy potrzebny jest klucz API. Dodaj go w zakładce „Klucze AI”.",
-    "CV_FILE_NOT_FOUND": "Nie znaleziono zapisanego CV.",
-    "CV_FILE_LIMIT": "Możesz zapisać najwyżej {{max}} plików CV. Usuń któryś w zakładce „Moje CV”.",
+    "CV_NOT_FOUND": "Nie znaleziono zapisanego CV.",
+    "CV_LIMIT": "Możesz zapisać najwyżej {{max}} CV. Usuń któreś w zakładce „CV i analizy”.",
+    "CV_NAME_REQUIRED": "Brakuje nazwy CV.",
+    "CV_NAME_TOO_LONG": "Nazwa CV może mieć najwyżej {{max}} znaków.",
+    "CV_CONTENT_REQUIRED": "CV nie zawiera tekstu.",
+    "CV_CONTENT_TOO_LONG": "CV jest za długie (limit to {{max}} znaków).",
     "ANALYSIS_NOT_FOUND": "Nie znaleziono analizy.",
     "ANALYSIS_IS_PROFILE_SOURCE": "Tej analizy nie można usunąć, bo jest źródłem Twojego profilu.",
     "UNKNOWN": "Wystąpił nieoczekiwany błąd."

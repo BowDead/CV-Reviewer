@@ -273,7 +273,7 @@ paths:
     post:
       tags: [CV i analizy]
       summary: Odczyt tekstu z pliku PDF lub DOCX
-      description: Plik nie jest zapisywany.
+      description: Plik nie jest zapisywany. PDF i DOCX są zwracane tak samo, jako zwykły tekst linia po linii.
       requestBody:
         required: true
         content:
@@ -359,8 +359,8 @@ paths:
   /api/cv/analyze:
     post:
       tags: [CV i analizy]
-      summary: Analiza tekstu CV przez model językowy
-      description: Analizuje tekst zanonimizowany i zatwierdzony przez użytkownika. Wynik jest zapisywany w historii analiz.
+      summary: Analiza tekstu CV według kryteriów
+      description: Model ocenia kryteria z cytatem z CV, a ocenę wylicza system. Wynik jest zapisywany w historii analiz.
       requestBody:
         required: true
         content:
@@ -370,14 +370,10 @@ paths:
                 - $ref: "#/components/schemas/CvTextRequest"
                 - type: object
                   properties:
-                    cvFileId:
+                    cvId:
                       type: [string, "null"]
                       format: uuid
                       description: Zapisane CV, z którego pochodzi tekst. Nieznany identyfikator jest pomijany.
-                    fileName:
-                      type: [string, "null"]
-                      maxLength: 255
-                      description: Nazwa pliku pokazywana w historii analiz
       responses:
         "200":
           description: Wynik analizy
@@ -432,36 +428,46 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /api/cv/files:
+  /api/cv/saved:
     get:
       tags: [CV i analizy]
       summary: Lista zapisanych CV
       responses:
         "200":
-          description: Zapisane CV, od najnowszego
+          description: Zapisane CV, od najnowszego, bez treści
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  files:
+                  cvs:
                     type: array
                     items:
-                      $ref: "#/components/schemas/CvFile"
+                      $ref: "#/components/schemas/SavedCvSummary"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
     post:
       tags: [CV i analizy]
-      summary: Zapisanie przesłanego pliku CV za zgodą użytkownika
-      description: Plik jest najpierw odczytywany tak jak w `/api/cv/parse`, więc zapisany zostanie tylko poprawny PDF lub DOCX z tekstem. Plik i jego nazwa są szyfrowane kluczem danych użytkownika.
+      summary: Zapisanie tekstu CV za zgodą użytkownika
+      description: Zapisuje tekst odczytany wcześniej przez `/api/cv/parse`. Pliku nie zapisujemy. Nazwa i treść są szyfrowane kluczem danych użytkownika.
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
-              $ref: "#/components/schemas/CvUpload"
+              type: object
+              required: [name, content]
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                  example: cv-2026.pdf
+                content:
+                  type: string
+                  maxLength: 50000
+                  description: Tekst CV w formacie Markdown
       responses:
         "201":
           description: CV zapisane
@@ -470,10 +476,10 @@ paths:
               schema:
                 type: object
                 properties:
-                  file:
-                    $ref: "#/components/schemas/CvFile"
+                  cv:
+                    $ref: "#/components/schemas/SavedCvSummary"
         "400":
-          description: "`FILE_MISSING`, `FILE_EMPTY`, `FILE_NOT_PDF`, `FILE_NOT_DOCX`, `FILE_UNREADABLE`, `UPLOAD_INVALID`"
+          description: "`CV_NAME_REQUIRED`, `CV_NAME_TOO_LONG`, `CV_CONTENT_REQUIRED`, `CV_CONTENT_TOO_LONG`"
           content:
             application/json:
               schema:
@@ -483,35 +489,17 @@ paths:
         "403":
           $ref: "#/components/responses/Forbidden"
         "409":
-          description: "`CV_FILE_LIMIT` – zapisano już najwięcej plików"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "413":
-          description: "`FILE_TOO_LARGE`"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "415":
-          description: "`FILE_UNSUPPORTED`"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "422":
-          description: "`FILE_NO_TEXT`"
+          description: "`CV_LIMIT` – zapisano już najwięcej CV"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /api/cv/files/creator:
+  /api/cv/saved/creator:
     post:
       tags: [CV i analizy]
       summary: Zapisanie CV utworzonego w kreatorze
-      description: Na podstawie danych z kreatora powstaje plik CV, zapisywany tak jak przesłany plik.
+      description: Dane z kreatora są zamieniane na Markdown i zapisywane tak jak tekst wgranego CV, z `source` równym `creator` (krok 07.1).
       requestBody:
         required: true
         content:
@@ -526,43 +514,37 @@ paths:
               schema:
                 type: object
                 properties:
-                  file:
-                    $ref: "#/components/schemas/CvFile"
+                  cv:
+                    $ref: "#/components/schemas/SavedCvSummary"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
 
-  /api/cv/files/{id}/content:
+  /api/cv/saved/{id}:
     get:
       tags: [CV i analizy]
-      summary: Pobranie odszyfrowanego pliku CV
+      summary: Treść zapisanego CV i jego najnowsza analiza
+      description: Zwraca odszyfrowany tekst i najnowszą analizę tego CV. Front przepuszcza tekst tylko przez `/api/cv/anonymize`, bez ponownego parsowania pliku, a analizę pokazuje od razu.
       parameters:
         - $ref: "#/components/parameters/Id"
       responses:
         "200":
-          description: Zawartość pliku
+          description: Zapisane CV z treścią
           content:
-            application/pdf:
+            application/json:
               schema:
-                type: string
-                format: binary
-            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
-              schema:
-                type: string
-                format: binary
+                $ref: "#/components/schemas/SavedCv"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
-          description: "`CV_FILE_NOT_FOUND`"
+          description: "`CV_NOT_FOUND`"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
-  /api/cv/files/{id}:
     delete:
       tags: [CV i analizy]
       summary: Usunięcie zapisanego CV
@@ -577,7 +559,7 @@ paths:
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
-          description: "`CV_FILE_NOT_FOUND`"
+          description: "`CV_NOT_FOUND`"
           content:
             application/json:
               schema:
@@ -587,7 +569,7 @@ paths:
     get:
       tags: [CV i analizy]
       summary: Historia analiz CV
-      description: Każda analiza z `/api/cv/analyze` trafia tu automatycznie. Lista nie zawiera pełnego wyniku.
+      description: Każda analiza z `/api/cv/analyze` trafia tu automatycznie. Lista nie zawiera pełnego wyniku, a ocenę i poziom baza wyciąga z kolumny `result`.
       responses:
         "200":
           description: Analizy użytkownika, od najnowszej
@@ -1055,7 +1037,7 @@ paths:
               properties:
                 accept:
                   type: boolean
-                cvFileId:
+                cvId:
                   type: string
                   format: uuid
                   description: Zapisane CV udostępniane pracodawcy; wymagane przy akceptacji
@@ -1869,9 +1851,10 @@ components:
       properties:
         overallScore:
           type: [number, "null"]
-          minimum: 1
+          minimum: 0
           maximum: 10
           example: 7.5
+          description: Średnia ocen kategorii, wyliczana przez system
         seniority:
           oneOf:
             - $ref: "#/components/schemas/Seniority"
@@ -1887,8 +1870,11 @@ components:
                 type: string
               score:
                 type: [number, "null"]
-              comment:
-                type: string
+                description: Suma poziomów kryteriów kategorii przeliczona na skalę 0–10
+              criteria:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CvCriterion"
         strengths:
           type: array
           items:
@@ -1986,6 +1972,29 @@ components:
               items:
                 type: string
 
+    CvCriterion:
+      type: object
+      properties:
+        id:
+          type: string
+          example: metrics
+        label:
+          type: string
+          example: Co najmniej jedno osiągnięcie z liczbą lub mierzalnym efektem
+        source:
+          type: string
+          enum: [system, llm]
+          description: Czy kryterium sprawdził kod, czy model
+        level:
+          type: [integer, "null"]
+          enum: [0, 1, 2, null]
+          description: 2 – spełnione, 1 – częściowo, 0 – niespełnione, null – model nie ocenił
+        evidence:
+          type: string
+          description: Dosłowny cytat z CV (model) albo wynik sprawdzenia (system). Cytatu, którego nie ma w CV, system nie przyjmuje i obniża poziom o 1.
+        comment:
+          type: string
+
     AnalysisResult:
       type: object
       properties:
@@ -2010,22 +2019,43 @@ components:
         model:
           type: string
           example: openai/gpt-oss-120b
+        cached:
+          type: boolean
+          description: Czy wynik pochodzi z historii (wczytane CV albo otwarta analiza), a nie z nowego zapytania do modelu
+        analyzedAt:
+          type: [string, "null"]
+          format: date-time
+          description: Data analizy, gdy wynik pochodzi z historii
 
-    CvFile:
+    SavedCvSummary:
       type: object
       properties:
         id:
           type: string
           format: uuid
-        fileName:
+        name:
           type: string
           example: cv-2026.pdf
-        mimeType:
+        source:
           type: string
-          example: application/pdf
+          enum: [upload, creator]
         createdAt:
           type: string
           format: date-time
+
+    SavedCv:
+      allOf:
+        - $ref: "#/components/schemas/SavedCvSummary"
+        - type: object
+          properties:
+            content:
+              type: string
+              description: Tekst CV w formacie Markdown
+            latestAnalysis:
+              description: Najnowsza analiza tego CV (`cached` równe `true`) albo `null`. Front pokazuje ją od razu po wczytaniu, bez zapytania do modelu.
+              oneOf:
+                - $ref: "#/components/schemas/AnalysisResult"
+                - type: "null"
 
     CvCreatorInput:
       type: object
@@ -2089,14 +2119,10 @@ components:
         id:
           type: string
           format: uuid
-        cvFileId:
+        cvId:
           type: [string, "null"]
           format: uuid
-          description: Pusty, gdy plik nie był zapisany albo został usunięty
-        fileName:
-          type: [string, "null"]
-          description: Nazwa pliku z chwili analizy, zostaje także po usunięciu pliku
-          example: cv-2026.pdf
+          description: Pusty, gdy CV nie było zapisane albo zostało usunięte
         model:
           type: string
         language:

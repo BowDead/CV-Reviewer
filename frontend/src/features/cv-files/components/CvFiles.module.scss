@@ -1,13 +1,13 @@
 @use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
 
 .panel {
   display: flex;
   flex-direction: column;
-  gap: $space-md;
+  gap: $space-lg;
 }
 
 .error {
-  max-width: 720px;
   margin: 0;
   padding: $space-xs 0.75rem;
   border: 1px solid;
@@ -19,4 +19,40 @@
 
 .icon {
   color: $color-primary;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+.groupTitle {
+  @include section-label;
+}
+
+.analyses {
+  margin: 0 $space-lg;
+  padding: 0 $space-md;
+  border-inline: 2px solid $color-border;
+}
+
+.noAnalyses {
+  margin: 0;
+  color: $color-faint-text;
+  font-size: 0.85rem;
+}
+
+.score {
+  min-width: 3.5rem;
+  color: $color-primary;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.scoreMax {
+  color: $color-muted-text;
+  font-size: 0.8rem;
+  font-weight: 400;
 }

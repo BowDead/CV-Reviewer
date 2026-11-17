@@ -1,0 +1,70 @@
+@use "@/shared/styles/variables" as *;
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  margin: $space-xs 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: $space-sm;
+  align-items: start;
+}
+
+.status {
+  padding: 0.125rem 0.375rem;
+  border-radius: $radius-sm;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.met {
+  background: $color-success-bg;
+  color: $color-success;
+}
+
+.partial {
+  background: $color-primary-bg;
+  color: $color-primary-text;
+}
+
+.notMet {
+  background: $color-danger-bg;
+  color: $color-danger;
+}
+
+.notRated {
+  background: $color-muted-bg;
+  color: $color-muted-text;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.label {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.comment {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.8rem;
+}
+
+.evidence {
+  color: $color-text-soft;
+  font-size: 0.8rem;
+  font-style: italic;
+  overflow-wrap: anywhere;
+}

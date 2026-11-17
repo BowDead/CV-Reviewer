@@ -8,6 +8,10 @@ export function AnalysisGate({ cv, analysis, startAnalysis, children }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  if (analysis.status === "done") {
+    return children(analysis.result);
+  }
+
   if (cv.status !== "done") {
     return (
       <EmptyState title={t("workspace.gate.noCvTitle")}>
@@ -56,18 +60,14 @@ export function AnalysisGate({ cv, analysis, startAnalysis, children }) {
     );
   }
 
-  if (analysis.status !== "done") {
-    return (
-      <EmptyState
-        title={t("workspace.gate.idleTitle")}
-        action={
-          <Button onClick={startAnalysis}>{t("cvAnalysis.analyze")}</Button>
-        }
-      >
-        {t("workspace.gate.idleText")}
-      </EmptyState>
-    );
-  }
-
-  return children(analysis.result);
+  return (
+    <EmptyState
+      title={t("workspace.gate.idleTitle")}
+      action={
+        <Button onClick={startAnalysis}>{t("cvAnalysis.analyze")}</Button>
+      }
+    >
+      {t("workspace.gate.idleText")}
+    </EmptyState>
+  );
 }

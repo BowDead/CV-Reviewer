@@ -10,10 +10,7 @@ export function ProfileTab() {
 
   return (
     <>
-      <PageHeader
-        title={t("workspace.profile.title")}
-        description={t("workspace.profile.description")}
-      />
+      <PageHeader title={t("workspace.profile.title")} />
       <AnalysisGate {...workspace}>
         {(result) => <ProfileSummary profile={result.analysis.profile} />}
       </AnalysisGate>

@@ -10,6 +10,7 @@ import {
 import { decryptBytes, encryptBytes } from "../utils/encryption.js";
 import { parseId } from "../utils/parse-id.js";
 import { parseInput } from "../utils/parse-input.js";
+import { getLatestAnalysisForCv } from "./analysis.service.js";
 import { getUserDataKey } from "./user-crypto.service.js";
 
 const MAX_SAVED_CVS = 10;
@@ -80,6 +81,7 @@ export async function getSavedCv(userId, cvId) {
   return {
     ...readSummary(cv, dataKey),
     content: decryptText(cv.contentEnc, dataKey),
+    latestAnalysis: await getLatestAnalysisForCv(userId, cvId),
   };
 }
 

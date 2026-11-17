@@ -359,8 +359,8 @@ paths:
   /api/cv/analyze:
     post:
       tags: [CV i analizy]
-      summary: Analiza tekstu CV przez model językowy
-      description: Analizuje tekst zanonimizowany i zatwierdzony przez użytkownika. Wynik jest zapisywany w historii analiz.
+      summary: Analiza tekstu CV według kryteriów
+      description: Model ocenia kryteria z cytatem z CV, a ocenę wylicza system. Wynik jest zapisywany w historii analiz.
       requestBody:
         required: true
         content:
@@ -1855,9 +1855,10 @@ components:
       properties:
         overallScore:
           type: [number, "null"]
-          minimum: 1
+          minimum: 0
           maximum: 10
           example: 7.5
+          description: Średnia ocen kategorii, wyliczana przez system
         seniority:
           oneOf:
             - $ref: "#/components/schemas/Seniority"
@@ -1873,8 +1874,11 @@ components:
                 type: string
               score:
                 type: [number, "null"]
-              comment:
-                type: string
+                description: Suma poziomów kryteriów kategorii przeliczona na skalę 0–10
+              criteria:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CvCriterion"
         strengths:
           type: array
           items:
@@ -1971,6 +1975,29 @@ components:
               type: array
               items:
                 type: string
+
+    CvCriterion:
+      type: object
+      properties:
+        id:
+          type: string
+          example: metrics
+        label:
+          type: string
+          example: Co najmniej jedno osiągnięcie z liczbą lub mierzalnym efektem
+        source:
+          type: string
+          enum: [system, llm]
+          description: Czy kryterium sprawdził kod, czy model
+        level:
+          type: [integer, "null"]
+          enum: [0, 1, 2, null]
+          description: 2 – spełnione, 1 – częściowo, 0 – niespełnione, null – model nie ocenił
+        evidence:
+          type: string
+          description: Dosłowny cytat z CV (model) albo wynik sprawdzenia (system). Cytatu, którego nie ma w CV, system nie przyjmuje i obniża poziom o 1.
+        comment:
+          type: string
 
     AnalysisResult:
       type: object

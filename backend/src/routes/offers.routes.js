@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   getOfferList,
+  getOfferRepositoryList,
   postOfferInsight,
 } from "../controllers/offer.controller.js";
 import { requireAuth } from "../middlewares/auth.middleware.js";
@@ -11,3 +12,4 @@ offersRouter.use(requireAuth);
 
 offersRouter.get("/", getOfferList);
 offersRouter.post("/:offerKey/insight", postOfferInsight);
+offersRouter.get("/:offerKey/repositories", getOfferRepositoryList);

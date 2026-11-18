@@ -15,6 +15,15 @@ export function offerView(offer) {
   };
 }
 
+export function offerRepositoryView(repository) {
+  return {
+    id: repository.id,
+    name: repository.name,
+    url: repository.url,
+    matchedSkills: repository.matchedSkills,
+  };
+}
+
 export function offerInsightView(insight) {
   return {
     comment: insight.comment,

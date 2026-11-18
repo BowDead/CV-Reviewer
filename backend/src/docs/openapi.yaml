@@ -876,6 +876,7 @@ paths:
     get:
       tags: [Oferty pracy]
       summary: Lista repozytoriów najlepiej dopasowanych do wybranej oferty
+      description: System wybiera najwyżej 3 przeanalizowane repozytoria z największą liczbą umiejętności wymaganych w ofercie, potem mile widzianych. Bez konta GitHub lista jest pusta.
       parameters:
         - $ref: "#/components/parameters/OfferKey"
       responses:
@@ -2317,6 +2318,9 @@ components:
           format: uuid
         name:
           type: string
+        url:
+          type: string
+          format: uri
         matchedSkills:
           type: array
           items:

@@ -18,6 +18,10 @@ import { getRepositories } from "./github.service.js";
 import { resolveLlm } from "./llm-key.service.js";
 import { matchOffer, rankOffers } from "./offers/offer-matching.service.js";
 import { findOffer, getOfferPool } from "./offers/offer-pool.service.js";
+import {
+  MAX_OFFER_REPOSITORIES,
+  selectRepositories,
+} from "./offers/repository-selection.service.js";
 
 const MAX_OFFERS = 50;
 const INSIGHT_SEED = 7;
@@ -81,14 +85,28 @@ export async function getOffers(userId, input) {
   return attachInsights(analysis.id, ranked);
 }
 
-export async function getOfferInsight(userId, offerKey, input) {
+async function requireOffer(offerKey) {
   parseId(offerKey, "OFFER_NOT_FOUND");
-  const { analysisId } = parseInput(insightSchema, input);
-  const analysis = await getAnalysis(userId, analysisId);
   const offer = await findOffer(offerKey);
   if (!offer) {
     throw new HttpError(404, "OFFER_NOT_FOUND");
   }
+  return offer;
+}
+
+export async function getOfferRepositories(userId, offerKey) {
+  const offer = await requireOffer(offerKey);
+  const { login, repositories } = await getRepositories(userId);
+  if (!login) {
+    return [];
+  }
+  return selectRepositories(offer, repositories, MAX_OFFER_REPOSITORIES);
+}
+
+export async function getOfferInsight(userId, offerKey, input) {
+  const offer = await requireOffer(offerKey);
+  const { analysisId } = parseInput(insightSchema, input);
+  const analysis = await getAnalysis(userId, analysisId);
 
   const saved = await findOfferInsight(analysisId, offerKey);
   if (isFresh(saved, offer)) {

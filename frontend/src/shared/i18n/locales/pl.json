@@ -212,6 +212,16 @@
       "failed": "Błąd analizy"
     }
   },
+  "githubMatch": {
+    "title": "CV a GitHub",
+    "connect": "Podłącz konto GitHub, żeby sprawdzić, które umiejętności z CV potwierdzają Twoje repozytoria.",
+    "noRepos": "Konto {{login}} nie ma jeszcze przeanalizowanych repozytoriów.",
+    "goToGithub": "Przejdź do GitHuba",
+    "confirmed": "Potwierdzone w repozytoriach",
+    "onlyGithub": "W repozytoriach, a brak w CV",
+    "onlyCv": "Tylko w CV",
+    "inRepos": "{{name}} ({{count}})"
+  },
   "health": {
     "checking": "Sprawdzanie połączenia z API…",
     "unavailable": "Brak połączenia z API: {{message}}",

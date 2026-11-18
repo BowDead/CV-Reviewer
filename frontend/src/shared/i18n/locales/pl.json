@@ -252,8 +252,14 @@
     "match": "dopasowania",
     "matched": "Masz:",
     "missing": "Brakuje:",
-    "explain": "Dlaczego pasuje?",
+    "explain": "Uzasadnij ofertę",
     "explaining": "Generowanie uzasadnienia…"
+  },
+  "pagination": {
+    "label": "Stronicowanie",
+    "previous": "Poprzednia",
+    "next": "Następna",
+    "status": "Strona {{page}} z {{pageCount}}"
   },
   "health": {
     "checking": "Sprawdzanie połączenia z API…",

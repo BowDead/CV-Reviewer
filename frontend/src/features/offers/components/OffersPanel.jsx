@@ -1,13 +1,31 @@
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { errorMessage } from "@/shared/i18n/errorMessage";
 import { EmptyState } from "@/shared/ui/EmptyState";
+import { Pagination } from "@/shared/ui/Pagination";
 import { useOffers } from "../hooks/useOffers";
 import { OfferCard } from "./OfferCard";
 import styles from "./Offers.module.scss";
 
 export function OffersPanel({ analysisId }) {
   const { t } = useTranslation();
-  const { status, offers, error, insights, explain } = useOffers(analysisId);
+  const panelRef = useRef(null);
+  const {
+    status,
+    offers,
+    error,
+    insights,
+    explain,
+    page,
+    pageCount,
+    pageOffers,
+    setPage,
+  } = useOffers(analysisId);
+
+  function changePage(nextPage) {
+    setPage(nextPage);
+    panelRef.current?.scrollIntoView({ block: "start" });
+  }
 
   if (status === "loading") {
     return (
@@ -34,12 +52,12 @@ export function OffersPanel({ analysisId }) {
   }
 
   return (
-    <div className={styles.panel}>
+    <div className={styles.panel} ref={panelRef}>
       <p className={styles.summary}>
         {t("offers.summary", { count: offers.length })}
       </p>
       <ul className={styles.list}>
-        {offers.map((offer) => (
+        {pageOffers.map((offer) => (
           <OfferCard
             key={offer.offerKey}
             offer={offer}
@@ -48,6 +66,7 @@ export function OffersPanel({ analysisId }) {
           />
         ))}
       </ul>
+      <Pagination page={page} pageCount={pageCount} onChange={changePage} />
     </div>
   );
 }

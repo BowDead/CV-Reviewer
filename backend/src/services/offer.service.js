@@ -3,6 +3,7 @@ import { HttpError } from "../errors/HttpError.js";
 import { findDefaultAnalysis } from "../models/analysis.model.js";
 import {
   findOfferInsight,
+  findOfferInsights,
   saveOfferInsight,
 } from "../models/offer-insight.model.js";
 import { parseId } from "../utils/parse-id.js";
@@ -51,6 +52,24 @@ async function collectSkills(userId, analysis) {
   return new Set(names.map((name) => name.toLowerCase()));
 }
 
+function isFresh(saved, offer) {
+  if (!saved) {
+    return false;
+  }
+  return !offer.updatedAt || saved.createdAt >= new Date(offer.updatedAt);
+}
+
+async function attachInsights(analysisId, offers) {
+  const saved = await findOfferInsights(
+    analysisId,
+    offers.map((offer) => offer.offerKey),
+  );
+  return offers.map((offer) => {
+    const insight = saved.get(offer.offerKey.toLowerCase());
+    return { ...offer, insight: isFresh(insight, offer) ? insight : null };
+  });
+}
+
 export async function getOffers(userId, input) {
   const { analysisId } = parseInput(listSchema, input);
   const analysis = await resolveAnalysis(userId, analysisId);
@@ -58,7 +77,8 @@ export async function getOffers(userId, input) {
     getOfferPool(),
     collectSkills(userId, analysis),
   ]);
-  return rankOffers(offers, userSkills, MAX_OFFERS);
+  const ranked = rankOffers(offers, userSkills, MAX_OFFERS);
+  return attachInsights(analysis.id, ranked);
 }
 
 export async function getOfferInsight(userId, offerKey, input) {
@@ -71,8 +91,7 @@ export async function getOfferInsight(userId, offerKey, input) {
   }
 
   const saved = await findOfferInsight(analysisId, offerKey);
-  const offerChangedAt = offer.updatedAt ? new Date(offer.updatedAt) : null;
-  if (saved && (!offerChangedAt || saved.createdAt >= offerChangedAt)) {
+  if (isFresh(saved, offer)) {
     return { ...saved, cached: true };
   }
 

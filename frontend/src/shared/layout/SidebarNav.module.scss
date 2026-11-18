@@ -3,13 +3,24 @@
 
 .group {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
-  gap: 2px;
+  min-height: 0;
 }
 
 .label {
   @include section-label;
+  flex: none;
   margin-bottom: 0.375rem;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 .link {

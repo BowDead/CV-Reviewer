@@ -1,0 +1,13 @@
+@use "@/shared/styles/variables" as *;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-md;
+}
+
+.status {
+  color: $color-muted-text;
+  font-size: 0.875rem;
+}

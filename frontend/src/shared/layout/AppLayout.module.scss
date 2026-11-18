@@ -14,7 +14,7 @@
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow-y: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: $space-lg;
@@ -25,6 +25,7 @@
   @media (max-width: $breakpoint-sidebar) {
     position: static;
     height: auto;
+    overflow: visible;
     border-right: none;
     border-bottom: 1px solid $color-divider;
   }
@@ -32,6 +33,7 @@
 
 .brand {
   display: flex;
+  flex: none;
   align-items: center;
   gap: 0.625rem;
   padding: 0 0.25rem;
@@ -51,6 +53,7 @@
 }
 
 .footer {
+  flex: none;
   margin-top: auto;
   display: flex;
   flex-direction: column;

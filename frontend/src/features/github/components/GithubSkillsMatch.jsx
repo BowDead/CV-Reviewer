@@ -38,7 +38,7 @@ export function GithubSkillsMatch({ cvSkills }) {
 
   const repoSkills = countRepoSkills(github.repositories);
   const goToGithub = (
-    <Button size="sm" variant="ghost" onClick={() => navigate("/github")}>
+    <Button size="sm" variant="ghost" onClick={() => navigate("/repositories")}>
       {t("githubMatch.goToGithub")}
     </Button>
   );

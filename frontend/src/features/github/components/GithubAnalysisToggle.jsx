@@ -15,7 +15,7 @@ export function GithubAnalysisToggle({ enabled, onChange }) {
     return (
       <div className={styles.source}>
         <strong className={styles.sourceName}>GitHub</strong>
-        <Link to="/github" className={styles.sourceLink}>
+        <Link to="/repositories" className={styles.sourceLink}>
           {t("githubToggle.connect")}
         </Link>
       </div>

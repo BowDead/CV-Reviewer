@@ -53,19 +53,31 @@ export function WorkspacePage({ actions }) {
 
   const rewritesCount = currentAnalysis.result?.analysis.rewrites.length ?? 0;
 
-  const navItems = [
-    { to: "/cv", label: t("workspace.nav.preview") },
-    { to: "/analysis", label: t("workspace.nav.analysis") },
+  const navEntries = [
     {
-      to: "/improvements",
-      label: t("workspace.nav.improvements"),
-      badge: rewritesCount || null,
+      id: "cv",
+      title: t("workspace.navGroups.cv"),
+      items: [
+        { to: "/cv", label: t("workspace.nav.preview") },
+        { to: "/analysis", label: t("workspace.nav.analysis") },
+        {
+          to: "/improvements",
+          label: t("workspace.nav.improvements"),
+          badge: rewritesCount || null,
+        },
+        { to: "/files", label: t("workspace.nav.files") },
+      ],
     },
-    { to: "/profile", label: t("workspace.nav.profile") },
-    { to: "/offers", label: t("workspace.nav.offers") },
-    { to: "/files", label: t("workspace.nav.files") },
-    { to: "/keys", label: t("workspace.nav.keys") },
-    { to: "/github", label: t("workspace.nav.github") },
+    { id: "github", to: "/repositories", label: t("workspace.nav.github") },
+    {
+      id: "career",
+      title: t("workspace.navGroups.career"),
+      items: [
+        { to: "/offers", label: t("workspace.nav.offers") },
+        { to: "/profile", label: t("workspace.nav.profile") },
+      ],
+    },
+    { id: "keys", to: "/keys", label: t("workspace.nav.keys") },
   ];
 
   return (
@@ -87,7 +99,7 @@ export function WorkspacePage({ actions }) {
               />
             </section>
 
-            <SidebarNav title={t("workspace.navTitle")} items={navItems} />
+            <SidebarNav label={t("workspace.navTitle")} entries={navEntries} />
           </>
         }
         footer={

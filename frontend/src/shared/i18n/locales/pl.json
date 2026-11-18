@@ -29,16 +29,20 @@
   },
   "workspace": {
     "yourCv": "Twoje CV",
-    "navTitle": "Widok",
+    "navTitle": "Nawigacja",
     "nav": {
       "preview": "Podgląd CV",
       "analysis": "Analiza",
       "improvements": "Poprawki",
       "profile": "Profil",
       "offers": "Oferty pracy",
-      "files": "CV i analizy",
-      "github": "GitHub",
+      "files": "Zapisane CV i analizy",
+      "github": "Repozytoria",
       "keys": "Klucze AI"
+    },
+    "navGroups": {
+      "cv": "CV",
+      "career": "Praca"
     },
     "gate": {
       "noCvTitle": "Najpierw wgraj CV",
@@ -70,7 +74,7 @@
       "title": "Oferty pracy"
     },
     "files": {
-      "title": "CV i analizy"
+      "title": "Zapisane CV i analizy"
     },
     "github": {
       "title": "Repozytoria GitHub"
@@ -224,7 +228,7 @@
     "title": "Porównanie z GitHubem",
     "connect": "Podłącz konto GitHub, żeby sprawdzić, które umiejętności z CV potwierdzają Twoje repozytoria.",
     "noRepos": "Konto {{login}} nie ma jeszcze przeanalizowanych repozytoriów.",
-    "goToGithub": "Otwórz zakładkę GitHub",
+    "goToGithub": "Otwórz zakładkę Repozytoria",
     "confirmed": "Potwierdzone w repozytoriach",
     "onlyGithub": "W repozytoriach, a brak w CV",
     "onlyCv": "Tylko w CV",

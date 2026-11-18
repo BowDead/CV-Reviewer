@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import { errorMessage } from "@/shared/i18n/errorMessage";
 import { CvDropzone } from "./CvDropzone";
 import { CvSummary } from "./CvSummary";
@@ -7,6 +7,7 @@ import styles from "./CvUploadPanel.module.scss";
 
 export function CvUploadPanel({ cv }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const {
     status,
     name,
@@ -42,10 +43,11 @@ export function CvUploadPanel({ cv }) {
 
   return (
     <div className={styles.upload}>
-      <CvDropzone onFileSelected={upload} disabled={status === "uploading"} />
-      <Link to="/files" className={styles.savedLink}>
-        {t("cvUpload.fromSaved")}
-      </Link>
+      <CvDropzone
+        onFileSelected={upload}
+        onChooseSaved={() => navigate("/files")}
+        disabled={status === "uploading"}
+      />
 
       <div aria-live="polite">
         {status === "uploading" && (

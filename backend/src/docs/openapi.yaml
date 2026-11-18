@@ -374,6 +374,10 @@ paths:
                       type: [string, "null"]
                       format: uuid
                       description: Zapisane CV, z którego pochodzi tekst. Nieznany identyfikator jest pomijany.
+                    useGithub:
+                      type: boolean
+                      default: false
+                      description: Czy dołączyć do analizy przeanalizowane repozytoria GitHub (nazwa, opis, umiejętności, bez loginu). Wpływa tylko na rekomendacje, nie na ocenę.
       responses:
         "200":
           description: Wynik analizy
@@ -499,7 +503,7 @@ paths:
     post:
       tags: [CV i analizy]
       summary: Zapisanie CV utworzonego w kreatorze
-      description: Dane z kreatora są zamieniane na Markdown i zapisywane tak jak tekst wgranego CV, z `source` równym `creator` (krok 07.1).
+      description: Dane z kreatora są zamieniane na Markdown i zapisywane tak jak tekst wgranego CV, z `source` równym `creator` (krok 08.1).
       requestBody:
         required: true
         content:
@@ -2049,6 +2053,9 @@ components:
         truncated:
           type: boolean
           description: Czy do modelu trafił tylko początek tekstu
+        githubRepositories:
+          type: integer
+          description: Liczba repozytoriów GitHub dołączonych do analizy, 0 bez GitHuba
         model:
           type: string
           example: openai/gpt-oss-120b

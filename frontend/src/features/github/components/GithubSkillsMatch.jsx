@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { Button } from "@/shared/ui/Button";
 import { TagList } from "@/shared/ui/TagList";
-import { useGithubRepositories } from "../hooks/useGithubRepositories";
+import { useGithub } from "../hooks/useGithub";
 import styles from "./Github.module.scss";
 
 function countRepoSkills(repositories) {
@@ -30,7 +30,7 @@ function SkillGroup({ title, items, tone }) {
 export function GithubSkillsMatch({ cvSkills }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const github = useGithubRepositories();
+  const github = useGithub();
 
   if (github.status !== "done") {
     return null;

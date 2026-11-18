@@ -10,6 +10,7 @@ import {
   useCvUpload,
 } from "@/features/cv-upload";
 import { CvAnalysisControls, useCvAnalysis } from "@/features/cv-analysis";
+import { GithubAnalysisToggle, GithubProvider } from "@/features/github";
 import styles from "./WorkspacePage.module.scss";
 
 export function WorkspacePage({ actions }) {
@@ -19,6 +20,7 @@ export function WorkspacePage({ actions }) {
   const analysis = useCvAnalysis();
   const navigate = useNavigate();
   const [analyzedCv, setAnalyzedCv] = useState(null);
+  const [includeGithub, setIncludeGithub] = useState(true);
 
   const cvText = review.text;
   const isCurrent = cv.status === "done" && analyzedCv === cv.result;
@@ -41,7 +43,10 @@ export function WorkspacePage({ actions }) {
   function startAnalysis() {
     if (!cvText) return;
     setAnalyzedCv(cv.result);
-    analysis.analyze(cvText, { cvId: cv.savedCvId });
+    analysis.analyze(cvText, {
+      cvId: cv.savedCvId,
+      useGithub: includeGithub,
+    });
 
     navigate("/analysis");
   }
@@ -63,38 +68,44 @@ export function WorkspacePage({ actions }) {
   ];
 
   return (
-    <AppLayout
-      sidebar={
-        <>
-          <section className={styles.block}>
-            <h2 className={styles.label}>{t("workspace.yourCv")}</h2>
-            <CvUploadPanel cv={cv} />
-            <CvAnalysisControls
-              status={currentAnalysis.status}
-              disabled={!cvText}
-              onAnalyze={startAnalysis}
-            />
-          </section>
+    <GithubProvider>
+      <AppLayout
+        sidebar={
+          <>
+            <section className={styles.block}>
+              <h2 className={styles.label}>{t("workspace.yourCv")}</h2>
+              <CvUploadPanel cv={cv} />
+              <GithubAnalysisToggle
+                enabled={includeGithub}
+                onChange={setIncludeGithub}
+              />
+              <CvAnalysisControls
+                status={currentAnalysis.status}
+                disabled={!cvText}
+                onAnalyze={startAnalysis}
+              />
+            </section>
 
-          <SidebarNav title={t("workspace.navTitle")} items={navItems} />
-        </>
-      }
-      footer={
-        <>
-          {actions}
-          <ApiStatus />
-        </>
-      }
-    >
-      <Outlet
-        context={{
-          cv,
-          review,
-          changedAfterAnalysis,
-          analysis: currentAnalysis,
-          startAnalysis,
-        }}
-      />
-    </AppLayout>
+            <SidebarNav title={t("workspace.navTitle")} items={navItems} />
+          </>
+        }
+        footer={
+          <>
+            {actions}
+            <ApiStatus />
+          </>
+        }
+      >
+        <Outlet
+          context={{
+            cv,
+            review,
+            changedAfterAnalysis,
+            analysis: currentAnalysis,
+            startAnalysis,
+          }}
+        />
+      </AppLayout>
+    </GithubProvider>
   );
 }

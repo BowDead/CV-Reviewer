@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { errorMessage } from "@/shared/i18n/errorMessage";
 import { Button } from "@/shared/ui/Button";
 import { EmptyState } from "@/shared/ui/EmptyState";
-import { useGithubRepositories } from "../hooks/useGithubRepositories";
+import { useGithub } from "../hooks/useGithub";
 import { GithubLoginForm } from "./GithubLoginForm";
 import { RepositoryList } from "./RepositoryList";
 import styles from "./Github.module.scss";
@@ -21,7 +21,7 @@ export function GithubPanel() {
     saveLogin,
     removeAccount,
     analyze,
-  } = useGithubRepositories();
+  } = useGithub();
   const [editing, setEditing] = useState(false);
 
   if (status === "loading") {

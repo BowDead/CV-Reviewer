@@ -5,6 +5,7 @@ import {
 } from "./ai/cv-analysis.prompt.js";
 import { cvAnalysisSchema } from "./ai/cv-analysis.schema.js";
 import { keepRewritesFromCv, scoreCv } from "./cv-scoring.service.js";
+import { getRepositoriesForCv } from "./github.service.js";
 import { resolveLlm } from "./llm-key.service.js";
 import {
   getSkillDetector,
@@ -14,6 +15,7 @@ import {
 const MAX_AI_CHARS = 10_000;
 const MAX_INPUT_CHARS = 50_000;
 const ANALYSIS_SEED = 7;
+const MAX_ATTEMPTS = 2;
 
 function mergeSkills(detected, review, detector) {
   const rejected = new Set(
@@ -55,7 +57,36 @@ function groupByCategory(known, unknown) {
   return [...groups].map(([category, items]) => ({ category, items }));
 }
 
-export async function analyzeCv(text, { userId }) {
+function isComplete(data) {
+  return (
+    data.criteria.length > 0 &&
+    data.summary !== "" &&
+    data.actionItems.length > 0
+  );
+}
+
+async function askModel(llm, userMessage) {
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    const raw = await llm.completeJson({
+      system: CV_ANALYSIS_SYSTEM_PROMPT,
+      user: userMessage,
+      temperature: 0,
+      seed: ANALYSIS_SEED + attempt,
+    });
+    const parsed = cvAnalysisSchema.safeParse(raw);
+    if (parsed.success && isComplete(parsed.data)) {
+      return parsed.data;
+    }
+    console.warn(
+      "Niepełna odpowiedź modelu, próba",
+      attempt + 1,
+      Object.keys(raw ?? {}),
+    );
+  }
+  throw new HttpError(502, "AI_EMPTY_RESPONSE");
+}
+
+export async function analyzeCv(text, { userId, useGithub = false }) {
   if (typeof text !== "string" || !text.trim()) {
     throw new HttpError(400, "CV_TEXT_MISSING");
   }
@@ -70,26 +101,18 @@ export async function analyzeCv(text, { userId }) {
   const detected = detector.detect(text);
 
   const llm = await resolveLlm(userId);
+  const repositories = useGithub ? await getRepositoriesForCv(userId) : [];
 
-  const raw = await llm.completeJson({
-    system: CV_ANALYSIS_SYSTEM_PROMPT,
-    user: buildCvAnalysisUserMessage(
+  const data = await askModel(
+    llm,
+    buildCvAnalysisUserMessage(
       cvText,
       detected.map((skill) => skill.name),
+      repositories,
     ),
-    temperature: 0,
-    seed: ANALYSIS_SEED,
-  });
+  );
 
-  const parsed = cvAnalysisSchema.safeParse(raw);
-  if (
-    !parsed.success ||
-    (parsed.data.criteria.length === 0 && !parsed.data.summary)
-  ) {
-    throw new HttpError(502, "AI_EMPTY_RESPONSE");
-  }
-
-  const { skillReview, criteria, rewrites, ...analysis } = parsed.data;
+  const { skillReview, criteria, rewrites, ...analysis } = data;
   const { known, unknown } = mergeSkills(detected, skillReview, detector);
   await savePendingSkills(unknown);
 
@@ -114,6 +137,7 @@ export async function analyzeCv(text, { userId }) {
     })),
     unknownSkills: unknown,
     truncated,
+    githubRepositories: repositories.length,
     model: llm.model,
   };
 }

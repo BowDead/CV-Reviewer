@@ -183,3 +183,90 @@
   background: $color-danger-bg;
   color: $color-danger;
 }
+
+.source {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-surface;
+  font-size: 0.875rem;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.sourceText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sourceName {
+  overflow-wrap: anywhere;
+}
+
+.sourceMeta {
+  color: $color-muted-text;
+  font-size: 0.8rem;
+}
+
+.sourceLink {
+  color: $color-primary-text;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.switch {
+  appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 1.25rem;
+  margin: 0;
+  border-radius: 999px;
+  background: $color-border-strong;
+  cursor: pointer;
+  transition: background-color 0.15s;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0.125rem;
+    left: 0.125rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: $color-text;
+    transition: transform 0.15s;
+  }
+
+  &:checked {
+    background: $color-primary;
+  }
+
+  &:checked::after {
+    background: $color-on-primary;
+    transform: translateX(1rem);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+}

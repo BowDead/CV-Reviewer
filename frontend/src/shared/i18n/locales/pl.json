@@ -81,7 +81,7 @@
     "chooseFile": "Wybierz plik",
     "reading": "Odczytywanie „{{fileName}}”…",
     "changeFile": "Zmień plik",
-    "fromSaved": "Wybierz z zapisanych CV",
+    "fromSaved": "Z zapisanych",
     "save": "Zapisz CV",
     "saving": "Zapisywanie…",
     "saved": "Zapisane",
@@ -131,6 +131,10 @@
     "actionItems": "Proponowane działania",
     "rewritesTitle": "Propozycje przeredagowania",
     "cached": "Analiza z {{date}}",
+    "githubUsed_one": "Rekomendacje uwzględniają {{count}} repozytorium z GitHuba.",
+    "githubUsed_few": "Rekomendacje uwzględniają {{count}} repozytoria z GitHuba.",
+    "githubUsed_many": "Rekomendacje uwzględniają {{count}} repozytoriów z GitHuba.",
+    "githubUsed_other": "Rekomendacje uwzględniają {{count}} repozytoria z GitHuba.",
     "criteria": {
       "met": "Spełnione",
       "partial": "Częściowo",
@@ -221,6 +225,15 @@
     "onlyGithub": "W repozytoriach, a brak w CV",
     "onlyCv": "Tylko w CV",
     "inRepos": "{{name}} ({{count}})"
+  },
+  "githubToggle": {
+    "label": "Uwzględnij GitHub w analizie",
+    "connect": "Podłącz konto →",
+    "noRepos": "Brak przeanalizowanych repozytoriów",
+    "repos_one": "{{count}} repozytorium",
+    "repos_few": "{{count}} repozytoria",
+    "repos_many": "{{count}} repozytoriów",
+    "repos_other": "{{count}} repozytorium"
   },
   "health": {
     "checking": "Sprawdzanie połączenia z API…",

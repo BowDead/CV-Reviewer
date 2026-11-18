@@ -4,7 +4,11 @@ import { Button } from "@/shared/ui/Button";
 import { ACCEPT_ATTRIBUTE, MAX_FILE_SIZE_MB } from "../constants";
 import styles from "./CvDropzone.module.scss";
 
-export function CvDropzone({ onFileSelected, disabled = false }) {
+export function CvDropzone({
+  onFileSelected,
+  onChooseSaved,
+  disabled = false,
+}) {
   const { t } = useTranslation();
   const inputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -56,13 +60,23 @@ export function CvDropzone({ onFileSelected, disabled = false }) {
         {t("cvUpload.dropHint", { maxMb: MAX_FILE_SIZE_MB })}
       </p>
 
-      <Button
-        size="sm"
-        onClick={() => inputRef.current?.click()}
-        disabled={disabled}
-      >
-        {t("cvUpload.chooseFile")}
-      </Button>
+      <div className={styles.actions}>
+        <Button
+          size="sm"
+          onClick={() => inputRef.current?.click()}
+          disabled={disabled}
+        >
+          {t("cvUpload.chooseFile")}
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={onChooseSaved}
+          disabled={disabled}
+        >
+          {t("cvUpload.fromSaved")}
+        </Button>
+      </div>
 
       <input
         ref={inputRef}

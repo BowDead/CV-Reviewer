@@ -5,6 +5,7 @@ export function cvAnalysisView(result) {
     skills: result.skills,
     unknownSkills: result.unknownSkills,
     truncated: result.truncated,
+    githubRepositories: result.githubRepositories ?? 0,
     model: result.model,
     cached: result.cached ?? false,
     analyzedAt: result.analyzedAt ?? null,

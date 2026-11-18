@@ -34,3 +34,10 @@
   color: $color-muted-text;
   font-size: 0.8rem;
 }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.375rem;
+}

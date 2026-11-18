@@ -16,11 +16,12 @@ const FOREIGN_KEY_VIOLATION = "23503";
 
 const sourceSchema = z.object({
   cvId: z.uuid().nullish().catch(null),
+  useGithub: z.boolean().catch(false),
 });
 
 export async function analyzeAndSave(userId, input) {
-  const { cvId } = parseInput(sourceSchema, input);
-  const result = await analyzeCv(input?.text, { userId });
+  const { cvId, useGithub } = parseInput(sourceSchema, input);
+  const result = await analyzeCv(input?.text, { userId, useGithub });
 
   const analysisId = await insertAnalysis({
     userId,

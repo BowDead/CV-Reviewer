@@ -41,6 +41,8 @@ import { getUserDataKey } from "./user-crypto.service.js";
 
 const MAX_REPOS_PER_RUN = 10;
 const MAX_DESCRIPTION_CHARS = 300;
+const MAX_REPOS_FOR_CV = 10;
+const MAX_SUMMARY_CHARS = 200;
 const LOGIN_PATTERN = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
 
 const loginSchema = z.object({
@@ -78,6 +80,24 @@ export async function getRepositories(userId) {
     login,
     repositories: repositories.map((repo) => readRepository(repo, dataKey)),
   };
+}
+
+export async function getRepositoriesForCv(userId) {
+  const { login, repositories } = await getRepositories(userId);
+  if (!login) {
+    return [];
+  }
+  return repositories
+    .filter((repo) => repo.status === "done")
+    .slice(0, MAX_REPOS_FOR_CV)
+    .map((repo) => ({
+      name: hideLogin(repo.name, login),
+      summary: hideLogin(
+        (repo.summary ?? "").slice(0, MAX_SUMMARY_CHARS),
+        login,
+      ),
+      skills: repo.skills.map((skill) => skill.name),
+    }));
 }
 
 export async function setGithubAccount(userId, input) {

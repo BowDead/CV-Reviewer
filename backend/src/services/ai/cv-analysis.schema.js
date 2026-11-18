@@ -2,9 +2,9 @@ import { z } from "zod";
 
 export const SENIORITY_LEVELS = ["Stażysta", "Junior", "Mid", "Senior", "Lead"];
 
-const text = z.string().trim().catch("");
+export const text = z.string().trim().catch("");
 
-const stringList = z
+export const stringList = z
   .array(z.unknown())
   .catch([])
   .transform((items) =>

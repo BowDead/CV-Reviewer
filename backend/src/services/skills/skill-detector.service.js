@@ -21,6 +21,12 @@ export function createSkillDetector(skills) {
     ),
   );
 
+  const skillsByLanguage = new Map(
+    skills
+      .filter((skill) => skill.githubLanguage)
+      .map((skill) => [skill.githubLanguage, skill]),
+  );
+
   return {
     detect(text) {
       return matchers
@@ -29,6 +35,9 @@ export function createSkillDetector(skills) {
     },
     find(name) {
       return skillsByName.get(name.trim().toLowerCase()) ?? null;
+    },
+    findByLanguage(language) {
+      return skillsByLanguage.get(language) ?? null;
     },
   };
 }

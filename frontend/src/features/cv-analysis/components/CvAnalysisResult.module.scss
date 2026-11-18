@@ -1,15 +1,16 @@
 @use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
 
 .result {
   display: flex;
   flex-direction: column;
-  gap: $space-lg;
+  gap: $space-md;
 }
 
 .columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: $space-lg;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: $space-md;
 
   &:empty {
     display: none;
@@ -26,18 +27,11 @@
   color: $color-danger;
 }
 
-.card {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: $space-md $space-lg;
-  padding: $space-md $space-lg;
-  border: 1px solid $color-border;
-  border-radius: $radius;
-  background: $color-surface;
+.roles {
+  @include card;
 }
 
-.cardTitle {
+.rolesTitle {
   margin: 0 0 $space-sm;
   font-size: 1rem;
 }

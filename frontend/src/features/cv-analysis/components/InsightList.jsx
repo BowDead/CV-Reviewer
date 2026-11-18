@@ -5,8 +5,9 @@ export function InsightList({
   items,
   tone = "neutral",
   ordered = false,
+  children,
 }) {
-  if (!items.length) {
+  if (!children && !items.length) {
     return null;
   }
 
@@ -15,11 +16,13 @@ export function InsightList({
   return (
     <div className={`${styles.card} ${styles[tone]}`}>
       <h3 className={styles.title}>{title}</h3>
-      <ListTag className={styles.list}>
-        {items.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ListTag>
+      {children ?? (
+        <ListTag className={styles.list}>
+          {items.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ListTag>
+      )}
     </div>
   );
 }

@@ -217,10 +217,10 @@
     }
   },
   "githubMatch": {
-    "title": "CV a GitHub",
+    "title": "Porównanie z GitHubem",
     "connect": "Podłącz konto GitHub, żeby sprawdzić, które umiejętności z CV potwierdzają Twoje repozytoria.",
     "noRepos": "Konto {{login}} nie ma jeszcze przeanalizowanych repozytoriów.",
-    "goToGithub": "Przejdź do GitHuba",
+    "goToGithub": "Otwórz zakładkę GitHub",
     "confirmed": "Potwierdzone w repozytoriach",
     "onlyGithub": "W repozytoriach, a brak w CV",
     "onlyCv": "Tylko w CV",

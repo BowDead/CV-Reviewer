@@ -32,29 +32,21 @@ export function CvAnalysisResult({ result }) {
           items={analysis.missingSections}
           tone="negative"
         />
-
-        {(analysis.suggestedRoles.length > 0 ||
-          analysis.skillsToAdd.length > 0) && (
-          <div className={styles.card}>
-            {analysis.suggestedRoles.length > 0 && (
-              <div>
-                <h3 className={styles.cardTitle}>
-                  {t("cvAnalysis.suggestedRoles")}
-                </h3>
-                <TagList items={analysis.suggestedRoles} tone="primary" />
-              </div>
-            )}
-            {analysis.skillsToAdd.length > 0 && (
-              <div>
-                <h3 className={styles.cardTitle}>
-                  {t("cvAnalysis.skillsToAdd")}
-                </h3>
-                <TagList items={analysis.skillsToAdd} tone="success" />
-              </div>
-            )}
-          </div>
+        {analysis.skillsToAdd.length > 0 && (
+          <InsightList title={t("cvAnalysis.skillsToAdd")} tone="positive">
+            <TagList items={analysis.skillsToAdd} tone="success" />
+          </InsightList>
         )}
       </div>
+
+      {analysis.suggestedRoles.length > 0 && (
+        <section className={styles.roles}>
+          <h3 className={styles.rolesTitle}>
+            {t("cvAnalysis.suggestedRoles")}
+          </h3>
+          <TagList items={analysis.suggestedRoles} tone="primary" />
+        </section>
+      )}
     </div>
   );
 }

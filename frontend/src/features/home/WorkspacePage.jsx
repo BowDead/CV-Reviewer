@@ -59,6 +59,7 @@ export function WorkspacePage({ actions }) {
     { to: "/profile", label: t("workspace.nav.profile") },
     { to: "/files", label: t("workspace.nav.files") },
     { to: "/keys", label: t("workspace.nav.keys") },
+    { to: "/github", label: t("workspace.nav.github") },
   ];
 
   return (

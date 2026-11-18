@@ -36,6 +36,7 @@
       "improvements": "Poprawki",
       "profile": "Profil",
       "files": "CV i analizy",
+      "github": "GitHub",
       "keys": "Klucze AI"
     },
     "gate": {
@@ -66,6 +67,9 @@
     },
     "files": {
       "title": "CV i analizy"
+    },
+    "github": {
+      "title": "Repozytoria GitHub"
     },
     "keys": {
       "title": "Klucze AI"
@@ -179,11 +183,35 @@
     "confirmRemove": "Usunąć „{{name}}”? Analizy tego CV zostaną i przejdą do grupy „Analizy bez zapisanego CV”.",
     "confirmRemoveAnalysis": "Usunąć analizę z {{date}}?"
   },
-
   "analysisHistory": {
     "profileSource": "Źródło profilu"
   },
-
+  "github": {
+    "loading": "Wczytywanie repozytoriów…",
+    "loadFailed": "Nie udało się wczytać repozytoriów",
+    "formTitle": "Konto GitHub",
+    "formHint": "Podanie konta jest opcjonalne. Analizujemy tylko publiczne repozytoria, a nazwa konta nie trafia do modelu AI.",
+    "login": "Login albo link do profilu",
+    "save": "Sprawdź i zapisz",
+    "saving": "Sprawdzanie konta…",
+    "cancel": "Anuluj",
+    "connected": "Konto:",
+    "analyze": "Analizuj repozytoria",
+    "analyzing": "Analizowanie…",
+    "analyzingHint": "Pobieranie danych z GitHuba i analiza AI. Zwykle trwa to 10–30 sekund.",
+    "change": "Zmień",
+    "remove": "Odłącz",
+    "confirmRemove": "Odłączyć konto {{login}}? Wyniki analizy repozytoriów zostaną usunięte.",
+    "lastRun": "Przeanalizowano: {{analyzed}}, bez zmian: {{unchanged}}, błędy: {{failed}}.",
+    "remaining": "Do analizy zostało jeszcze: {{left}}. Kliknij ponownie, aby kontynuować.",
+    "emptyTitle": "Brak przeanalizowanych repozytoriów",
+    "emptyText": "Kliknij „Analizuj repozytoria”. Forki i puste repozytoria są pomijane.",
+    "analyzedAt": "przeanalizowano {{date}}",
+    "status": {
+      "pending": "Czeka na analizę",
+      "failed": "Błąd analizy"
+    }
+  },
   "health": {
     "checking": "Sprawdzanie połączenia z API…",
     "unavailable": "Brak połączenia z API: {{message}}",
@@ -254,6 +282,14 @@
     "CV_CONTENT_TOO_LONG": "CV jest za długie (limit to {{max}} znaków).",
     "ANALYSIS_NOT_FOUND": "Nie znaleziono analizy.",
     "ANALYSIS_IS_PROFILE_SOURCE": "Tej analizy nie można usunąć, bo jest źródłem Twojego profilu.",
+    "GITHUB_LOGIN_REQUIRED": "Podaj login GitHub.",
+    "GITHUB_LOGIN_INVALID": "To nie wygląda na login GitHub. Login ma do 39 znaków: litery, cyfry i pojedyncze myślniki.",
+    "GITHUB_USER_NOT_FOUND": "Nie znaleziono konta GitHub „{{login}}”.",
+    "GITHUB_ACCOUNT_REQUIRED": "Najpierw podaj konto GitHub.",
+    "GITHUB_RATE_LIMIT": "Wyczerpano limit zapytań do GitHuba. Spróbuj ponownie za {{minutes}} min.",
+    "GITHUB_TIMEOUT": "GitHub nie odpowiedział na czas. Spróbuj ponownie.",
+    "GITHUB_CONNECTION": "Brak połączenia z GitHubem.",
+    "GITHUB_ERROR": "GitHub zwrócił błąd. Spróbuj ponownie później.",
     "UNKNOWN": "Wystąpił nieoczekiwany błąd."
   }
 }

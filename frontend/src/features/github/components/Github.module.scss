@@ -1,0 +1,158 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  max-width: 720px;
+}
+
+.form {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $space-md;
+}
+
+.formTitle {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.hint {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.9rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  input {
+    min-height: 2.5rem;
+    padding: $space-xs 0.75rem;
+    border: 1px solid $color-border-strong;
+    border-radius: $radius;
+    background: $color-bg;
+    color: $color-text;
+    font: inherit;
+    font-weight: 400;
+
+    &:focus {
+      border-color: $color-primary;
+      outline: none;
+    }
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.account {
+  @include card;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-sm;
+}
+
+.accountName {
+  font-weight: 600;
+
+  a {
+    color: $color-primary-text;
+  }
+}
+
+.info,
+.error {
+  margin: 0;
+  padding: $space-xs 0.75rem;
+  border-radius: $radius;
+  font-size: 0.875rem;
+}
+
+.info {
+  background: $color-muted-bg;
+  color: $color-muted-text;
+}
+
+.error {
+  border: 1px solid;
+  background: $color-danger-bg;
+  color: $color-danger;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.repo {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+.repoHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: $space-xs;
+}
+
+.repoName {
+  color: $color-text;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+
+  &:hover {
+    color: $color-primary-text;
+    text-decoration: underline;
+  }
+}
+
+.summary {
+  margin: 0;
+  color: $color-text-soft;
+  font-size: 0.9rem;
+}
+
+.meta {
+  color: $color-muted-text;
+  font-size: 0.85rem;
+}
+
+.status {
+  padding: 0 0.375rem;
+  border-radius: $radius-sm;
+  font-size: 0.75rem;
+}
+
+.pending {
+  background: $color-muted-bg;
+  color: $color-muted-text;
+}
+
+.failed {
+  background: $color-danger-bg;
+  color: $color-danger;
+}

@@ -33,6 +33,7 @@ export const router = createBrowserRouter([
       { path: "/files", element: <FilesTab /> },
       { path: "/history", element: <Navigate to="/files" replace /> },
       { path: "/keys", element: <KeysTab /> },
+      { path: "/github", element: <GithubTab /> },
     ],
   },
   {

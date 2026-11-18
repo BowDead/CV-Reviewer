@@ -5,3 +5,4 @@ export { ImprovementsTab } from "./tabs/ImprovementsTab";
 export { ProfileTab } from "./tabs/ProfileTab";
 export { FilesTab } from "./tabs/FilesTab";
 export { KeysTab } from "./tabs/KeysTab";
+export { GithubTab } from "./tabs/GithubTab";

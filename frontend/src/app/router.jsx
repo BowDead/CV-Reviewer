@@ -8,6 +8,7 @@ import {
   ProfileTab,
   KeysTab,
   FilesTab,
+  GithubTab,
 } from "@/features/home";
 import { EmployerPage } from "@/features/employer";
 import {
@@ -32,8 +33,8 @@ export const router = createBrowserRouter([
       { path: "/profile", element: <ProfileTab /> },
       { path: "/files", element: <FilesTab /> },
       { path: "/history", element: <Navigate to="/files" replace /> },
-      { path: "/keys", element: <KeysTab /> },
       { path: "/github", element: <GithubTab /> },
+      { path: "/keys", element: <KeysTab /> },
     ],
   },
   {

@@ -91,6 +91,49 @@
   font-size: 0.8rem;
 }
 
+.repos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: $space-xs;
+}
+
+.reposNote {
+  color: $color-muted-text;
+  font-size: 0.85rem;
+}
+
+.repoList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-xs $space-md;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.repo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.repoName {
+  color: $color-primary-text;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.repoSkills {
+  color: $color-muted-text;
+  font-size: 0.8rem;
+}
+
 .insight {
   display: flex;
   flex-direction: column;

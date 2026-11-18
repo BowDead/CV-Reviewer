@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { errorMessage } from "@/shared/i18n/errorMessage";
 import { Button } from "@/shared/ui/Button";
 import { TagList } from "@/shared/ui/TagList";
+import { OfferRepositories } from "./OfferRepositories";
 import styles from "./Offers.module.scss";
 
 export function OfferCard({ offer, insight, onExplain }) {
@@ -42,6 +43,7 @@ export function OfferCard({ offer, insight, onExplain }) {
           <TagList items={match.missing} />
         </div>
       )}
+      <OfferRepositories offerKey={offer.offerKey} />
 
       <div className={styles.insight} aria-live="polite">
         {insight?.status === "done" && (

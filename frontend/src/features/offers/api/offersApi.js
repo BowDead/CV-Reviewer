@@ -11,3 +11,9 @@ export function fetchOfferInsight(offerKey, analysisId) {
     body: { analysisId },
   });
 }
+
+export function fetchOfferRepositories(offerKey, signal) {
+  return request(`/offers/${encodeURIComponent(offerKey)}/repositories`, {
+    signal,
+  });
+}

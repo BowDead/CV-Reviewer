@@ -253,7 +253,11 @@
     "matched": "Masz:",
     "missing": "Brakuje:",
     "explain": "Uzasadnij ofertę",
-    "explaining": "Generowanie uzasadnienia…"
+    "explaining": "Generowanie uzasadnienia…",
+    "repositories": {
+      "label": "Repozytoria do pokazania:",
+      "empty": "Żadne przeanalizowane repozytorium nie pokrywa umiejętności z tej oferty."
+    }
   },
   "pagination": {
     "label": "Stronicowanie",

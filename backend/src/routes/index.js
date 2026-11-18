@@ -5,6 +5,7 @@ import { cvRouter } from "./cv.routes.js";
 import { llmKeysRouter } from "./llm-keys.routes.js";
 import { analysesRouter } from "./analyses.routes.js";
 import { skillsRouter } from "./skills.routes.js";
+import { githubRouter } from "./github.routes.js";
 
 export const apiRouter = Router();
 
@@ -14,3 +15,4 @@ apiRouter.use("/cv", cvRouter);
 apiRouter.use("/llm-keys", llmKeysRouter);
 apiRouter.use("/analyses", analysesRouter);
 apiRouter.use("/skills", skillsRouter);
+apiRouter.use("/github", githubRouter);

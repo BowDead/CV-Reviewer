@@ -659,7 +659,8 @@ paths:
   /api/github/account:
     put:
       tags: [Repozytoria GitHub]
-      summary: Podanie loginu lub zmiana loginu GitHub
+      summary: Podanie lub zmiana loginu GitHub
+      description: Sprawdza w GitHub API, czy konto istnieje, i zapisuje login w postaci zaszyfrowanej. Przyjmuje też link do profilu i login z `@`. Zmiana na inne konto usuwa dane repozytoriów poprzedniego.
       requestBody:
         required: true
         content:
@@ -670,11 +671,10 @@ paths:
               properties:
                 login:
                   type: string
-                  maxLength: 39
                   example: octocat
       responses:
         "200":
-          description: Login zapisany
+          description: Login zapisany w pisowni z GitHuba
           content:
             application/json:
               schema:
@@ -682,12 +682,25 @@ paths:
                 properties:
                   login:
                     type: string
+                    example: octocat
         "400":
-          $ref: "#/components/responses/BadRequest"
+          description: "`GITHUB_LOGIN_REQUIRED`, `GITHUB_LOGIN_INVALID`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
-          description: Konto GitHub nie istnieje
+          description: "`GITHUB_USER_NOT_FOUND` – konto GitHub nie istnieje"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "429":
+          description: "`GITHUB_RATE_LIMIT` – wyczerpany limit zapytań do GitHub API, `params.minutes` mówi, za ile minut spróbować"
           content:
             application/json:
               schema:
@@ -700,59 +713,79 @@ paths:
           description: Login i dane repozytoriów usunięte
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
 
   /api/github/repositories:
     get:
       tags: [Repozytoria GitHub]
-      summary: Lista repozytoriów ze stanem analizy i listą umiejętności
+      summary: Login GitHub i lista repozytoriów ze stanem analizy
+      description: Czyta tylko zapisane dane, bez zapytań do GitHuba.
       responses:
         "200":
-          description: Repozytoria użytkownika
+          description: Repozytoria użytkownika, od ostatnio zmienionego
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  repositories:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Repository"
+                $ref: "#/components/schemas/RepositoryList"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
 
   /api/github/repositories/analyze:
     post:
       tags: [Repozytoria GitHub]
       summary: Aktualizacja danych i analiza repozytoriów
-      description: Pobiera listę publicznych repozytoriów z GitHuba i analizuje tylko te, które są nowe albo zmieniły się od ostatniej analizy. Forki i puste repozytoria są pomijane.
+      description: Pobiera listę publicznych repozytoriów z GitHuba i analizuje tylko te, które są nowe, zmieniły się od ostatniej analizy albo poprzednio się nie udały. Forki i puste repozytoria są pomijane. Jedno wywołanie analizuje najwyżej 10 repozytoriów i wysyła jedno zapytanie do modelu, a `remaining` mówi, ile czeka na kolejne wywołanie.
       responses:
         "200":
           description: Podsumowanie analizy i aktualna lista repozytoriów
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  analyzed:
-                    type: integer
-                  unchanged:
-                    type: integer
-                  failed:
-                    type: integer
-                  repositories:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Repository"
+                allOf:
+                  - type: object
+                    properties:
+                      analyzed:
+                        type: integer
+                      unchanged:
+                        type: integer
+                      failed:
+                        type: integer
+                      remaining:
+                        type: integer
+                  - $ref: "#/components/schemas/RepositoryList"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          description: "`GITHUB_USER_NOT_FOUND` – konto zostało usunięte z GitHuba"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "409":
-          description: Nie podano loginu GitHub albo brak klucza do modelu (`LLM_KEY_REQUIRED`)
+          description: "`GITHUB_ACCOUNT_REQUIRED` – nie podano loginu, `LLM_KEY_REQUIRED` – brak klucza do modelu"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "429":
+          description: "`GITHUB_RATE_LIMIT` albo `AI_RATE_LIMIT`"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
         "502":
-          description: Błąd GitHub API albo modelu językowego
+          description: "`GITHUB_ERROR`, `GITHUB_CONNECTION` albo błąd modelu językowego"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "504":
+          description: "`GITHUB_TIMEOUT` albo `AI_TIMEOUT`"
           content:
             application/json:
               schema:

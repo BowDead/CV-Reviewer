@@ -15,7 +15,7 @@ function NavItem({ item }) {
   );
 }
 
-function NavGroup({ group, open, onToggle }) {
+function NavGroup({ group, open, active, onToggle }) {
   const listId = useId();
   const badge = group.items.reduce((sum, item) => sum + (item.badge ?? 0), 0);
 
@@ -23,7 +23,9 @@ function NavGroup({ group, open, onToggle }) {
     <div className={styles.group}>
       <button
         type="button"
-        className={styles.header}
+        className={
+          active ? `${styles.header} ${styles.headerActive}` : styles.header
+        }
         aria-expanded={open}
         aria-controls={listId}
         onClick={onToggle}
@@ -55,14 +57,28 @@ function findActiveGroup(entries, pathname) {
 export function SidebarNav({ label, entries }) {
   const { pathname } = useLocation();
   const activeGroup = findActiveGroup(entries, pathname);
-  const [openGroup, setOpenGroup] = useState(activeGroup);
+  const [closedGroups, setClosedGroups] = useState(() => new Set());
   const [shownFor, setShownFor] = useState(activeGroup);
 
   if (activeGroup !== shownFor) {
     setShownFor(activeGroup);
-    if (activeGroup) {
-      setOpenGroup(activeGroup);
+    if (activeGroup && closedGroups.has(activeGroup)) {
+      const next = new Set(closedGroups);
+      next.delete(activeGroup);
+      setClosedGroups(next);
     }
+  }
+
+  function toggleGroup(id) {
+    setClosedGroups((current) => {
+      const next = new Set(current);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
   }
 
   return (
@@ -72,10 +88,9 @@ export function SidebarNav({ label, entries }) {
           <NavGroup
             key={entry.id}
             group={entry}
-            open={openGroup === entry.id}
-            onToggle={() =>
-              setOpenGroup((current) => (current === entry.id ? null : entry.id))
-            }
+            open={!closedGroups.has(entry.id)}
+            active={activeGroup === entry.id}
+            onToggle={() => toggleGroup(entry.id)}
           />
         ) : (
           <NavItem key={entry.id} item={entry.items?.[0] ?? entry} />

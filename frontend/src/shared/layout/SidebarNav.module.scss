@@ -42,6 +42,23 @@
   }
 }
 
+.headerActive {
+  color: $color-primary-text;
+
+  &[aria-expanded="false"] {
+    background: $color-primary-bg;
+    box-shadow: inset 2px 0 0 $color-primary;
+  }
+
+  &[aria-expanded="false"]:hover {
+    background: $color-primary-bg;
+  }
+
+  .chevron {
+    border-color: $color-primary;
+  }
+}
+
 .chevron {
   flex: none;
   width: 0.45rem;

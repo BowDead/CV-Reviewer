@@ -24,13 +24,6 @@ export function AnalysisTab() {
                 })}
               </p>
             )}
-            {result.githubRepositories > 0 && (
-              <p className={styles.notice}>
-                {t("cvAnalysis.githubUsed", {
-                  count: result.githubRepositories,
-                })}
-              </p>
-            )}
             <CvAnalysisResult result={result} />
             <GithubSkillsMatch
               cvSkills={result.skills.map((skill) => skill.name)}

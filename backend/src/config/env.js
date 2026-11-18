@@ -25,6 +25,7 @@ export const env = {
   isProduction: process.env.NODE_ENV === "production",
   groqApiKey: process.env.GROQ_API_KEY || "",
   groqModel: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
+  githubToken: process.env.GITHUB_TOKEN || "",
   databaseUrl: required("DATABASE_URL"),
   jwtSecret,
   masterKey,

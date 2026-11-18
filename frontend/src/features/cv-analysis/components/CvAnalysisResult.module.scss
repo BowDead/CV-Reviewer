@@ -27,9 +27,10 @@
 }
 
 .card {
-  display: flex;
-  flex-direction: column;
-  gap: $space-md;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $space-md $space-lg;
   padding: $space-md $space-lg;
   border: 1px solid $color-border;
   border-radius: $radius;

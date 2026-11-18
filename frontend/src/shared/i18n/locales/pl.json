@@ -35,6 +35,7 @@
       "analysis": "Analiza",
       "improvements": "Poprawki",
       "profile": "Profil",
+      "offers": "Oferty pracy",
       "files": "CV i analizy",
       "github": "GitHub",
       "keys": "Klucze AI"
@@ -64,6 +65,9 @@
     },
     "profile": {
       "title": "Profil"
+    },
+    "offers": {
+      "title": "Oferty pracy"
     },
     "files": {
       "title": "CV i analizy"
@@ -235,6 +239,22 @@
     "repos_many": "{{count}} repozytoriów",
     "repos_other": "{{count}} repozytorium"
   },
+  "offers": {
+    "loading": "Dopasowywanie ofert…",
+    "loadingText": "Pobieranie ofert z Solid.Jobs. Pierwsze wczytanie trwa kilka sekund.",
+    "loadFailed": "Nie udało się wczytać ofert",
+    "emptyTitle": "Brak dopasowanych ofert",
+    "emptyText": "Żadna oferta nie wymaga umiejętności z Twojej analizy ani repozytoriów. Dopisz umiejętności do CV albo przeanalizuj repozytoria GitHub.",
+    "noAnalysisTitle": "Najpierw przeanalizuj CV",
+    "noAnalysisText": "Oferty są dopasowywane do umiejętności z analizy CV i z repozytoriów GitHub. Przeanalizuj CV albo wczytaj zapisane.",
+    "goToFiles": "Przejdź do CV i analiz",
+    "summary": "Najlepiej dopasowane oferty z Solid.Jobs: {{count}}",
+    "match": "dopasowania",
+    "matched": "Masz:",
+    "missing": "Brakuje:",
+    "explain": "Dlaczego pasuje?",
+    "explaining": "Generowanie uzasadnienia…"
+  },
   "health": {
     "checking": "Sprawdzanie połączenia z API…",
     "unavailable": "Brak połączenia z API: {{message}}",
@@ -313,6 +333,9 @@
     "GITHUB_TIMEOUT": "GitHub nie odpowiedział na czas. Spróbuj ponownie.",
     "GITHUB_CONNECTION": "Brak połączenia z GitHubem.",
     "GITHUB_ERROR": "GitHub zwrócił błąd. Spróbuj ponownie później.",
+    "OFFER_NOT_FOUND": "Nie znaleziono oferty. Mogła wygasnąć, odśwież listę.",
+    "SOLIDJOBS_TIMEOUT": "Solid.Jobs nie odpowiedział na czas. Spróbuj ponownie.",
+    "SOLIDJOBS_ERROR": "Nie udało się pobrać ofert z Solid.Jobs. Spróbuj ponownie później.",
     "UNKNOWN": "Wystąpił nieoczekiwany błąd."
   }
 }

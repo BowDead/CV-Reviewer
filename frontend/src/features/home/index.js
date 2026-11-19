@@ -7,3 +7,4 @@ export { FilesTab } from "./tabs/FilesTab";
 export { KeysTab } from "./tabs/KeysTab";
 export { GithubTab } from "./tabs/GithubTab";
 export { OffersTab } from "./tabs/OffersTab";
+export { OfferDetailsTab } from "./tabs/OfferDetailsTab";

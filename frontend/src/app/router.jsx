@@ -10,6 +10,7 @@ import {
   FilesTab,
   GithubTab,
   OffersTab,
+  OfferDetailsTab,
 } from "@/features/home";
 import { EmployerPage } from "@/features/employer";
 import {
@@ -33,6 +34,7 @@ export const router = createBrowserRouter([
       { path: "/improvements", element: <ImprovementsTab /> },
       { path: "/profile", element: <ProfileTab /> },
       { path: "/offers", element: <OffersTab /> },
+      { path: "/offers/:offerKey", element: <OfferDetailsTab /> },
       { path: "/files", element: <FilesTab /> },
       { path: "/history", element: <Navigate to="/files" replace /> },
       { path: "/repositories", element: <GithubTab /> },

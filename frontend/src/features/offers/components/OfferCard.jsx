@@ -1,34 +1,30 @@
 import { useTranslation } from "react-i18next";
-import { errorMessage } from "@/shared/i18n/errorMessage";
-import { Button } from "@/shared/ui/Button";
+import { Link, useLocation } from "react-router";
 import { TagList } from "@/shared/ui/TagList";
-import { OfferRepositories } from "./OfferRepositories";
+import { OfferScore } from "./OfferScore";
 import styles from "./Offers.module.scss";
 
-export function OfferCard({ offer, insight, onExplain }) {
+export function OfferCard({ offer }) {
   const { t } = useTranslation();
+  const location = useLocation();
   const { match } = offer;
 
   return (
     <li className={styles.offer}>
       <div className={styles.header}>
         <div className={styles.heading}>
-          <a
+          <Link
             className={styles.title}
-            href={offer.url}
-            target="_blank"
-            rel="noreferrer"
+            to={`/offers/${offer.offerKey}`}
+            state={{ fromList: location.search }}
           >
             {offer.title}
-          </a>
+          </Link>
           <span className={styles.meta}>
             {[offer.company, offer.location].filter(Boolean).join(" · ")}
           </span>
         </div>
-        <span className={styles.score}>
-          {match.score}%
-          <span className={styles.scoreLabel}>{t("offers.match")}</span>
-        </span>
+        <OfferScore score={match.score} />
       </div>
 
       {match.matched.length > 0 && (
@@ -43,28 +39,6 @@ export function OfferCard({ offer, insight, onExplain }) {
           <TagList items={match.missing} />
         </div>
       )}
-      <OfferRepositories offerKey={offer.offerKey} />
-
-      <div className={styles.insight} aria-live="polite">
-        {insight?.status === "done" && (
-          <p className={styles.comment}>{insight.comment}</p>
-        )}
-        {insight?.status === "error" && (
-          <p className={styles.error}>{errorMessage(insight.error)}</p>
-        )}
-        {insight?.status !== "done" && (
-          <Button
-            size="sm"
-            variant="ghost"
-            disabled={insight?.status === "loading"}
-            onClick={() => onExplain(offer.offerKey)}
-          >
-            {insight?.status === "loading"
-              ? t("offers.explaining")
-              : t("offers.explain")}
-          </Button>
-        )}
-      </div>
     </li>
   );
 }

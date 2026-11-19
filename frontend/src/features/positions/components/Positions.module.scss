@@ -1,0 +1,222 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.panel,
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-sm;
+}
+
+.summary {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.875rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.position,
+.card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+}
+
+.cardHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-sm;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.title {
+  color: $color-text;
+  font-size: 1.05rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+
+  &:hover {
+    color: $color-primary-text;
+    text-decoration: underline;
+  }
+}
+
+.meta {
+  color: $color-muted-text;
+  font-size: 0.85rem;
+}
+
+.blocked {
+  flex: none;
+  padding: 0.125rem 0.5rem;
+  border-radius: $radius-sm;
+  background: $color-danger-bg;
+  color: $color-danger;
+  font-size: 0.75rem;
+}
+
+.cardActions,
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-xs;
+}
+
+.label {
+  @include section-label;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: $color-muted-text;
+  font-size: 0.8rem;
+}
+
+.fieldHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: $space-sm;
+}
+
+.counter {
+  color: $color-faint-text;
+  font-variant-numeric: tabular-nums;
+}
+
+.input,
+.select {
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius;
+  background: $color-bg;
+  color: $color-text;
+  font-size: 0.9rem;
+
+  &:focus-visible {
+    border-color: $color-primary;
+    outline: none;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.textarea {
+  min-height: 12rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.hint {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.error {
+  margin: 0;
+  padding: $space-xs 0.75rem;
+  border: 1px solid;
+  border-radius: $radius;
+  background: $color-danger-bg;
+  color: $color-danger;
+  font-size: 0.875rem;
+}
+
+.skills {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+}
+
+.skillGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.groupTitle {
+  color: $color-text-soft;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.125rem 0.25rem 0.125rem 0.5rem;
+  border-radius: $radius-sm;
+  background: $color-muted-bg;
+  color: $color-text-soft;
+  font-size: 0.8125rem;
+}
+
+.tagButton {
+  padding: 0 0.3rem;
+  border: none;
+  border-radius: $radius-sm;
+  background: transparent;
+  color: $color-muted-text;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: $color-border-strong;
+    color: $color-text;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-xs;
+
+  .input {
+    flex: 1;
+    min-width: 12rem;
+  }
+}

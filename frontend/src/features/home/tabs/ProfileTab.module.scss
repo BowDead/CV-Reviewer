@@ -1,0 +1,12 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.analysisData {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+.label {
+  @include section-label;
+}

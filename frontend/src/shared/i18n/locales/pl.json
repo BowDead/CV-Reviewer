@@ -280,7 +280,7 @@
     "sourceUnknown": "Źródło: wybrana analiza CV",
     "anonymous": "Kandydat",
     "score": "ocena CV",
-    "visible": "Widoczny dla pracodawców",
+    "visible": "Publiczny",
     "public": "Publiczny",
     "private": "Prywatny",
     "visibleHint": "Pracodawcy zobaczą imię i nazwisko (jeśli je wpiszesz), nagłówek, poziom, lokalizację, ocenę i umiejętności. Telefon, e-mail i CV dostanie tylko pracodawca, którego zaproszenie przyjmiesz. Profil możesz wycofać w każdej chwili.",

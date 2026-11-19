@@ -7,6 +7,7 @@ import { analysesRouter } from "./analyses.routes.js";
 import { skillsRouter } from "./skills.routes.js";
 import { githubRouter } from "./github.routes.js";
 import { offersRouter } from "./offers.routes.js";
+import { profileRouter } from "./profile.routes.js";
 
 export const apiRouter = Router();
 
@@ -18,3 +19,4 @@ apiRouter.use("/analyses", analysesRouter);
 apiRouter.use("/skills", skillsRouter);
 apiRouter.use("/github", githubRouter);
 apiRouter.use("/offers", offersRouter);
+apiRouter.use("/profile", profileRouter);

@@ -1185,6 +1185,51 @@ paths:
         "403":
           $ref: "#/components/responses/Forbidden"
 
+  /api/positions/skill-suggestions:
+    post:
+      tags: [Stanowiska i kandydaci]
+      summary: Propozycja kompetencji na podstawie opisu stanowiska
+      description: System rozpoznaje umiejętności ze słownika, a model językowy dzieli je na wymagane i mile widziane oraz dopisuje brakujące. Nic nie jest zapisywane w stanowisku. Nazwy spoza słownika trafiają do słownika jako oczekujące na decyzję administratora. Wymaga klucza do modelu językowego.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [description]
+              properties:
+                title:
+                  type: string
+                  maxLength: 150
+                description:
+                  type: string
+                  maxLength: 4000
+      responses:
+        "200":
+          description: Proponowane umiejętności
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SkillSuggestion"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          description: "`LLM_KEY_REQUIRED`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "502":
+          description: Błąd modelu językowego
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /api/positions/{id}:
     get:
       tags: [Stanowiska i kandydaci]
@@ -2494,6 +2539,25 @@ components:
           type: string
           format: date-time
 
+    SkillSuggestion:
+      type: object
+      properties:
+        skills:
+          type: array
+          items:
+            allOf:
+              - $ref: "#/components/schemas/Skill"
+              - type: object
+                properties:
+                  isRequired:
+                    type: boolean
+                    description: "`false` – umiejętność mile widziana"
+        unknownSkills:
+          type: array
+          description: Nazwy spoza słownika, czekające na decyzję administratora
+          items:
+            type: string
+
     PositionInput:
       type: object
       required: [title, description]
@@ -2504,7 +2568,7 @@ components:
         description:
           type: string
           maxLength: 4000
-          description: Opis stanowiska z danymi kontaktowymi pracodawcy
+          description: Opis stanowiska. Kontakt odbywa się przez wiadomości w zaproszeniu, więc opis nie musi zawierać danych kontaktowych.
         url:
           type: string
           format: uri

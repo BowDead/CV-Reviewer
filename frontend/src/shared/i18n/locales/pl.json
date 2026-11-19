@@ -319,7 +319,57 @@
     "databaseDisconnected": "brak połączenia"
   },
   "employer": {
-    "title": "Panel pracodawcy"
+    "title": "Panel pracodawcy",
+    "navTitle": "Panel pracodawcy",
+    "nav": {
+      "positions": "Stanowiska",
+      "keys": "Klucze AI"
+    },
+    "positions": {
+      "title": "Stanowiska",
+      "newTitle": "Nowe stanowisko",
+      "editTitle": "Edycja stanowiska"
+    }
+  },
+  "positions": {
+    "loading": "Wczytywanie stanowisk…",
+    "loadFailed": "Nie udało się wczytać stanowisk",
+    "loadingOne": "Wczytywanie stanowiska…",
+    "loadOneFailed": "Nie udało się wczytać stanowiska",
+    "emptyTitle": "Nie masz jeszcze stanowisk",
+    "emptyText": "Dodaj stanowisko z opisem. Na jego podstawie model zaproponuje potrzebne kompetencje.",
+    "add": "Dodaj stanowisko",
+    "summary": "Stanowiska: {{count}}",
+    "meta": "Wymagane: {{required}} · Mile widziane: {{niceToHave}} · Zmienione {{date}}",
+    "blocked": "Zablokowane",
+    "blockedText": "Administrator zablokował to stanowisko. Nie można wysyłać do niego zaproszeń.",
+    "remove": "Usuń",
+    "confirmRemove": "Usunąć stanowisko „{{title}}”? Zaproszenia do niego też zostaną usunięte.",
+    "form": {
+      "details": "Stanowisko",
+      "title": "Tytuł stanowiska",
+      "url": "Link do ogłoszenia lub strony firmy (opcjonalnie)",
+      "description": "Opis stanowiska",
+      "descriptionPlaceholder": "Opisz obowiązki, wymagania i to, co oferujesz. Na podstawie opisu model zaproponuje kompetencje.",
+      "skills": "Kompetencje",
+      "suggest": "Zaproponuj kompetencje",
+      "suggesting": "Analizowanie opisu…",
+      "suggestHint": "Model przeczyta opis i doda brakujące umiejętności ze słownika. Możesz je przenosić między grupami (⇄) i usuwać (×).",
+      "unknownSkills": "Spoza słownika: {{names}}. Trafią do słownika po zatwierdzeniu przez administratora.",
+      "required": "Wymagane",
+      "niceToHave": "Mile widziane",
+      "noSkills": "Brak",
+      "addSkillPlaceholder": "Dodaj umiejętność ze słownika, np. Docker",
+      "addAs": "Dodaj jako",
+      "addSkill": "Dodaj",
+      "skillNotFound": "Wybierz umiejętność z listy podpowiedzi.",
+      "moveToNice": "Przenieś {{name}} do mile widzianych",
+      "moveToRequired": "Przenieś {{name}} do wymaganych",
+      "removeSkill": "Usuń {{name}}",
+      "cancel": "Anuluj",
+      "save": "Zapisz stanowisko",
+      "saving": "Zapisywanie…"
+    }
   },
   "errors": {
     "AUTH_REQUIRED": "Zaloguj się, aby kontynuować.",
@@ -398,6 +448,13 @@
     "PROFILE_LOCATION_TOO_LONG": "Lokalizacja może mieć najwyżej {{max}} znaków.",
     "PROFILE_TOO_MANY_SKILLS": "Profil może mieć najwyżej {{max}} umiejętności.",
     "SKILL_NOT_FOUND": "Tej umiejętności nie ma w słowniku.",
+    "POSITION_NOT_FOUND": "Nie znaleziono stanowiska.",
+    "POSITION_TITLE_REQUIRED": "Podaj tytuł stanowiska.",
+    "POSITION_TITLE_TOO_LONG": "Tytuł może mieć najwyżej {{max}} znaków.",
+    "POSITION_DESCRIPTION_REQUIRED": "Podaj opis stanowiska.",
+    "POSITION_DESCRIPTION_TOO_LONG": "Opis może mieć najwyżej {{max}} znaków.",
+    "POSITION_URL_INVALID": "Podaj poprawny adres zaczynający się od http:// lub https://.",
+    "POSITION_TOO_MANY_SKILLS": "Stanowisko może mieć najwyżej {{max}} umiejętności.",
     "UNKNOWN": "Wystąpił nieoczekiwany błąd."
   }
 }

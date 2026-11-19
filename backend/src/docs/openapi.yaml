@@ -947,7 +947,8 @@ paths:
           $ref: "#/components/responses/NotFound"
     patch:
       tags: [Profil kandydata]
-      summary: Aktualizacja nagłówka i lokalizacji profilu
+      summary: Aktualizacja imienia i nazwiska, nagłówka i lokalizacji profilu
+      description: Pola pominięte w żądaniu zostają bez zmian. Pusty tekst albo null czyści pole.
       requestBody:
         required: true
         content:
@@ -955,6 +956,10 @@ paths:
             schema:
               type: object
               properties:
+                displayName:
+                  type: [string, "null"]
+                  maxLength: 100
+                  description: Imię i nazwisko wpisane przez kandydata, widoczne dla pracodawców po publikacji
                 headline:
                   type: string
                   maxLength: 150
@@ -2332,6 +2337,8 @@ components:
         sourceAnalysisId:
           type: string
           format: uuid
+        displayName:
+          type: [string, "null"]
         headline:
           type: [string, "null"]
         seniority:
@@ -2354,11 +2361,13 @@ components:
 
     CandidateProfile:
       type: object
-      description: Profil bez imienia, nazwiska i danych kontaktowych
+      description: Opublikowany profil bez danych kontaktowych. Imię i nazwisko tylko wtedy, gdy kandydat je wpisał.
       properties:
         id:
           type: string
           format: uuid
+        displayName:
+          type: [string, "null"]
         headline:
           type: [string, "null"]
         seniority:

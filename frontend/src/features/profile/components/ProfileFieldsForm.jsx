@@ -62,8 +62,7 @@ export function ProfileFieldsForm({ profile, saving, onSave }) {
           />
         </label>
       </div>
-      <div className={styles.row}>
-        <span className={styles.hint}>{t("candidateProfile.locked")}</span>
+      <div className={styles.actions}>
         <Button type="submit" size="sm" disabled={!changed || saving}>
           {t("candidateProfile.save")}
         </Button>

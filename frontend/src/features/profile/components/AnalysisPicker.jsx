@@ -98,7 +98,7 @@ export function AnalysisPicker({
         <p className={styles.hint}>{t("candidateProfile.pickerWarning")}</p>
       )}
 
-      <div className={styles.dialogActions}>
+      <div className={styles.actions}>
         <Button variant="ghost" size="sm" onClick={onClose}>
           {t("candidateProfile.cancel")}
         </Button>

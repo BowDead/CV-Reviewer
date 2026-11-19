@@ -28,28 +28,17 @@ export function ProfileCard({ profile, saving, onPublishChange }) {
         </div>
       </div>
 
-      <div className={styles.row}>
-        <label className={styles.switchRow}>
-          <input
-            type="checkbox"
-            role="switch"
-            className={styles.switch}
-            checked={profile.isPublished}
-            disabled={saving}
-            onChange={(event) => onPublishChange(event.target.checked)}
-          />
-          {t("candidateProfile.visible")}
-        </label>
-        <span
-          className={`${styles.status} ${
-            profile.isPublished ? styles.public : styles.private
-          }`}
-        >
-          {profile.isPublished
-            ? t("candidateProfile.public")
-            : t("candidateProfile.private")}
-        </span>
-      </div>
+      <label className={styles.switchRow}>
+        <input
+          type="checkbox"
+          role="switch"
+          className={styles.switch}
+          checked={profile.isPublished}
+          disabled={saving}
+          onChange={(event) => onPublishChange(event.target.checked)}
+        />
+        {t("candidateProfile.visible")}
+      </label>
       <p className={styles.hint}>{t("candidateProfile.visibleHint")}</p>
     </section>
   );

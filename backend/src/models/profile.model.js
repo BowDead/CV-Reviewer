@@ -59,10 +59,15 @@ export function saveProfileFromAnalysis(userId, data) {
   return withTransaction(async (client) => {
     await client.query(
       `INSERT INTO candidate_profiles
-         (user_id, source_analysis_id, headline, seniority, location, score)
-       VALUES ($1, $2, $3, $4, $5, $6)
+         (user_id, source_analysis_id, display_name, headline, seniority,
+          location, score)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        ON CONFLICT (user_id) DO UPDATE SET
          source_analysis_id = EXCLUDED.source_analysis_id,
+         display_name = COALESCE(
+           candidate_profiles.display_name,
+           EXCLUDED.display_name
+         ),
          headline = EXCLUDED.headline,
          seniority = EXCLUDED.seniority,
          location = EXCLUDED.location,
@@ -70,6 +75,7 @@ export function saveProfileFromAnalysis(userId, data) {
       [
         userId,
         data.analysisId,
+        data.displayName,
         data.headline,
         data.seniority,
         data.location,

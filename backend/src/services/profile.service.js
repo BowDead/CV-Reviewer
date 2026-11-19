@@ -13,6 +13,8 @@ import {
 } from "../models/skill.model.js";
 import { parseInput } from "../utils/parse-input.js";
 import { getAnalysis } from "./analysis.service.js";
+import { guessFullName } from "./anonymizer.service.js";
+import { readSavedCvContent } from "./saved-cv.service.js";
 
 const MAX_DISPLAY_NAME = 100;
 const MAX_HEADLINE = 150;
@@ -61,6 +63,14 @@ function keep(value, current) {
   return value === undefined ? current : value;
 }
 
+function nameFromCv(cvText, headline) {
+  const name = cvText ? guessFullName(cvText) : null;
+  if (!name || name.toLowerCase() === headline?.trim().toLowerCase()) {
+    return null;
+  }
+  return cut(name, MAX_DISPLAY_NAME);
+}
+
 async function requireProfile(userId) {
   const profile = await findProfile(userId);
   if (!profile) {
@@ -75,7 +85,8 @@ export function getProfile(userId) {
 
 export async function setProfileSource(userId, input) {
   const { analysisId } = parseInput(sourceSchema, input);
-  const { result } = await getAnalysis(userId, analysisId);
+  const { cvId, result } = await getAnalysis(userId, analysisId);
+  const cvText = await readSavedCvContent(userId, cvId);
   const details = result.analysis;
   const skillIds = await findApprovedSkillIdsByNames(
     result.skills.map((skill) => skill.name),
@@ -83,6 +94,7 @@ export async function setProfileSource(userId, input) {
 
   await saveProfileFromAnalysis(userId, {
     analysisId,
+    displayName: nameFromCv(cvText, details.profile?.headline),
     headline: cut(details.profile?.headline, MAX_HEADLINE),
     seniority: details.seniority ?? null,
     location: cut(details.profile?.location, MAX_LOCATION),

@@ -85,6 +85,18 @@ export async function getSavedCv(userId, cvId) {
   };
 }
 
+export async function readSavedCvContent(userId, cvId) {
+  if (!cvId) {
+    return null;
+  }
+  const cv = await findSavedCv(userId, cvId);
+  if (!cv) {
+    return null;
+  }
+  const dataKey = await getUserDataKey(userId);
+  return decryptText(cv.contentEnc, dataKey);
+}
+
 export async function removeSavedCv(userId, cvId) {
   parseId(cvId, "CV_NOT_FOUND");
   if (!(await deleteSavedCv(userId, cvId))) {

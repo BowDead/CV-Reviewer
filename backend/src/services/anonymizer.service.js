@@ -4,8 +4,7 @@ import { escapeRegExp } from "../utils/regexp.js";
 const NAME_LINE_RE =
   /^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+(?:[ -][A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+){1,2}$/;
 
-// Imię i nazwisko
-function guessFullName(text) {
+export function guessFullName(text) {
   const firstLines = text
     .split("\n")
     .map((line) => line.trim())

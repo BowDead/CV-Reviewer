@@ -126,22 +126,6 @@
   }
 }
 
-.status {
-  padding: 0.125rem 0.5rem;
-  border-radius: $radius-sm;
-  font-size: 0.75rem;
-}
-
-.private {
-  background: $color-muted-bg;
-  color: $color-muted-text;
-}
-
-.public {
-  background: $color-success-bg;
-  color: $color-success;
-}
-
 .hint {
   margin: 0;
   color: $color-muted-text;
@@ -349,7 +333,7 @@
   line-height: 1;
 }
 
-.dialogActions {
+.actions {
   display: flex;
   justify-content: flex-end;
   gap: $space-xs;

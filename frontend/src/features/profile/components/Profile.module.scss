@@ -1,0 +1,356 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-sm;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.name {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.headline {
+  margin: 0;
+  color: $color-text-soft;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  color: $color-muted-text;
+  font-size: 0.85rem;
+}
+
+.score {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-end;
+  color: $color-primary;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.scoreLabel {
+  margin-top: 0.25rem;
+  color: $color-muted-text;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.switchRow {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: $color-text-soft;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.switch {
+  appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 1.25rem;
+  margin: 0;
+  border-radius: 999px;
+  background: $color-border-strong;
+  cursor: pointer;
+  transition: background-color 0.15s;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0.125rem;
+    left: 0.125rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: $color-text;
+    transition: transform 0.15s;
+  }
+
+  &:checked {
+    background: $color-primary;
+
+    &::after {
+      background: $color-on-primary;
+      transform: translateX(1rem);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &::after {
+      transition: none;
+    }
+  }
+}
+
+.status {
+  padding: 0.125rem 0.5rem;
+  border-radius: $radius-sm;
+  font-size: 0.75rem;
+}
+
+.private {
+  background: $color-muted-bg;
+  color: $color-muted-text;
+}
+
+.public {
+  background: $color-success-bg;
+  color: $color-success;
+}
+
+.hint {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.error {
+  margin: 0;
+  padding: $space-xs 0.75rem;
+  border: 1px solid;
+  border-radius: $radius;
+  background: $color-danger-bg;
+  color: $color-danger;
+  font-size: 0.875rem;
+}
+
+.source {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-sm;
+  padding: $space-xs 0.75rem;
+  border: 1px dashed $color-border-strong;
+  border-radius: $radius;
+  color: $color-text-soft;
+  font-size: 0.875rem;
+}
+
+.label {
+  @include section-label;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: $space-sm;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: $color-muted-text;
+  font-size: 0.8rem;
+}
+
+.input {
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius;
+  background: $color-bg;
+  color: $color-text;
+  font: inherit;
+  font-size: 0.9rem;
+
+  &:focus-visible {
+    border-color: $color-primary;
+    outline: none;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.25rem 0.125rem 0.5rem;
+  border-radius: $radius-sm;
+  background: $color-muted-bg;
+  color: $color-text-soft;
+  font-size: 0.8125rem;
+}
+
+.remove {
+  padding: 0 0.3rem;
+  border: none;
+  border-radius: $radius-sm;
+  background: transparent;
+  color: $color-muted-text;
+  font: inherit;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: $color-border-strong;
+    color: $color-text;
+  }
+}
+
+.add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-xs;
+
+  .input {
+    flex: 1;
+    min-width: 12rem;
+  }
+}
+
+.dialog {
+  width: min(32rem, calc(100vw - 2rem));
+  padding: $space-md $space-lg;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius;
+  background: $color-surface;
+  color: $color-text;
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+    gap: $space-sm;
+  }
+}
+
+.dialogTitle {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  max-height: 22rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  padding: $space-xs 0.75rem;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  cursor: pointer;
+
+  &:hover {
+    background: $color-muted-bg;
+  }
+}
+
+.selected,
+.selected:hover {
+  border-color: $color-primary;
+  background: $color-primary-bg;
+}
+
+.radio {
+  flex: none;
+  accent-color: $color-primary;
+}
+
+.choiceText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.choiceName {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.choiceMuted {
+  color: $color-muted-text;
+}
+
+.sourceBadge {
+  margin-left: 0.375rem;
+  padding: 0 0.375rem;
+  border-radius: $radius-sm;
+  background: $color-success-bg;
+  color: $color-success;
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+
+.choiceScore {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-end;
+  color: $color-primary;
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-xs;
+}

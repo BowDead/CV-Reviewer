@@ -1,5 +1,4 @@
 import { createBrowserRouter, Navigate } from "react-router";
-import { AppLayout } from "@/shared/layout/AppLayout";
 import {
   WorkspacePage,
   PreviewTab,
@@ -12,7 +11,11 @@ import {
   OffersTab,
   OfferDetailsTab,
 } from "@/features/home";
-import { EmployerPage } from "@/features/employer";
+import {
+  EmployerPage,
+  PositionEditTab,
+  PositionsTab,
+} from "@/features/employer";
 import {
   LoginPage,
   RegisterPage,
@@ -46,11 +49,16 @@ export const router = createBrowserRouter([
     path: "/employer",
     element: (
       <RequireAuth roles={["employer", "admin"]}>
-        <AppLayout footer={<UserMenu />}>
-          <EmployerPage />
-        </AppLayout>
+        <EmployerPage actions={<UserMenu />} />
       </RequireAuth>
     ),
+    children: [
+      { index: true, element: <Navigate to="/employer/positions" replace /> },
+      { path: "positions", element: <PositionsTab /> },
+      { path: "positions/new", element: <PositionEditTab /> },
+      { path: "positions/:positionId", element: <PositionEditTab /> },
+      { path: "keys", element: <KeysTab /> },
+    ],
   },
   { path: "/login", element: <LoginPage /> },
   { path: "/register", element: <RegisterPage /> },

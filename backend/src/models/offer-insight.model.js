@@ -13,18 +13,6 @@ export async function findOfferInsight(analysisId, offerKey) {
   return rows[0] ? toInsight(rows[0]) : null;
 }
 
-export async function findOfferInsights(analysisId, offerKeys) {
-  if (offerKeys.length === 0) {
-    return new Map();
-  }
-  const { rows } = await query(
-    `SELECT solidjobs_offer_key, comment, created_at FROM offer_insights
-     WHERE analysis_id = $1 AND solidjobs_offer_key = ANY($2::uuid[])`,
-    [analysisId, offerKeys],
-  );
-  return new Map(rows.map((row) => [row.solidjobs_offer_key, toInsight(row)]));
-}
-
 export async function saveOfferInsight({ analysisId, offerKey, comment }) {
   const { rows } = await query(
     `INSERT INTO offer_insights (analysis_id, solidjobs_offer_key, comment)

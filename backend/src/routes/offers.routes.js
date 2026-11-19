@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  getOfferItem,
   getOfferList,
   getOfferRepositoryList,
   postOfferInsight,
@@ -11,5 +12,6 @@ export const offersRouter = Router();
 offersRouter.use(requireAuth);
 
 offersRouter.get("/", getOfferList);
+offersRouter.get("/:offerKey", getOfferItem);
 offersRouter.post("/:offerKey/insight", postOfferInsight);
 offersRouter.get("/:offerKey/repositories", getOfferRepositoryList);

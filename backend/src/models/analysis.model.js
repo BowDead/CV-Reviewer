@@ -51,17 +51,6 @@ export async function findLatestAnalysisForCv(userId, cvId) {
   return rows[0] ? toAnalysis(rows[0]) : null;
 }
 
-export async function findDefaultAnalysis(userId) {
-  const { rows } = await query(
-    `SELECT ${COLUMNS}, a.result FROM analyses a
-     WHERE a.user_id = $1
-     ORDER BY is_profile_source DESC, a.created_at DESC
-     LIMIT 1`,
-    [userId],
-  );
-  return rows[0] ? toAnalysis(rows[0]) : null;
-}
-
 export async function insertAnalysis({
   userId,
   cvId,

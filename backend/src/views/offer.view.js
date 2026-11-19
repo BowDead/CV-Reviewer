@@ -9,6 +9,14 @@ export function offerView(offer) {
     requiredSkills: offer.requiredSkills,
     niceToHaveSkills: offer.niceToHaveSkills,
     match: offer.match,
+  };
+}
+
+export function offerDetailsView(offer) {
+  return {
+    ...offerView(offer),
+    experienceLevel: offer.experienceLevel || null,
+    description: offer.description,
     insight: offer.insight
       ? offerInsightView({ ...offer.insight, cached: true })
       : null,

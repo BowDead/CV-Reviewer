@@ -1,13 +1,9 @@
-import { z } from "zod";
 import { HttpError } from "../errors/HttpError.js";
-import { findDefaultAnalysis } from "../models/analysis.model.js";
 import {
   findOfferInsight,
-  findOfferInsights,
   saveOfferInsight,
 } from "../models/offer-insight.model.js";
 import { parseId } from "../utils/parse-id.js";
-import { parseInput } from "../utils/parse-input.js";
 import {
   OFFER_INSIGHT_SYSTEM_PROMPT,
   buildOfferInsightUserMessage,
@@ -22,31 +18,13 @@ import {
   MAX_OFFER_REPOSITORIES,
   selectRepositories,
 } from "./offers/repository-selection.service.js";
+import { getProfile } from "./profile.service.js";
 
 const MAX_OFFERS = 50;
 const INSIGHT_SEED = 7;
 
-const listSchema = z.object({
-  analysisId: z.uuid("ANALYSIS_NOT_FOUND").optional(),
-});
-
-const insightSchema = z.object({
-  analysisId: z.uuid("ANALYSIS_NOT_FOUND"),
-});
-
-async function resolveAnalysis(userId, analysisId) {
-  if (analysisId) {
-    return getAnalysis(userId, analysisId);
-  }
-  const analysis = await findDefaultAnalysis(userId);
-  if (!analysis) {
-    throw new HttpError(404, "ANALYSIS_NOT_FOUND");
-  }
-  return analysis;
-}
-
-async function collectSkills(userId, analysis) {
-  const names = analysis.result.skills.map((skill) => skill.name);
+async function collectSkills(userId, profile) {
+  const names = profile.skills.map((skill) => skill.name);
   const { repositories } = await getRepositories(userId);
   for (const repository of repositories) {
     if (repository.status === "done") {
@@ -63,28 +41,6 @@ function isFresh(saved, offer) {
   return !offer.updatedAt || saved.createdAt >= new Date(offer.updatedAt);
 }
 
-async function attachInsights(analysisId, offers) {
-  const saved = await findOfferInsights(
-    analysisId,
-    offers.map((offer) => offer.offerKey),
-  );
-  return offers.map((offer) => {
-    const insight = saved.get(offer.offerKey.toLowerCase());
-    return { ...offer, insight: isFresh(insight, offer) ? insight : null };
-  });
-}
-
-export async function getOffers(userId, input) {
-  const { analysisId } = parseInput(listSchema, input);
-  const analysis = await resolveAnalysis(userId, analysisId);
-  const [offers, userSkills] = await Promise.all([
-    getOfferPool(),
-    collectSkills(userId, analysis),
-  ]);
-  const ranked = rankOffers(offers, userSkills, MAX_OFFERS);
-  return attachInsights(analysis.id, ranked);
-}
-
 async function requireOffer(offerKey) {
   parseId(offerKey, "OFFER_NOT_FOUND");
   const offer = await findOffer(offerKey);
@@ -92,6 +48,34 @@ async function requireOffer(offerKey) {
     throw new HttpError(404, "OFFER_NOT_FOUND");
   }
   return offer;
+}
+
+async function findFreshInsight(profile, offer) {
+  const saved = await findOfferInsight(
+    profile.sourceAnalysisId,
+    offer.offerKey,
+  );
+  return isFresh(saved, offer) ? saved : null;
+}
+
+export async function getOffers(userId) {
+  const profile = await getProfile(userId);
+  const [offers, userSkills] = await Promise.all([
+    getOfferPool(),
+    collectSkills(userId, profile),
+  ]);
+  return rankOffers(offers, userSkills, MAX_OFFERS);
+}
+
+export async function getOfferDetails(userId, offerKey) {
+  const profile = await getProfile(userId);
+  const offer = await requireOffer(offerKey);
+  const userSkills = await collectSkills(userId, profile);
+  return {
+    ...offer,
+    match: matchOffer(offer, userSkills),
+    insight: await findFreshInsight(profile, offer),
+  };
 }
 
 export async function getOfferRepositories(userId, offerKey) {
@@ -103,22 +87,26 @@ export async function getOfferRepositories(userId, offerKey) {
   return selectRepositories(offer, repositories, MAX_OFFER_REPOSITORIES);
 }
 
-export async function getOfferInsight(userId, offerKey, input) {
+export async function getOfferInsight(userId, offerKey) {
+  const profile = await getProfile(userId);
   const offer = await requireOffer(offerKey);
-  const { analysisId } = parseInput(insightSchema, input);
-  const analysis = await getAnalysis(userId, analysisId);
 
-  const saved = await findOfferInsight(analysisId, offerKey);
-  if (isFresh(saved, offer)) {
+  const saved = await findFreshInsight(profile, offer);
+  if (saved) {
     return { ...saved, cached: true };
   }
 
-  const userSkills = await collectSkills(userId, analysis);
-  const match = matchOffer(offer, userSkills);
+  const { result } = await getAnalysis(userId, profile.sourceAnalysisId);
+  const candidate = {
+    seniority: profile.seniority,
+    summary: result.analysis.summary,
+    profile: { headline: profile.headline },
+  };
+  const match = matchOffer(offer, await collectSkills(userId, profile));
   const llm = await resolveLlm(userId);
   const raw = await llm.completeJson({
     system: OFFER_INSIGHT_SYSTEM_PROMPT,
-    user: buildOfferInsightUserMessage(offer, analysis.result.analysis, match),
+    user: buildOfferInsightUserMessage(offer, candidate, match),
     temperature: 0,
     seed: INSIGHT_SEED,
   });
@@ -129,7 +117,7 @@ export async function getOfferInsight(userId, offerKey, input) {
   }
 
   const insight = await saveOfferInsight({
-    analysisId,
+    analysisId: profile.sourceAnalysisId,
     offerKey,
     comment: parsed.data.comment,
   });

@@ -798,15 +798,8 @@ paths:
   /api/offers:
     get:
       tags: [Oferty pracy]
-      summary: Lista ofert z Solid.Jobs
-      description: Kolejność ustala system na podstawie pokrycia umiejętności oferty umiejętnościami z analizy i repozytoriów.
-      parameters:
-        - name: analysisId
-          in: query
-          description: Analiza, do której dopasowywane są oferty. Domyślnie analiza źródłowa profilu.
-          schema:
-            type: string
-            format: uuid
+      summary: Lista ofert z Solid.Jobs dopasowanych do profilu
+      description: Kolejność ustala system na podstawie pokrycia umiejętności oferty umiejętnościami z profilu kandydata i z przeanalizowanych repozytoriów. Bez profilu zwraca 404 `PROFILE_NOT_FOUND`.
       responses:
         "200":
           description: Oferty od najlepiej dopasowanej
@@ -830,24 +823,38 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /api/offers/{offerKey}:
+    get:
+      tags: [Oferty pracy]
+      summary: Szczegóły oferty z dopasowaniem do profilu
+      description: Zwraca opis oferty, dopasowanie do profilu i zapisane uzasadnienie, jeśli jest aktualne. Bez profilu zwraca 404 `PROFILE_NOT_FOUND`.
+      parameters:
+        - $ref: "#/components/parameters/OfferKey"
+      responses:
+        "200":
+          description: Szczegóły oferty
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfferDetails"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "502":
+          description: Błąd Solid.Jobs API
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /api/offers/{offerKey}/insight:
     post:
       tags: [Oferty pracy]
       summary: Zwrócenie zapisanego uzasadnienia lub wygenerowanie uzasadnienia dla nowej oferty
-      description: Zwraca zapisane uzasadnienie albo generuje je przez model, jeśli go nie ma lub oferta zmieniła się później.
+      description: Uzasadnienie dotyczy profilu kandydata. Opis kandydata pochodzi z analizy źródłowej profilu, a dopasowanie z umiejętności profilu. Zwraca zapisane uzasadnienie albo generuje je przez model, jeśli go nie ma lub oferta zmieniła się później.
       parameters:
         - $ref: "#/components/parameters/OfferKey"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [analysisId]
-              properties:
-                analysisId:
-                  type: string
-                  format: uuid
       responses:
         "200":
           description: Uzasadnienie dopasowania
@@ -2279,11 +2286,22 @@ components:
             type: string
         match:
           $ref: "#/components/schemas/Match"
-        insight:
-          description: Zapisane uzasadnienie dopasowania albo null, gdy jeszcze go nie wygenerowano
-          oneOf:
-            - $ref: "#/components/schemas/OfferInsight"
-            - type: "null"
+
+    OfferDetails:
+      allOf:
+        - $ref: "#/components/schemas/Offer"
+        - type: object
+          properties:
+            experienceLevel:
+              type: [string, "null"]
+            description:
+              type: string
+              description: Opis oferty bez HTML, skrócony do 1500 znaków
+            insight:
+              description: Zapisane uzasadnienie dopasowania albo null, gdy jeszcze go nie wygenerowano
+              oneOf:
+                - $ref: "#/components/schemas/OfferInsight"
+                - type: "null"
 
     Match:
       type: object

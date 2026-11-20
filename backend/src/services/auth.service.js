@@ -70,6 +70,9 @@ export async function loginUser(input) {
   if (!user || !passwordMatches) {
     throw new HttpError(401, "INVALID_CREDENTIALS");
   }
+  if (user.isBlocked) {
+    throw new HttpError(403, "ACCOUNT_BLOCKED");
+  }
   return user;
 }
 
@@ -77,6 +80,9 @@ export async function getCurrentUser(userId) {
   const user = await findUserById(userId);
   if (!user) {
     throw new HttpError(401, "SESSION_EXPIRED");
+  }
+  if (user.isBlocked) {
+    throw new HttpError(403, "ACCOUNT_BLOCKED");
   }
   return user;
 }

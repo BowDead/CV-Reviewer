@@ -1,3 +1,4 @@
+import { escapeLike } from "../utils/escape-like.js";
 import { query } from "./db.js";
 
 const COLUMNS = `p.user_id, p.display_name, p.headline, p.seniority, p.location,
@@ -16,10 +17,6 @@ function toCandidate(row, skills) {
     publishedAt: row.published_at,
     skills,
   };
-}
-
-function escapeLike(text) {
-  return text.replace(/[\\%_]/g, (char) => `\\${char}`);
 }
 
 async function withSkills(rows) {

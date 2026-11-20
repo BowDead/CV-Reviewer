@@ -1,5 +1,4 @@
 import { useSearchParams } from "react-router";
-import { usePositions } from "@/features/positions";
 import { CandidateFilters } from "./CandidateFilters";
 import { CandidateResults } from "./CandidateResults";
 import styles from "./Candidates.module.scss";
@@ -25,9 +24,8 @@ function toSearchParams(filters) {
   return params;
 }
 
-export function CandidatesPanel({ renderActions }) {
+export function CandidatesPanel({ positions, renderActions }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { positions } = usePositions();
   const query = searchParams.toString();
   const filters = readFilters(searchParams);
 

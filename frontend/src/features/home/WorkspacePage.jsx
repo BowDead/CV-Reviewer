@@ -75,6 +75,7 @@ export function WorkspacePage({ actions }) {
       items: [
         { to: "/offers", label: t("workspace.nav.offers") },
         { to: "/profile", label: t("workspace.nav.profile") },
+        { to: "/invitations", label: t("workspace.nav.invitations") },
       ],
     },
     { id: "keys", to: "/keys", label: t("workspace.nav.keys") },

@@ -51,6 +51,15 @@ export function PositionCard({ position, onRemove }) {
         >
           {t("positions.findCandidates")}
         </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() =>
+            navigate(`/employer/positions/${position.id}/invitations`)
+          }
+        >
+          {t("positions.invitations")}
+        </Button>
         <Button size="sm" variant="ghost" onClick={handleRemove}>
           {t("positions.remove")}
         </Button>

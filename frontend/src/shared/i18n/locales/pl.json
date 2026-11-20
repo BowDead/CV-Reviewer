@@ -36,6 +36,7 @@
       "improvements": "Poprawki",
       "profile": "Profil",
       "offers": "Oferty pracy",
+      "invitations": "Zaproszenia",
       "files": "Zapisane CV i analizy",
       "github": "Repozytoria",
       "keys": "Klucze AI"
@@ -81,6 +82,9 @@
     },
     "keys": {
       "title": "Klucze AI"
+    },
+    "invitations": {
+      "title": "Zaproszenia"
     }
   },
   "cvUpload": {
@@ -332,7 +336,12 @@
       "editTitle": "Edycja stanowiska"
     },
     "candidates": {
-      "title": "Kandydaci"
+      "title": "Kandydaci",
+      "invite": "Zaproś"
+    },
+    "invitations": {
+      "positionTitle": "Zaproszenia do stanowiska",
+      "threadTitle": "Rozmowa z kandydatem"
     }
   },
   "positions": {
@@ -349,6 +358,7 @@
     "blockedText": "Administrator zablokował to stanowisko. Nie można wysyłać do niego zaproszeń.",
     "remove": "Usuń",
     "findCandidates": "Pasujący kandydaci",
+    "invitations": "Zaproszenia",
     "confirmRemove": "Usunąć stanowisko „{{title}}”? Zaproszenia do niego też zostaną usunięte.",
     "form": {
       "details": "Stanowisko",
@@ -401,6 +411,72 @@
       "addSkill": "Dodaj",
       "removeSkill": "Usuń {{name}}",
       "search": "Szukaj"
+    }
+  },
+  "invitations": {
+    "loading": "Wczytywanie zaproszeń…",
+    "loadFailed": "Nie udało się wczytać zaproszeń",
+    "loadingOne": "Wczytywanie rozmowy…",
+    "loadOneFailed": "Nie udało się wczytać rozmowy",
+    "emptyTitle": "Brak zaproszeń",
+    "emptyCandidate": "Gdy pracodawca zaprosi Cię do stanowiska, zaproszenie pojawi się tutaj. Pracodawcy widzą tylko opublikowany profil.",
+    "emptyEmployer": "Nikt nie dostał jeszcze zaproszenia do tego stanowiska. Zaproś kandydata w zakładce Kandydaci.",
+    "anonymous": "Kandydat",
+    "lastMessage": "Ostatnia wiadomość: {{date}}",
+    "back": "Wróć do listy",
+    "status": {
+      "pending": "Czeka na odpowiedź",
+      "accepted": "Przyjęte",
+      "declined": "Odrzucone"
+    },
+    "header": {
+      "positionLink": "Ogłoszenie lub strona firmy",
+      "description": "Opis stanowiska",
+      "cvShared": "Udostępniono CV pracodawcy.",
+      "position": "Stanowisko: {{title}}",
+      "email": "E-mail:",
+      "downloadCv": "Pobierz CV",
+      "cvRemoved": "Kandydat usunął udostępnione CV.",
+      "blocked": "Administrator zablokował to stanowisko."
+    },
+    "respond": {
+      "title": "Odpowiedź",
+      "hint": "Przyjmując zaproszenie, udostępniasz pracodawcy wybrane CV i adres e-mail konta. Odrzucenia nie można cofnąć.",
+      "loadingCvs": "Wczytywanie zapisanych CV…",
+      "noCvs": "Nie masz zapisanych CV, więc nie możesz przyjąć zaproszenia.",
+      "goToFiles": "Zapisz CV",
+      "cv": "CV do udostępnienia",
+      "chooseCv": "Wybierz CV",
+      "accept": "Przyjmij i udostępnij CV",
+      "decline": "Odrzuć",
+      "confirmDecline": "Odrzucić zaproszenie? Nie będzie można już pisać w tej rozmowie."
+    },
+    "thread": {
+      "title": "Wiadomości",
+      "refresh": "Odśwież",
+      "refreshing": "Odświeżanie…",
+      "you": "Ty",
+      "candidate": "Kandydat",
+      "employer": "Pracodawca",
+      "placeholder": "Napisz wiadomość",
+      "send": "Wyślij",
+      "sending": "Wysyłanie…",
+      "closed": "Zaproszenie zostało odrzucone, więc rozmowa jest tylko do odczytu."
+    },
+    "invite": {
+      "title": "Zaproszenie: {{name}}",
+      "position": "Stanowisko",
+      "choosePosition": "Wybierz stanowisko",
+      "noPositions": "Nie masz stanowisk, do których można zapraszać. Dodaj stanowisko w zakładce Stanowiska.",
+      "message": "Pierwsza wiadomość",
+      "messagePlaceholder": "Napisz, czym zajmuje się zespół i dlaczego zapraszasz tę osobę.",
+      "hint": "Kandydat zobaczy tytuł i opis stanowiska oraz wiadomość. Kontakt i CV dostaniesz po przyjęciu zaproszenia.",
+      "cancel": "Anuluj",
+      "send": "Wyślij zaproszenie",
+      "sending": "Wysyłanie…",
+      "sent": "Zaproszenie wysłane. Odpowiedź kandydata zobaczysz w rozmowie.",
+      "close": "Zamknij",
+      "openThread": "Przejdź do rozmowy"
     }
   },
   "errors": {
@@ -488,6 +564,14 @@
     "POSITION_URL_INVALID": "Podaj poprawny adres zaczynający się od http:// lub https://.",
     "POSITION_TOO_MANY_SKILLS": "Stanowisko może mieć najwyżej {{max}} umiejętności.",
     "CANDIDATE_NOT_FOUND": "Nie znaleziono kandydata.",
+    "INVITATION_NOT_FOUND": "Nie znaleziono zaproszenia.",
+    "INVITATION_EXISTS": "Ten kandydat ma już zaproszenie do tego stanowiska.",
+    "INVITATION_ALREADY_ANSWERED": "Na to zaproszenie już odpowiedziano.",
+    "INVITATION_CLOSED": "Zaproszenie zostało odrzucone, więc nie można już pisać.",
+    "POSITION_BLOCKED": "Stanowisko jest zablokowane przez administratora.",
+    "MESSAGE_REQUIRED": "Wpisz treść wiadomości.",
+    "MESSAGE_TOO_LONG": "Wiadomość może mieć najwyżej {{max}} znaków.",
+    "SHARED_CV_NOT_FOUND": "CV nie jest dostępne. Kandydat mógł je usunąć.",
     "UNKNOWN": "Wystąpił nieoczekiwany błąd."
   }
 }

@@ -10,6 +10,7 @@ import { offersRouter } from "./offers.routes.js";
 import { profileRouter } from "./profile.routes.js";
 import { positionsRouter } from "./positions.routes.js";
 import { candidatesRouter } from "./candidates.routes.js";
+import { invitationsRouter } from "./invitations.routes.js";
 
 export const apiRouter = Router();
 
@@ -24,3 +25,4 @@ apiRouter.use("/offers", offersRouter);
 apiRouter.use("/profile", profileRouter);
 apiRouter.use("/positions", positionsRouter);
 apiRouter.use("/candidates", candidatesRouter);
+apiRouter.use("/invitations", invitationsRouter);

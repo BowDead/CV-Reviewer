@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
 import { Button } from "@/shared/ui/Button";
 import { useAuth } from "../hooks/useAuth";
 import styles from "./UserMenu.module.scss";
@@ -15,7 +16,13 @@ export function UserMenu() {
     <div className={styles.menu}>
       <div className={styles.user}>
         <span className={styles.email}>{user.email}</span>
-        <span className={styles.role}>{t(`roles.${user.role}`)}</span>
+        {user.role === "admin" ? (
+          <Link className={`${styles.role} ${styles.roleLink}`} to="/admin">
+            {t("auth.adminPanel")}
+          </Link>
+        ) : (
+          <span className={styles.role}>{t(`roles.${user.role}`)}</span>
+        )}
       </div>
       <Button variant="ghost" size="sm" onClick={logout}>
         {t("auth.logout")}

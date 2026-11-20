@@ -1360,11 +1360,11 @@ paths:
     get:
       tags: [Stanowiska i kandydaci]
       summary: Lista publicznych profili według zastosowanych filtrów
-      description: Z parametrem `positionId` kandydaci są uszeregowani według dopasowania do wymagań stanowiska.
+      description: Tylko opublikowane profile niezablokowanych kont, najwyżej 50. Bez `positionId` od najnowszej publikacji. Z `positionId` (własne stanowisko pracodawcy) kandydaci są uszeregowani według dopasowania umiejętności profilu do wymagań stanowiska, a pomijani są ci, którzy nie mają żadnej z nich.
       parameters:
         - name: skills
           in: query
-          description: Identyfikatory umiejętności, które musi mieć kandydat
+          description: Identyfikatory umiejętności, które kandydat musi mieć wszystkie, np. `skills=1,2`
           style: form
           explode: false
           schema:
@@ -1377,8 +1377,10 @@ paths:
             $ref: "#/components/schemas/Seniority"
         - name: location
           in: query
+          description: Fragment nazwy miejscowości, bez rozróżniania wielkości liter
           schema:
             type: string
+            maxLength: 100
         - name: positionId
           in: query
           description: Stanowisko, do którego dopasowywani są kandydaci
@@ -2446,7 +2448,10 @@ components:
           items:
             $ref: "#/components/schemas/Skill"
         match:
-          $ref: "#/components/schemas/Match"
+          description: Dopasowanie do stanowiska; tylko przy wyszukiwaniu z `positionId`
+          oneOf:
+            - $ref: "#/components/schemas/Match"
+            - type: "null"
 
     InvitationStatus:
       type: string

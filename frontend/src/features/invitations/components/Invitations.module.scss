@@ -1,0 +1,287 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+}
+
+.cardHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-sm;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  color: $color-text;
+  font-size: 1.15rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.label {
+  @include section-label;
+}
+
+.meta {
+  color: $color-muted-text;
+  font-size: 0.85rem;
+}
+
+.link {
+  color: $color-primary-text;
+  font-size: 0.875rem;
+}
+
+.details {
+  color: $color-text-soft;
+  font-size: 0.875rem;
+
+  summary {
+    color: $color-muted-text;
+    cursor: pointer;
+  }
+}
+
+.description {
+  margin: $space-xs 0 0;
+  line-height: 1.6;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.hint {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.error {
+  margin: 0;
+  padding: $space-xs 0.75rem;
+  border: 1px solid;
+  border-radius: $radius;
+  background: $color-danger-bg;
+  color: $color-danger;
+  font-size: 0.875rem;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-sm;
+  padding: $space-xs 0.75rem;
+  border: 1px dashed $color-border-strong;
+  border-radius: $radius;
+  color: $color-text-soft;
+  font-size: 0.875rem;
+}
+
+.download {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: $radius;
+  background: $color-primary;
+  color: $color-on-primary;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+
+  &:hover {
+    background: $color-primary-hover;
+  }
+}
+
+.status {
+  flex: none;
+  padding: 0.125rem 0.5rem;
+  border-radius: $radius-sm;
+  font-size: 0.75rem;
+}
+
+.pending {
+  background: $color-primary-bg;
+  color: $color-primary-text;
+}
+
+.accepted {
+  background: $color-success-bg;
+  color: $color-success;
+}
+
+.declined {
+  background: $color-muted-bg;
+  color: $color-muted-text;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 85%;
+  padding: $space-xs 0.75rem;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-bg;
+}
+
+.mine {
+  align-self: flex-end;
+  border-color: rgba($color-primary, 0.35);
+  background: $color-primary-bg;
+}
+
+.author {
+  color: $color-muted-text;
+  font-size: 0.75rem;
+}
+
+.body {
+  margin: 0;
+  color: $color-text;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.composer,
+.dialogForm {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: $color-muted-text;
+  font-size: 0.8rem;
+}
+
+.input,
+.textarea {
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius;
+  background: $color-bg;
+  color: $color-text;
+  font-size: 0.9rem;
+
+  &:focus-visible {
+    border-color: $color-primary;
+    outline: none;
+  }
+}
+
+.textarea {
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.composerActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-sm;
+}
+
+.counter {
+  color: $color-faint-text;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: $space-xs;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  @include card;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-sm;
+}
+
+.itemTitle {
+  color: $color-text;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+
+  &:hover {
+    color: $color-primary-text;
+    text-decoration: underline;
+  }
+}
+
+.dialog {
+  width: min(34rem, calc(100vw - 2rem));
+  padding: $space-md $space-lg;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius;
+  background: $color-surface;
+  color: $color-text;
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+    gap: $space-sm;
+  }
+}
+
+.dialogTitle {
+  margin: 0;
+  font-size: 1.05rem;
+}

@@ -33,6 +33,13 @@ export function respondToInvitation(invitationId, body) {
   });
 }
 
+export function reportInvitation(invitationId, reason) {
+  return request(`${invitationPath(invitationId)}/report`, {
+    method: "POST",
+    body: { reason },
+  });
+}
+
 export function sharedCvUrl(invitationId) {
   return `/api${invitationPath(invitationId)}/cv`;
 }

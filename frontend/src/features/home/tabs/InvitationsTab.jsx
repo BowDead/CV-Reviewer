@@ -7,8 +7,8 @@ export function InvitationsTab() {
 
   return (
     <>
-      <PageHeader title={t("workspace.invitations.title")} />
-      <InvitationList basePath="/invitations" />
+      <PageHeader title={t("workspace.messages.title")} />
+      <InvitationList />
     </>
   );
 }

@@ -16,9 +16,9 @@ import {
 import {
   CandidatesTab,
   EmployerInvitationTab,
+  EmployerMessagesTab,
   EmployerPage,
   PositionEditTab,
-  PositionInvitationsTab,
   PositionsTab,
 } from "@/features/employer";
 import {
@@ -43,8 +43,9 @@ export const router = createBrowserRouter([
       { path: "/profile", element: <ProfileTab /> },
       { path: "/offers", element: <OffersTab /> },
       { path: "/offers/:offerKey", element: <OfferDetailsTab /> },
-      { path: "/invitations", element: <InvitationsTab /> },
-      { path: "/invitations/:invitationId", element: <InvitationThreadTab /> },
+      { path: "/messages", element: <InvitationsTab /> },
+      { path: "/messages/:invitationId", element: <InvitationThreadTab /> },
+      { path: "/invitations", element: <Navigate to="/messages" replace /> },
       { path: "/files", element: <FilesTab /> },
       { path: "/history", element: <Navigate to="/files" replace /> },
       { path: "/repositories", element: <GithubTab /> },
@@ -64,11 +65,8 @@ export const router = createBrowserRouter([
       { path: "positions", element: <PositionsTab /> },
       { path: "positions/new", element: <PositionEditTab /> },
       { path: "positions/:positionId", element: <PositionEditTab /> },
-      {
-        path: "positions/:positionId/invitations",
-        element: <PositionInvitationsTab />,
-      },
-      { path: "invitations/:invitationId", element: <EmployerInvitationTab /> },
+      { path: "messages", element: <EmployerMessagesTab /> },
+      { path: "messages/:invitationId", element: <EmployerInvitationTab /> },
       { path: "candidates", element: <CandidatesTab /> },
       { path: "keys", element: <KeysTab /> },
     ],

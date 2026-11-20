@@ -31,51 +31,55 @@ export function RespondPanel({ onRespond }) {
   }
 
   return (
-    <section className={styles.card}>
-      <h2 className={styles.label}>{t("invitations.respond.title")}</h2>
-      <p className={styles.hint}>{t("invitations.respond.hint")}</p>
-
+    <div className={styles.respond}>
       {cvs === null && (
         <p className={styles.hint}>{t("invitations.respond.loadingCvs")}</p>
       )}
       {cvs?.length === 0 && (
         <p className={styles.hint}>
           {t("invitations.respond.noCvs")}{" "}
-          <Link to="/files">{t("invitations.respond.goToFiles")}</Link>
+          <Link className={styles.link} to="/files">
+            {t("invitations.respond.goToFiles")}
+          </Link>
         </p>
       )}
       {cvs?.length > 0 && (
-        <label className={styles.field}>
-          {t("invitations.respond.cv")}
-          <select
-            className={styles.input}
-            value={cvId}
-            disabled={busy}
-            onChange={(event) => setCvId(event.target.value)}
+        <>
+          <label className={styles.field}>
+            {t("invitations.respond.cv")}
+            <select
+              className={styles.input}
+              value={cvId}
+              disabled={busy}
+              onChange={(event) => setCvId(event.target.value)}
+            >
+              <option value="">{t("invitations.respond.chooseCv")}</option>
+              {cvs.map((cv) => (
+                <option key={cv.id} value={cv.id}>
+                  {cv.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <Button
+            disabled={!cvId || busy}
+            onClick={() => answer({ accept: true, cvId })}
           >
-            <option value="">{t("invitations.respond.chooseCv")}</option>
-            {cvs.map((cv) => (
-              <option key={cv.id} value={cv.id}>
-                {cv.name}
-              </option>
-            ))}
-          </select>
-        </label>
+            {t("invitations.respond.accept")}
+          </Button>
+        </>
       )}
-
-      {error && <p className={styles.error}>{errorMessage(error)}</p>}
-      <div className={styles.actions}>
-        <Button variant="ghost" size="sm" disabled={busy} onClick={decline}>
-          {t("invitations.respond.decline")}
-        </Button>
-        <Button
-          size="sm"
-          disabled={!cvId || busy}
-          onClick={() => answer({ accept: true, cvId })}
-        >
-          {t("invitations.respond.accept")}
-        </Button>
-      </div>
-    </section>
+      <Button variant="ghost" disabled={busy} onClick={decline}>
+        {t("invitations.respond.decline")}
+      </Button>
+      <p className={`${styles.hint} ${styles.respondHint}`}>
+        {t("invitations.respond.hint")}
+      </p>
+      {error && (
+        <p className={`${styles.error} ${styles.respondHint}`}>
+          {errorMessage(error)}
+        </p>
+      )}
+    </div>
   );
 }

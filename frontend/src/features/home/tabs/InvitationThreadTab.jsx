@@ -9,7 +9,7 @@ export function InvitationThreadTab() {
 
   return (
     <>
-      <PageHeader title={t("workspace.invitations.title")} />
+      <PageHeader title={t("workspace.messages.title")} />
       <InvitationThreadView key={invitationId} invitationId={invitationId} />
     </>
   );

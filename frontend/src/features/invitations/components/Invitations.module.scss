@@ -1,187 +1,26 @@
 @use "@/shared/styles/variables" as *;
-@use "@/shared/styles/mixins" as *;
 
 .panel {
   display: flex;
   flex-direction: column;
-  gap: $space-md;
-}
-
-.card {
-  @include card;
-  display: flex;
-  flex-direction: column;
   gap: $space-sm;
 }
 
-.cardHeader {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: $space-sm;
-}
-
-.heading {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  min-width: 0;
-}
-
-.title {
-  margin: 0;
-  color: $color-text;
-  font-size: 1.15rem;
-  font-weight: 700;
-  overflow-wrap: anywhere;
-}
-
-.label {
-  @include section-label;
-}
-
-.meta {
-  color: $color-muted-text;
-  font-size: 0.85rem;
-}
-
-.link {
-  color: $color-primary-text;
-  font-size: 0.875rem;
-}
-
-.details {
+.back {
+  align-self: flex-start;
   color: $color-text-soft;
-  font-size: 0.875rem;
-
-  summary {
-    color: $color-muted-text;
-    cursor: pointer;
-  }
-}
-
-.description {
-  margin: $space-xs 0 0;
-  line-height: 1.6;
-  white-space: pre-line;
-  overflow-wrap: anywhere;
-}
-
-.hint {
-  margin: 0;
-  color: $color-muted-text;
-  font-size: 0.85rem;
-  line-height: 1.45;
-}
-
-.error {
-  margin: 0;
-  padding: $space-xs 0.75rem;
-  border: 1px solid;
-  border-radius: $radius;
-  background: $color-danger-bg;
-  color: $color-danger;
-  font-size: 0.875rem;
-}
-
-.contact {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: $space-sm;
-  padding: $space-xs 0.75rem;
-  border: 1px dashed $color-border-strong;
-  border-radius: $radius;
-  color: $color-text-soft;
-  font-size: 0.875rem;
-}
-
-.download {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: $radius;
-  background: $color-primary;
-  color: $color-on-primary;
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-decoration: none;
+  font-size: 0.9rem;
 
   &:hover {
-    background: $color-primary-hover;
+    color: $color-primary-text;
   }
 }
 
-.status {
-  flex: none;
-  padding: 0.125rem 0.5rem;
-  border-radius: $radius-sm;
-  font-size: 0.75rem;
-}
-
-.pending {
-  background: $color-primary-bg;
-  color: $color-primary-text;
-}
-
-.accepted {
-  background: $color-success-bg;
-  color: $color-success;
-}
-
-.declined {
-  background: $color-muted-bg;
-  color: $color-muted-text;
-}
-
-.messages {
+.toolbar {
   display: flex;
-  flex-direction: column;
-  gap: $space-xs;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.message {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  max-width: 85%;
-  padding: $space-xs 0.75rem;
-  border: 1px solid $color-border;
-  border-radius: $radius;
-  background: $color-bg;
-}
-
-.mine {
-  align-self: flex-end;
-  border-color: rgba($color-primary, 0.35);
-  background: $color-primary-bg;
-}
-
-.author {
-  color: $color-muted-text;
-  font-size: 0.75rem;
-}
-
-.body {
-  margin: 0;
-  color: $color-text;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  white-space: pre-line;
-  overflow-wrap: anywhere;
-}
-
-.composer,
-.dialogForm {
-  display: flex;
-  flex-direction: column;
-  gap: $space-xs;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: $space-sm;
 }
 
 .field {
@@ -209,21 +48,350 @@
 }
 
 .textarea {
+  flex: 1;
   line-height: 1.5;
   resize: vertical;
 }
 
-.composerActions {
+.list {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: $space-sm;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-surface;
+  list-style: none;
+
+  li + li {
+    border-top: 1px solid $color-divider;
+  }
 }
 
-.counter {
-  color: $color-faint-text;
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem $space-md;
+  padding: $space-sm $space-md;
+  color: $color-text-soft;
+  text-decoration: none;
+
+  &:hover {
+    background: $color-muted-bg;
+  }
+}
+
+.who {
+  display: flex;
+  flex: 0 0 13rem;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  color: $color-text;
+  overflow-wrap: anywhere;
+}
+
+.sub {
+  color: $color-muted-text;
+  font-size: 0.8rem;
+}
+
+.preview {
+  flex: 1 1 14rem;
+  min-width: 0;
+  overflow: hidden;
+  color: $color-muted-text;
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.unread .name {
+  font-weight: 700;
+}
+
+.unread .preview {
+  color: $color-text;
+}
+
+.badge {
+  flex: none;
+  padding: 0 0.375rem;
+  border-radius: $radius-sm;
+  background: rgba($color-primary, 0.2);
+  color: $color-primary-text;
   font-size: 0.75rem;
-  font-variant-numeric: tabular-nums;
+}
+
+.date {
+  flex: 0 0 auto;
+  min-width: 4.5rem;
+  color: $color-muted-text;
+  font-size: 0.75rem;
+  text-align: right;
+}
+
+.status {
+  flex: none;
+  padding: 0.125rem 0.5rem;
+  border-radius: $radius-sm;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.pending {
+  background: $color-muted-bg;
+  color: $color-text-soft;
+}
+
+.accepted {
+  background: $color-success-bg;
+  color: $color-success;
+}
+
+.declined {
+  background: $color-danger-bg;
+  color: $color-danger;
+}
+
+.conversation {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-surface;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-sm;
+  padding: $space-sm $space-md;
+  border-bottom: 1px solid $color-divider;
+}
+
+.heading {
+  display: flex;
+  flex: 1 1 16rem;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-xs;
+}
+
+.title {
+  margin: 0;
+  color: $color-text;
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  color: $color-muted-text;
+  font-size: 0.85rem;
+}
+
+.headerActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-xs;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-sm;
+  font-size: 0.85rem;
+}
+
+.link,
+.linkButton {
+  color: $color-primary-text;
+}
+
+.linkButton {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.contact {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.75rem;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius;
+  color: $color-text;
+  font-size: 0.85rem;
+  text-decoration: none;
+
+  &:hover {
+    border-color: $color-primary;
+  }
+}
+
+.download {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.75rem;
+  border-radius: $radius;
+  background: $color-primary;
+  color: $color-on-primary;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+
+  &:hover {
+    background: $color-primary-hover;
+  }
+}
+
+.description {
+  margin: 0;
+  padding: $space-sm $space-md;
+  border-bottom: 1px solid $color-divider;
+  color: $color-text-soft;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.notice {
+  margin: 0;
+  padding: $space-xs $space-md;
+  border-bottom: 1px solid $color-divider;
+  background: $color-danger-bg;
+  color: $color-danger;
+  font-size: 0.85rem;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+  max-height: 60vh;
+  min-height: 12rem;
+  margin: 0;
+  padding: $space-md;
+  overflow-y: auto;
+  background: $color-bg;
+  list-style: none;
+}
+
+.day,
+.event {
+  align-self: center;
+  color: $color-muted-text;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  gap: 0.25rem;
+  max-width: min(70%, 40rem);
+}
+
+.mine {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.bubble {
+  margin: 0;
+  padding: $space-xs 0.875rem;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-muted-bg;
+  color: $color-text;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+
+  .mine & {
+    border-color: rgba($color-primary, 0.3);
+    background: $color-primary-bg;
+  }
+}
+
+.author {
+  color: $color-muted-text;
+  font-size: 0.75rem;
+}
+
+.respond {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: $space-xs;
+  padding: $space-sm $space-md;
+  border-top: 1px solid $color-divider;
+
+  .field {
+    flex: 1 1 14rem;
+  }
+}
+
+.respondHint {
+  flex-basis: 100%;
+}
+
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: $space-xs;
+  padding: $space-sm $space-md;
+  border-top: 1px solid $color-divider;
+}
+
+.closed {
+  margin: 0;
+  padding: $space-sm $space-md;
+  border-top: 1px solid $color-divider;
+  color: $color-muted-text;
+  font-size: 0.85rem;
+}
+
+.hint {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.error {
+  margin: 0;
+  padding: $space-xs 0.75rem;
+  border: 1px solid;
+  border-radius: $radius;
+  background: $color-danger-bg;
+  color: $color-danger;
+  font-size: 0.875rem;
+}
+
+.inlineError {
+  margin: 0 $space-md $space-sm;
 }
 
 .actions {
@@ -231,35 +399,6 @@
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: $space-xs;
-}
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: $space-xs;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.item {
-  @include card;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: $space-sm;
-}
-
-.itemTitle {
-  color: $color-text;
-  font-weight: 600;
-  overflow-wrap: anywhere;
-  text-decoration: none;
-
-  &:hover {
-    color: $color-primary-text;
-    text-decoration: underline;
-  }
 }
 
 .dialog {
@@ -284,4 +423,10 @@
 .dialogTitle {
   margin: 0;
   font-size: 1.05rem;
+}
+
+.dialogForm {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
 }

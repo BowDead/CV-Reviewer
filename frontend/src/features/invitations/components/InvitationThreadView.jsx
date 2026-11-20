@@ -1,24 +1,18 @@
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 import { errorMessage } from "@/shared/i18n/errorMessage";
-import { Button } from "@/shared/ui/Button";
 import { EmptyState } from "@/shared/ui/EmptyState";
+import { useInvitations } from "../hooks/useInvitations";
 import { useThread } from "../hooks/useThread";
 import { InvitationHeader } from "./InvitationHeader";
 import { MessageThread } from "./MessageThread";
 import { RespondPanel } from "./RespondPanel";
 import styles from "./Invitations.module.scss";
 
-function backPath(invitation) {
-  if (!invitation || invitation.role === "candidate") {
-    return "/invitations";
-  }
-  return `/employer/positions/${invitation.position.id}/invitations`;
-}
-
 export function InvitationThreadView({ invitationId }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const { basePath, markRead, reload } = useInvitations();
   const {
     status,
     thread,
@@ -30,15 +24,38 @@ export function InvitationThreadView({ invitationId }) {
     respond,
   } = useThread(invitationId);
 
+  useEffect(() => {
+    if (thread) markRead(invitationId);
+  }, [thread, invitationId, markRead]);
+
+  async function sendAndReload(text) {
+    await send(text);
+    reload();
+  }
+
+  async function respondAndReload(body) {
+    await respond(body);
+    reload();
+  }
+
+  const back = (
+    <Link className={styles.back} to={basePath}>
+      {t("invitations.back")}
+    </Link>
+  );
+
   if (status === "loading") {
     return <EmptyState busy title={t("invitations.loadingOne")} />;
   }
 
   if (status === "error") {
     return (
-      <EmptyState tone="error" title={t("invitations.loadOneFailed")}>
-        {errorMessage(error)}
-      </EmptyState>
+      <div className={styles.panel}>
+        {back}
+        <EmptyState tone="error" title={t("invitations.loadOneFailed")}>
+          {errorMessage(error)}
+        </EmptyState>
+      </div>
     );
   }
 
@@ -46,27 +63,29 @@ export function InvitationThreadView({ invitationId }) {
 
   return (
     <div className={styles.panel}>
-      <div>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => navigate(backPath(invitation))}
+      {back}
+      <section className={styles.conversation}>
+        <InvitationHeader
+          invitation={invitation}
+          refreshing={refreshing}
+          onRefresh={refresh}
+        />
+        {refreshError && (
+          <p className={`${styles.error} ${styles.inlineError}`}>
+            {errorMessage(refreshError)}
+          </p>
+        )}
+        <MessageThread
+          invitation={invitation}
+          messages={messages}
+          onSend={sendAndReload}
         >
-          {t("invitations.back")}
-        </Button>
-      </div>
-      <InvitationHeader invitation={invitation} />
-      {invitation.role === "candidate" && invitation.status === "pending" && (
-        <RespondPanel onRespond={respond} />
-      )}
-      <MessageThread
-        messages={messages}
-        canWrite={invitation.canWrite}
-        refreshing={refreshing}
-        refreshError={refreshError}
-        onRefresh={refresh}
-        onSend={send}
-      />
+          {invitation.role === "candidate" &&
+            invitation.status === "pending" && (
+              <RespondPanel onRespond={respondAndReload} />
+            )}
+        </MessageThread>
+      </section>
     </div>
   );
 }

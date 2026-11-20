@@ -9,7 +9,7 @@ export function EmployerInvitationTab() {
 
   return (
     <>
-      <PageHeader title={t("employer.invitations.threadTitle")} />
+      <PageHeader title={t("employer.messages.title")} />
       <InvitationThreadView key={invitationId} invitationId={invitationId} />
     </>
   );

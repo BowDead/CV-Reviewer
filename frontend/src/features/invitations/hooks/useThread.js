@@ -4,6 +4,9 @@ import {
   postMessage,
   respondToInvitation,
 } from "../api/invitationsApi";
+import { useVisibleInterval } from "./useVisibleInterval";
+
+const POLL_MS = 15000;
 
 export function useThread(invitationId) {
   const [state, setState] = useState({
@@ -23,6 +26,17 @@ export function useThread(invitationId) {
       });
     return () => controller.abort();
   }, [invitationId]);
+
+  const poll = useCallback(async () => {
+    try {
+      const thread = await fetchThread(invitationId);
+      setState({ status: "done", thread, error: null });
+    } catch {
+      return;
+    }
+  }, [invitationId]);
+
+  useVisibleInterval(poll, POLL_MS);
 
   const refresh = useCallback(async () => {
     setReload({ busy: true, error: null });

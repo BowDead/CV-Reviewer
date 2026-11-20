@@ -1,24 +1,61 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { errorMessage } from "@/shared/i18n/errorMessage";
-import { formatDateTime } from "@/shared/i18n/formatDateTime";
 import { Button } from "@/shared/ui/Button";
 import styles from "./Invitations.module.scss";
 
 const MAX_MESSAGE = 2000;
 
-export function MessageThread({
-  messages,
-  canWrite,
-  refreshing,
-  refreshError,
-  onRefresh,
-  onSend,
-}) {
-  const { t } = useTranslation();
+function buildTimeline(invitation, messages) {
+  const items = messages.map((message) => ({
+    key: message.id,
+    type: "message",
+    at: message.createdAt,
+    message,
+  }));
+  if (invitation.respondedAt) {
+    items.push({
+      key: "response",
+      type: "event",
+      at: invitation.respondedAt,
+    });
+    items.sort((a, b) => new Date(a.at) - new Date(b.at));
+  }
+  return items.map((item, index) => {
+    const date = new Date(item.at);
+    const previous = items[index - 1];
+    return {
+      ...item,
+      date,
+      showDay:
+        !previous ||
+        new Date(previous.at).toDateString() !== date.toDateString(),
+    };
+  });
+}
+
+export function MessageThread({ invitation, messages, onSend, children }) {
+  const { t, i18n } = useTranslation();
+  const listRef = useRef(null);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
+
+  const dayFormat = new Intl.DateTimeFormat(i18n.language, {
+    dateStyle: "long",
+  });
+  const timeFormat = new Intl.DateTimeFormat(i18n.language, {
+    timeStyle: "short",
+  });
+  const otherName =
+    invitation.role === "employer"
+      ? invitation.candidate.displayName || t("invitations.anonymous")
+      : t("invitations.thread.employer");
+
+  useEffect(() => {
+    const list = listRef.current;
+    if (list) list.scrollTop = list.scrollHeight;
+  }, [messages.length]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -35,69 +72,68 @@ export function MessageThread({
   }
 
   return (
-    <section className={styles.card}>
-      <div className={styles.cardHeader}>
-        <h2 className={styles.label}>{t("invitations.thread.title")}</h2>
-        <Button
-          size="sm"
-          variant="ghost"
-          disabled={refreshing}
-          onClick={onRefresh}
-        >
-          {refreshing
-            ? t("invitations.thread.refreshing")
-            : t("invitations.thread.refresh")}
-        </Button>
-      </div>
-      {refreshError && (
-        <p className={styles.error}>{errorMessage(refreshError)}</p>
-      )}
-
-      <ol className={styles.messages}>
-        {messages.map((message) => (
-          <li
-            key={message.id}
-            className={`${styles.message} ${message.isMine ? styles.mine : ""}`}
-          >
-            <span className={styles.author}>
-              {message.isMine
-                ? t("invitations.thread.you")
-                : t(`invitations.thread.${message.sender}`)}
-              {" · "}
-              {formatDateTime(message.createdAt)}
-            </span>
-            <p className={styles.body}>{message.body}</p>
-          </li>
-        ))}
+    <>
+      <ol ref={listRef} className={styles.messages}>
+        {buildTimeline(invitation, messages).map((item) => {
+          return [
+            item.showDay && (
+              <li key={`day-${item.key}`} className={styles.day}>
+                {dayFormat.format(item.date)}
+              </li>
+            ),
+            item.type === "event" ? (
+              <li key={item.key} className={styles.event}>
+                {t(`invitations.thread.${invitation.status}`)}
+                {" · "}
+                {timeFormat.format(item.date)}
+              </li>
+            ) : (
+              <li
+                key={item.key}
+                className={`${styles.message} ${item.message.isMine ? styles.mine : ""}`}
+              >
+                <p className={styles.bubble}>{item.message.body}</p>
+                <span className={styles.author}>
+                  {item.message.isMine
+                    ? t("invitations.thread.you")
+                    : otherName}
+                  {" · "}
+                  {timeFormat.format(item.date)}
+                </span>
+              </li>
+            ),
+          ];
+        })}
       </ol>
 
-      {canWrite ? (
+      {children}
+
+      {invitation.canWrite ? (
         <form className={styles.composer} onSubmit={handleSubmit}>
           <textarea
             className={styles.textarea}
             value={text}
-            rows={3}
+            rows={2}
             maxLength={MAX_MESSAGE}
             placeholder={t("invitations.thread.placeholder")}
             aria-label={t("invitations.thread.placeholder")}
             disabled={sending}
             onChange={(event) => setText(event.target.value)}
           />
-          {error && <p className={styles.error}>{errorMessage(error)}</p>}
-          <div className={styles.composerActions}>
-            <span className={styles.counter}>
-              {text.length}/{MAX_MESSAGE}
-            </span>
-            <Button type="submit" size="sm" disabled={!text.trim() || sending}>
-              {sending
-                ? t("invitations.thread.sending")
-                : t("invitations.thread.send")}
-            </Button>
-          </div>
+          <Button type="submit" disabled={!text.trim() || sending}>
+            {sending
+              ? t("invitations.thread.sending")
+              : t("invitations.thread.send")}
+          </Button>
         </form>
       ) : (
-        <p className={styles.hint}>{t("invitations.thread.closed")}</p>
+        <p className={styles.closed}>{t("invitations.thread.closed")}</p>
       )}
-    </section>
+      {error && (
+        <p className={`${styles.error} ${styles.inlineError}`}>
+          {errorMessage(error)}
+        </p>
+      )}
+    </>
   );
 }

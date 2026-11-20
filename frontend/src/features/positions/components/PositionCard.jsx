@@ -3,11 +3,17 @@ import { Link, useNavigate } from "react-router";
 import { formatDateTime } from "@/shared/i18n/formatDateTime";
 import { Button } from "@/shared/ui/Button";
 import { TagList } from "@/shared/ui/TagList";
+import { useInvitations } from "@/features/invitations";
 import styles from "./Positions.module.scss";
 
 export function PositionCard({ position, onRemove }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { invitations, basePath } = useInvitations();
+  const conversations = invitations.filter(
+    (invitation) => invitation.position.id === position.id,
+  );
+  const unread = conversations.filter((invitation) => invitation.unread).length;
   const required = position.skills.filter((skill) => skill.isRequired);
   const niceToHave = position.skills.filter((skill) => !skill.isRequired);
 
@@ -51,15 +57,20 @@ export function PositionCard({ position, onRemove }) {
         >
           {t("positions.findCandidates")}
         </Button>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() =>
-            navigate(`/employer/positions/${position.id}/invitations`)
-          }
-        >
-          {t("positions.invitations")}
-        </Button>
+        {conversations.length > 0 && (
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => navigate(`${basePath}?positionId=${position.id}`)}
+          >
+            {t("positions.conversations", { count: conversations.length })}
+            {unread > 0 && (
+              <span className={styles.unread}>
+                {t("positions.unread", { count: unread })}
+              </span>
+            )}
+          </Button>
+        )}
         <Button size="sm" variant="ghost" onClick={handleRemove}>
           {t("positions.remove")}
         </Button>

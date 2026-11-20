@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { formatDateTime } from "@/shared/i18n/formatDateTime";
 import { Button } from "@/shared/ui/Button";
 import { TagList } from "@/shared/ui/TagList";
@@ -7,6 +7,7 @@ import styles from "./Positions.module.scss";
 
 export function PositionCard({ position, onRemove }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const required = position.skills.filter((skill) => skill.isRequired);
   const niceToHave = position.skills.filter((skill) => !skill.isRequired);
 
@@ -42,6 +43,14 @@ export function PositionCard({ position, onRemove }) {
       </div>
       <TagList items={required.map((skill) => skill.name)} />
       <div className={styles.cardActions}>
+        <Button
+          size="sm"
+          onClick={() =>
+            navigate(`/employer/candidates?positionId=${position.id}`)
+          }
+        >
+          {t("positions.findCandidates")}
+        </Button>
         <Button size="sm" variant="ghost" onClick={handleRemove}>
           {t("positions.remove")}
         </Button>

@@ -12,6 +12,7 @@ import {
   OfferDetailsTab,
 } from "@/features/home";
 import {
+  CandidatesTab,
   EmployerPage,
   PositionEditTab,
   PositionsTab,
@@ -57,6 +58,7 @@ export const router = createBrowserRouter([
       { path: "positions", element: <PositionsTab /> },
       { path: "positions/new", element: <PositionEditTab /> },
       { path: "positions/:positionId", element: <PositionEditTab /> },
+      { path: "candidates", element: <CandidatesTab /> },
       { path: "keys", element: <KeysTab /> },
     ],
   },

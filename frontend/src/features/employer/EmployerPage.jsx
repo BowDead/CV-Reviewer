@@ -13,6 +13,11 @@ export function EmployerPage({ actions }) {
       to: "/employer/positions",
       label: t("employer.nav.positions"),
     },
+    {
+      id: "candidates",
+      to: "/employer/candidates",
+      label: t("employer.nav.candidates"),
+    },
     { id: "keys", to: "/employer/keys", label: t("employer.nav.keys") },
   ];
 

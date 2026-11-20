@@ -8,3 +8,5 @@ export { KeysTab } from "./tabs/KeysTab";
 export { GithubTab } from "./tabs/GithubTab";
 export { OffersTab } from "./tabs/OffersTab";
 export { OfferDetailsTab } from "./tabs/OfferDetailsTab";
+export { InvitationsTab } from "./tabs/InvitationsTab";
+export { InvitationThreadTab } from "./tabs/InvitationThreadTab";

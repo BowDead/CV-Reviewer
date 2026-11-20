@@ -107,6 +107,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+        "403":
+          description: "`ACCOUNT_BLOCKED` – konto zablokowane; zwracane tylko przy poprawnym haśle"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /api/auth/logout:
     post:
@@ -1171,6 +1177,7 @@ paths:
     post:
       tags: [Zaproszenia]
       summary: Zgłoszenie zaproszenia do administracji
+      description: Zgłasza kandydat z tego zaproszenia. Administrator widzi zgłoszenie razem z wątkiem wiadomości.
       parameters:
         - $ref: "#/components/parameters/Id"
       requestBody:
@@ -1187,6 +1194,14 @@ paths:
       responses:
         "201":
           description: Zgłoszenie przyjęte
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -1195,6 +1210,12 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "409":
+          description: "`REPORT_EXISTS` – to zaproszenie ma już nierozpatrzone zgłoszenie od tego kandydata"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /api/positions:
     get:
@@ -1527,6 +1548,12 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "409":
+          description: "`REPORT_ALREADY_RESOLVED`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /api/admin/users:
     get:
@@ -1567,6 +1594,7 @@ paths:
     put:
       tags: [Administracja]
       summary: Zablokowanie lub odblokowanie konta
+      description: Zablokowane konto nie zaloguje się, a jego bieżąca sesja dostaje 403 `ACCOUNT_BLOCKED` przy każdym żądaniu. Profil zablokowanego kandydata znika z wyszukiwania.
       parameters:
         - $ref: "#/components/parameters/Id"
       requestBody:
@@ -1588,6 +1616,12 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "409":
+          description: "`CANNOT_BLOCK_SELF` – administrator nie blokuje własnego konta"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /api/admin/positions/{id}/block:
     put:
@@ -1758,7 +1792,7 @@ components:
           example:
             error: AUTH_REQUIRED
     Forbidden:
-      description: "`FORBIDDEN` – rola użytkownika nie ma dostępu"
+      description: "`FORBIDDEN` – rola użytkownika nie ma dostępu; `ACCOUNT_BLOCKED` – konto zablokowane przez administratora"
       content:
         application/json:
           schema:
@@ -2687,14 +2721,25 @@ components:
         resolvedAt:
           type: [string, "null"]
           format: date-time
+        reporter:
+          description: Zgłaszający; null, gdy jego konto usunięto
+          oneOf:
+            - type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                email:
+                  type: string
+            - type: "null"
         invitation:
           type: object
           properties:
             id:
               type: string
               format: uuid
-            note:
-              type: [string, "null"]
+            status:
+              $ref: "#/components/schemas/InvitationStatus"
             position:
               type: object
               properties:
@@ -2703,11 +2748,43 @@ components:
                   format: uuid
                 title:
                   type: string
-                employerId:
-                  type: string
-                  format: uuid
                 isBlocked:
                   type: boolean
+            employer:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                email:
+                  type: string
+                isBlocked:
+                  type: boolean
+            candidate:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                email:
+                  type: string
+        messages:
+          type: array
+          description: Wątek zgłoszonego zaproszenia
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              sender:
+                type: string
+                enum: [candidate, employer]
+              body:
+                type: string
+              createdAt:
+                type: string
+                format: date-time
 
     AdminUser:
       allOf:
@@ -2743,22 +2820,31 @@ components:
           items:
             type: string
           example: [react.js, ReactJS]
+        caseSensitive:
+          type: boolean
+          description: Wykrywanie tylko w tej pisowni, np. Go
         status:
           $ref: "#/components/schemas/SkillStatus"
 
     DictionarySkillInput:
       type: object
+      description: Przy dodawaniu wymagane jest `name`. Przy edycji wszystkie pola są opcjonalne.
       properties:
         name:
           type: string
           maxLength: 100
         category:
-          type: string
+          type: [string, "null"]
           maxLength: 50
         githubLanguage:
-          type: string
+          type: [string, "null"]
           maxLength: 50
         aliases:
           type: array
+          maxItems: 20
           items:
             type: string
+            maxLength: 100
+        caseSensitive:
+          type: boolean
+          default: false

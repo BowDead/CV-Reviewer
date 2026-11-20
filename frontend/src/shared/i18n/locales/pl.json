@@ -36,7 +36,7 @@
       "improvements": "Poprawki",
       "profile": "Profil",
       "offers": "Oferty pracy",
-      "invitations": "Zaproszenia",
+      "messages": "Wiadomości",
       "files": "Zapisane CV i analizy",
       "github": "Repozytoria",
       "keys": "Klucze AI"
@@ -83,8 +83,8 @@
     "keys": {
       "title": "Klucze AI"
     },
-    "invitations": {
-      "title": "Zaproszenia"
+    "messages": {
+      "title": "Wiadomości"
     }
   },
   "cvUpload": {
@@ -325,9 +325,13 @@
   "employer": {
     "title": "Panel pracodawcy",
     "navTitle": "Panel pracodawcy",
+    "navGroups": {
+      "recruitment": "Rekrutacja"
+    },
     "nav": {
       "positions": "Stanowiska",
       "candidates": "Kandydaci",
+      "messages": "Wiadomości",
       "keys": "Klucze AI"
     },
     "positions": {
@@ -337,11 +341,11 @@
     },
     "candidates": {
       "title": "Kandydaci",
-      "invite": "Zaproś"
+      "invite": "Zaproś",
+      "openThread": "Otwórz rozmowę"
     },
-    "invitations": {
-      "positionTitle": "Zaproszenia do stanowiska",
-      "threadTitle": "Rozmowa z kandydatem"
+    "messages": {
+      "title": "Wiadomości"
     }
   },
   "positions": {
@@ -358,7 +362,8 @@
     "blockedText": "Administrator zablokował to stanowisko. Nie można wysyłać do niego zaproszeń.",
     "remove": "Usuń",
     "findCandidates": "Pasujący kandydaci",
-    "invitations": "Zaproszenia",
+    "conversations": "Rozmowy: {{count}}",
+    "unread": "nowe: {{count}}",
     "confirmRemove": "Usunąć stanowisko „{{title}}”? Zaproszenia do niego też zostaną usunięte.",
     "form": {
       "details": "Stanowisko",
@@ -414,16 +419,25 @@
     }
   },
   "invitations": {
-    "loading": "Wczytywanie zaproszeń…",
-    "loadFailed": "Nie udało się wczytać zaproszeń",
+    "loading": "Wczytywanie wiadomości…",
+    "loadFailed": "Nie udało się wczytać wiadomości",
     "loadingOne": "Wczytywanie rozmowy…",
     "loadOneFailed": "Nie udało się wczytać rozmowy",
-    "emptyTitle": "Brak zaproszeń",
+    "emptyTitle": "Brak rozmów",
     "emptyCandidate": "Gdy pracodawca zaprosi Cię do stanowiska, zaproszenie pojawi się tutaj. Pracodawcy widzą tylko opublikowany profil.",
-    "emptyEmployer": "Nikt nie dostał jeszcze zaproszenia do tego stanowiska. Zaproś kandydata w zakładce Kandydaci.",
+    "emptyEmployer": "Nikt nie dostał jeszcze zaproszenia. Zaproś kandydata w zakładce Kandydaci.",
+    "emptyFiltered": "Brak rozmów spełniających filtry",
     "anonymous": "Kandydat",
-    "lastMessage": "Ostatnia wiadomość: {{date}}",
     "back": "Wróć do listy",
+    "filters": {
+      "position": "Stanowisko",
+      "status": "Stan",
+      "all": "Wszystkie"
+    },
+    "list": {
+      "you": "Ty: {{text}}",
+      "new": "nowa"
+    },
     "status": {
       "pending": "Czeka na odpowiedź",
       "accepted": "Przyjęte",
@@ -433,14 +447,12 @@
       "positionLink": "Ogłoszenie lub strona firmy",
       "description": "Opis stanowiska",
       "cvShared": "Udostępniono CV pracodawcy.",
-      "position": "Stanowisko: {{title}}",
-      "email": "E-mail:",
+      "position": "Stanowisko:",
       "downloadCv": "Pobierz CV",
       "cvRemoved": "Kandydat usunął udostępnione CV.",
       "blocked": "Administrator zablokował to stanowisko."
     },
     "respond": {
-      "title": "Odpowiedź",
       "hint": "Przyjmując zaproszenie, udostępniasz pracodawcy wybrane CV i adres e-mail konta. Odrzucenia nie można cofnąć.",
       "loadingCvs": "Wczytywanie zapisanych CV…",
       "noCvs": "Nie masz zapisanych CV, więc nie możesz przyjąć zaproszenia.",
@@ -452,12 +464,12 @@
       "confirmDecline": "Odrzucić zaproszenie? Nie będzie można już pisać w tej rozmowie."
     },
     "thread": {
-      "title": "Wiadomości",
       "refresh": "Odśwież",
       "refreshing": "Odświeżanie…",
       "you": "Ty",
-      "candidate": "Kandydat",
       "employer": "Pracodawca",
+      "accepted": "Zaproszenie przyjęte, CV udostępnione pracodawcy",
+      "declined": "Zaproszenie odrzucone",
       "placeholder": "Napisz wiadomość",
       "send": "Wyślij",
       "sending": "Wysyłanie…",
@@ -473,10 +485,7 @@
       "hint": "Kandydat zobaczy tytuł i opis stanowiska oraz wiadomość. Kontakt i CV dostaniesz po przyjęciu zaproszenia.",
       "cancel": "Anuluj",
       "send": "Wyślij zaproszenie",
-      "sending": "Wysyłanie…",
-      "sent": "Zaproszenie wysłane. Odpowiedź kandydata zobaczysz w rozmowie.",
-      "close": "Zamknij",
-      "openThread": "Przejdź do rozmowy"
+      "sending": "Wysyłanie…"
     }
   },
   "errors": {

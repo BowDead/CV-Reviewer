@@ -18,6 +18,10 @@ export function getSkillDetector() {
   return detectorPromise;
 }
 
+export function resetSkillDetector() {
+  detectorPromise = null;
+}
+
 export function getApprovedSkills() {
   return listApprovedSkills();
 }

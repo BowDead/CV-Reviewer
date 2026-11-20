@@ -1,0 +1,190 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.panel,
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.filters,
+.candidate {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+}
+
+.filterGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: $space-sm;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: $color-muted-text;
+  font-size: 0.8rem;
+}
+
+.input {
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius;
+  background: $color-bg;
+  color: $color-text;
+  font-size: 0.9rem;
+
+  &:focus-visible {
+    border-color: $color-primary;
+    outline: none;
+  }
+}
+
+.skillPicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-xs;
+}
+
+.skillInput {
+  flex: 1;
+  min-width: 12rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.125rem 0.25rem 0.125rem 0.5rem;
+  border-radius: $radius-sm;
+  background: $color-muted-bg;
+  color: $color-text-soft;
+  font-size: 0.8125rem;
+}
+
+.tagButton {
+  padding: 0 0.3rem;
+  border: none;
+  border-radius: $radius-sm;
+  background: transparent;
+  color: $color-muted-text;
+  cursor: pointer;
+
+  &:hover {
+    background: $color-border-strong;
+    color: $color-text;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: $space-xs;
+}
+
+.summary {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.875rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-md;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.name {
+  color: $color-text;
+  font-size: 1.05rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.headline {
+  color: $color-text-soft;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  color: $color-muted-text;
+  font-size: 0.85rem;
+}
+
+.scores {
+  display: flex;
+  flex: none;
+  gap: $space-md;
+}
+
+.score,
+.cvScore {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.score {
+  color: $color-primary;
+  font-size: 1.5rem;
+}
+
+.cvScore {
+  color: $color-text-soft;
+  font-size: 1.15rem;
+}
+
+.scoreLabel {
+  margin-top: 0.25rem;
+  color: $color-muted-text;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: $space-xs;
+}
+
+.skillsLabel {
+  color: $color-muted-text;
+  font-size: 0.8rem;
+}

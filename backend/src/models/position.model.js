@@ -118,3 +118,12 @@ export async function deletePosition(employerId, positionId) {
   );
   return rowCount > 0;
 }
+
+export async function setPositionBlocked(positionId, blocked) {
+  const { rows } = await query(
+    `UPDATE positions SET is_blocked = $2 WHERE id = $1
+     RETURNING ${COLUMNS}`,
+    [positionId, blocked],
+  );
+  return rows[0] ? (await withSkills(rows))[0] : null;
+}

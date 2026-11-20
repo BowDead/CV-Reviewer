@@ -4,14 +4,8 @@ function invitationPath(invitationId) {
   return `/invitations/${encodeURIComponent(invitationId)}`;
 }
 
-export function fetchReceivedInvitations(signal) {
+export function fetchInvitations(signal) {
   return request("/invitations", { signal });
-}
-
-export function fetchPositionInvitations(positionId, signal) {
-  return request(`/positions/${encodeURIComponent(positionId)}/invitations`, {
-    signal,
-  });
 }
 
 export function inviteCandidate(positionId, body) {

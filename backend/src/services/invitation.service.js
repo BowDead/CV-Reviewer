@@ -6,8 +6,9 @@ import {
   findInvitation,
   insertMessage,
   listInvitationsForCandidate,
-  listInvitationsForPosition,
+  listInvitationsForEmployer,
   listMessages,
+  markInvitationRead,
 } from "../models/invitation.model.js";
 import { findSavedCv } from "../models/saved-cv.model.js";
 import { parseId } from "../utils/parse-id.js";
@@ -74,13 +75,10 @@ export async function inviteCandidate(employerId, positionId, input) {
   return findInvitation(invitationId);
 }
 
-export async function getPositionInvitations(employerId, positionId) {
-  await getPosition(employerId, positionId);
-  return listInvitationsForPosition(positionId);
-}
-
-export function getReceivedInvitations(candidateId) {
-  return listInvitationsForCandidate(candidateId);
+export function getInvitations(user) {
+  return user.role === "candidate"
+    ? listInvitationsForCandidate(user.id)
+    : listInvitationsForEmployer(user.id);
 }
 
 export async function respondToInvitation(candidateId, invitationId, input) {
@@ -113,7 +111,12 @@ export async function respondToInvitation(candidateId, invitationId, input) {
 
 export async function getThread(userId, invitationId) {
   const invitation = await requireParticipant(userId, invitationId);
-  return { invitation, messages: await listMessages(invitationId) };
+  const side = invitation.candidateId === userId ? "candidate" : "employer";
+  await markInvitationRead(invitationId, side);
+  return {
+    invitation: await findInvitation(invitationId),
+    messages: await listMessages(invitationId),
+  };
 }
 
 export async function sendMessage(userId, invitationId, input) {

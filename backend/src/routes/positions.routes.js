@@ -7,10 +7,7 @@ import {
   postSkillSuggestion,
   putPosition,
 } from "../controllers/position.controller.js";
-import {
-  getPositionInvitationList,
-  postInvitation,
-} from "../controllers/invitation.controller.js";
+import { postInvitation } from "../controllers/invitation.controller.js";
 import { requireAuth, requireRole } from "../middlewares/auth.middleware.js";
 
 export const positionsRouter = Router();
@@ -23,5 +20,4 @@ positionsRouter.post("/skill-suggestions", postSkillSuggestion);
 positionsRouter.get("/:id", getPositionItem);
 positionsRouter.put("/:id", putPosition);
 positionsRouter.delete("/:id", deletePositionItem);
-positionsRouter.get("/:id/invitations", getPositionInvitationList);
 positionsRouter.post("/:id/invitations", postInvitation);

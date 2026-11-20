@@ -2,16 +2,32 @@ import { query, withTransaction } from "./db.js";
 
 const SELECT_INVITATION = `
   SELECT i.id, i.status, i.shared_cv_id, i.created_at, i.responded_at,
+         i.candidate_read_at, i.employer_read_at,
          i.candidate_id, u.email AS candidate_email,
          pos.id AS position_id, pos.title, pos.description, pos.url,
          pos.employer_id, pos.is_blocked,
          p.display_name, p.headline, p.seniority, p.location, p.score,
-         (SELECT max(m.created_at) FROM invitation_messages m
-          WHERE m.invitation_id = i.id) AS last_message_at
+         lm.body AS last_message_body, lm.sender_id AS last_message_sender,
+         lm.created_at AS last_message_at
   FROM invitations i
   JOIN positions pos ON pos.id = i.position_id
   JOIN users u ON u.id = i.candidate_id
-  LEFT JOIN candidate_profiles p ON p.user_id = i.candidate_id`;
+  LEFT JOIN candidate_profiles p ON p.user_id = i.candidate_id
+  LEFT JOIN LATERAL (
+    SELECT m.body, m.sender_id, m.created_at
+    FROM invitation_messages m
+    WHERE m.invitation_id = i.id
+    ORDER BY m.created_at DESC
+    LIMIT 1
+  ) lm ON true`;
+
+const ORDER_BY_ACTIVITY = `
+  ORDER BY last_message_at DESC NULLS LAST, i.created_at DESC`;
+
+const READ_COLUMNS = {
+  candidate: "candidate_read_at",
+  employer: "employer_read_at",
+};
 
 function toInvitation(row) {
   return {
@@ -20,7 +36,15 @@ function toInvitation(row) {
     sharedCvId: row.shared_cv_id,
     createdAt: row.created_at,
     respondedAt: row.responded_at,
-    lastMessageAt: row.last_message_at,
+    candidateReadAt: row.candidate_read_at,
+    employerReadAt: row.employer_read_at,
+    lastMessage: row.last_message_at
+      ? {
+          body: row.last_message_body,
+          senderId: row.last_message_sender,
+          createdAt: row.last_message_at,
+        }
+      : null,
     employerId: row.employer_id,
     candidateId: row.candidate_id,
     position: {
@@ -75,12 +99,12 @@ export async function findInvitation(invitationId) {
   return rows[0] ? toInvitation(rows[0]) : null;
 }
 
-export async function listInvitationsForPosition(positionId) {
+export async function listInvitationsForEmployer(employerId) {
   const { rows } = await query(
     `${SELECT_INVITATION}
-     WHERE i.position_id = $1
-     ORDER BY i.created_at DESC`,
-    [positionId],
+     WHERE pos.employer_id = $1
+     ${ORDER_BY_ACTIVITY}`,
+    [employerId],
   );
   return rows.map(toInvitation);
 }
@@ -89,10 +113,17 @@ export async function listInvitationsForCandidate(candidateId) {
   const { rows } = await query(
     `${SELECT_INVITATION}
      WHERE i.candidate_id = $1
-     ORDER BY last_message_at DESC NULLS LAST, i.created_at DESC`,
+     ${ORDER_BY_ACTIVITY}`,
     [candidateId],
   );
   return rows.map(toInvitation);
+}
+
+export async function markInvitationRead(invitationId, side) {
+  const column = READ_COLUMNS[side];
+  await query(`UPDATE invitations SET ${column} = now() WHERE id = $1`, [
+    invitationId,
+  ]);
 }
 
 export async function answerInvitation({

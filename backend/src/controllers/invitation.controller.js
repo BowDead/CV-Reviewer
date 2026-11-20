@@ -1,6 +1,5 @@
 import {
-  getPositionInvitations,
-  getReceivedInvitations,
+  getInvitations,
   getSharedCv,
   getThread,
   inviteCandidate,
@@ -18,15 +17,8 @@ export async function postInvitation(req, res) {
   res.status(201).json(invitationView(invitation, req.user.id));
 }
 
-export async function getPositionInvitationList(req, res) {
-  const invitations = await getPositionInvitations(req.user.id, req.params.id);
-  res.json({
-    invitations: invitations.map((item) => invitationView(item, req.user.id)),
-  });
-}
-
-export async function getReceivedInvitationList(req, res) {
-  const invitations = await getReceivedInvitations(req.user.id);
+export async function getInvitationList(req, res) {
+  const invitations = await getInvitations(req.user);
   res.json({
     invitations: invitations.map((item) => invitationView(item, req.user.id)),
   });

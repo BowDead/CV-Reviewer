@@ -1,6 +1,26 @@
+const PREVIEW_LENGTH = 140;
+
+function preview(body) {
+  const text = body.replace(/\s+/g, " ").trim();
+  return text.length > PREVIEW_LENGTH
+    ? `${text.slice(0, PREVIEW_LENGTH - 1)}…`
+    : text;
+}
+
+function isUnread(lastMessage, viewerId, readAt) {
+  if (!lastMessage || lastMessage.senderId === viewerId) {
+    return false;
+  }
+  return !readAt || new Date(lastMessage.createdAt) > new Date(readAt);
+}
+
 export function invitationView(invitation, viewerId) {
   const isCandidate = invitation.candidateId === viewerId;
   const showEmail = !isCandidate && invitation.status === "accepted";
+  const readAt = isCandidate
+    ? invitation.candidateReadAt
+    : invitation.employerReadAt;
+  const { lastMessage } = invitation;
   return {
     id: invitation.id,
     role: isCandidate ? "candidate" : "employer",
@@ -10,7 +30,15 @@ export function invitationView(invitation, viewerId) {
     sharedCvId: isCandidate ? invitation.sharedCvId : null,
     createdAt: invitation.createdAt,
     respondedAt: invitation.respondedAt,
-    lastMessageAt: invitation.lastMessageAt,
+    lastMessageAt: lastMessage?.createdAt ?? null,
+    lastMessage: lastMessage
+      ? {
+          preview: preview(lastMessage.body),
+          isMine: lastMessage.senderId === viewerId,
+          createdAt: lastMessage.createdAt,
+        }
+      : null,
+    unread: isUnread(lastMessage, viewerId, readAt),
     position: invitation.position,
     candidate: {
       id: invitation.candidate.id,

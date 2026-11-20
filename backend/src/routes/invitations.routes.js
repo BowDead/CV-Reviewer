@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
+  getInvitationList,
   getInvitationThread,
-  getReceivedInvitationList,
   getSharedCvFile,
   postInvitationMessage,
   postInvitationResponse,
@@ -14,7 +14,7 @@ const candidateOnly = requireRole("candidate", "admin");
 
 invitationsRouter.use(requireAuth);
 
-invitationsRouter.get("/", candidateOnly, getReceivedInvitationList);
+invitationsRouter.get("/", getInvitationList);
 invitationsRouter.post("/:id/respond", candidateOnly, postInvitationResponse);
 invitationsRouter.get("/:id/messages", getInvitationThread);
 invitationsRouter.post("/:id/messages", postInvitationMessage);

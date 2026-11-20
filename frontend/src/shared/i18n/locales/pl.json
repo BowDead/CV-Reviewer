@@ -323,12 +323,16 @@
     "navTitle": "Panel pracodawcy",
     "nav": {
       "positions": "Stanowiska",
+      "candidates": "Kandydaci",
       "keys": "Klucze AI"
     },
     "positions": {
       "title": "Stanowiska",
       "newTitle": "Nowe stanowisko",
       "editTitle": "Edycja stanowiska"
+    },
+    "candidates": {
+      "title": "Kandydaci"
     }
   },
   "positions": {
@@ -344,6 +348,7 @@
     "blocked": "Zablokowane",
     "blockedText": "Administrator zablokował to stanowisko. Nie można wysyłać do niego zaproszeń.",
     "remove": "Usuń",
+    "findCandidates": "Pasujący kandydaci",
     "confirmRemove": "Usunąć stanowisko „{{title}}”? Zaproszenia do niego też zostaną usunięte.",
     "form": {
       "details": "Stanowisko",
@@ -369,6 +374,33 @@
       "cancel": "Anuluj",
       "save": "Zapisz stanowisko",
       "saving": "Zapisywanie…"
+    }
+  },
+  "candidates": {
+    "loading": "Wyszukiwanie kandydatów…",
+    "loadFailed": "Nie udało się wyszukać kandydatów",
+    "emptyTitle": "Brak kandydatów",
+    "emptyText": "Żaden opublikowany profil nie spełnia filtrów. Usuń część umiejętności albo zmień poziom lub lokalizację.",
+    "summary": "Opublikowane profile: {{count}}",
+    "summaryRanked": "Kandydaci dopasowani do stanowiska: {{count}}",
+    "anonymous": "Kandydat",
+    "match": "dopasowania",
+    "cvScore": "ocena CV",
+    "matched": "Spełnia:",
+    "missing": "Brakuje:",
+    "skills": "Umiejętności:",
+    "filters": {
+      "position": "Dopasuj do stanowiska",
+      "noPosition": "Bez stanowiska",
+      "seniority": "Poziom",
+      "any": "Dowolny",
+      "location": "Lokalizacja",
+      "locationPlaceholder": "np. Kraków",
+      "skills": "Wymagane umiejętności",
+      "skillsPlaceholder": "Dodaj umiejętność ze słownika, np. React",
+      "addSkill": "Dodaj",
+      "removeSkill": "Usuń {{name}}",
+      "search": "Szukaj"
     }
   },
   "errors": {
@@ -455,6 +487,7 @@
     "POSITION_DESCRIPTION_TOO_LONG": "Opis może mieć najwyżej {{max}} znaków.",
     "POSITION_URL_INVALID": "Podaj poprawny adres zaczynający się od http:// lub https://.",
     "POSITION_TOO_MANY_SKILLS": "Stanowisko może mieć najwyżej {{max}} umiejętności.",
+    "CANDIDATE_NOT_FOUND": "Nie znaleziono kandydata.",
     "UNKNOWN": "Wystąpił nieoczekiwany błąd."
   }
 }

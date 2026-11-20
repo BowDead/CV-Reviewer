@@ -1053,11 +1053,11 @@ paths:
   /api/invitations:
     get:
       tags: [Zaproszenia]
-      summary: Lista otrzymanych zaproszeń
-      description: Od zaproszenia z najnowszą wiadomością.
+      summary: Lista rozmów zalogowanego użytkownika
+      description: Kandydat dostaje otrzymane zaproszenia, a pracodawca zaproszenia wysłane do wszystkich swoich stanowisk. Od rozmowy z najnowszą wiadomością. Pole `unread` mówi, czy w rozmowie jest wiadomość drugiej strony, której użytkownik jeszcze nie otworzył.
       responses:
         "200":
-          description: Zaproszenia kandydata
+          description: Rozmowy użytkownika
           content:
             application/json:
               schema:
@@ -1069,8 +1069,6 @@ paths:
                       $ref: "#/components/schemas/Invitation"
         "401":
           $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
 
   /api/invitations/{id}/respond:
     post:
@@ -1118,7 +1116,7 @@ paths:
     get:
       tags: [Zaproszenia]
       summary: Wątek wiadomości w zaproszeniu
-      description: "Dostęp: kandydat i pracodawca z tego zaproszenia. Zwraca zaproszenie i wiadomości od najstarszej. Nowe wiadomości pojawiają się po ponownym pobraniu (bez komunikacji na żywo)."
+      description: "Dostęp: kandydat i pracodawca z tego zaproszenia. Zwraca zaproszenie i wiadomości od najstarszej oraz oznacza rozmowę jako przeczytaną. Nowe wiadomości pojawiają się po ponownym pobraniu; strona pobiera wątek co 15 sekund."
       parameters:
         - $ref: "#/components/parameters/Id"
       responses:
@@ -1348,29 +1346,6 @@ paths:
           $ref: "#/components/responses/NotFound"
 
   /api/positions/{id}/invitations:
-    get:
-      tags: [Stanowiska i kandydaci]
-      summary: Lista wysłanych zaproszeń na stanowisko
-      parameters:
-        - $ref: "#/components/parameters/Id"
-      responses:
-        "200":
-          description: Zaproszenia do stanowiska, od najnowszego
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  invitations:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Invitation"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
     post:
       tags: [Stanowiska i kandydaci]
       summary: Wysłanie zaproszenia do kandydata z pierwszą wiadomością
@@ -2540,6 +2515,22 @@ components:
         lastMessageAt:
           type: [string, "null"]
           format: date-time
+        lastMessage:
+          description: Ostatnia wiadomość w rozmowie, skrócona do 140 znaków
+          oneOf:
+            - type: object
+              properties:
+                preview:
+                  type: string
+                isMine:
+                  type: boolean
+                createdAt:
+                  type: string
+                  format: date-time
+            - type: "null"
+        unread:
+          type: boolean
+          description: Czy jest wiadomość drugiej strony, której użytkownik nie otworzył
         position:
           type: object
           properties:

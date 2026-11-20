@@ -1054,9 +1054,10 @@ paths:
     get:
       tags: [Zaproszenia]
       summary: Lista otrzymanych zaproszeń
+      description: Od zaproszenia z najnowszą wiadomością.
       responses:
         "200":
-          description: Zaproszenia, od najnowszego
+          description: Zaproszenia kandydata
           content:
             application/json:
               schema:
@@ -1065,7 +1066,7 @@ paths:
                   invitations:
                     type: array
                     items:
-                      $ref: "#/components/schemas/ReceivedInvitation"
+                      $ref: "#/components/schemas/Invitation"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -1097,7 +1098,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ReceivedInvitation"
+                $ref: "#/components/schemas/Invitation"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -1107,7 +1108,62 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
         "409":
-          description: Na zaproszenie już odpowiedziano
+          description: "`INVITATION_ALREADY_ANSWERED` – na zaproszenie już odpowiedziano"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/invitations/{id}/messages:
+    get:
+      tags: [Zaproszenia]
+      summary: Wątek wiadomości w zaproszeniu
+      description: "Dostęp: kandydat i pracodawca z tego zaproszenia. Zwraca zaproszenie i wiadomości od najstarszej. Nowe wiadomości pojawiają się po ponownym pobraniu (bez komunikacji na żywo)."
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Zaproszenie i wiadomości
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvitationThread"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags: [Zaproszenia]
+      summary: Wysłanie wiadomości w zaproszeniu
+      description: "Dostęp: kandydat i pracodawca z tego zaproszenia. Pisać można, dopóki zaproszenie czeka na odpowiedź albo jest przyjęte."
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+                  maxLength: 2000
+      responses:
+        "201":
+          description: Wątek po dodaniu wiadomości
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvitationThread"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: "`INVITATION_CLOSED` – zaproszenie zostało odrzucone"
           content:
             application/json:
               schema:
@@ -1299,7 +1355,7 @@ paths:
         - $ref: "#/components/parameters/Id"
       responses:
         "200":
-          description: Zaproszenia do stanowiska
+          description: Zaproszenia do stanowiska, od najnowszego
           content:
             application/json:
               schema:
@@ -1308,7 +1364,7 @@ paths:
                   invitations:
                     type: array
                     items:
-                      $ref: "#/components/schemas/SentInvitation"
+                      $ref: "#/components/schemas/Invitation"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -1317,7 +1373,8 @@ paths:
           $ref: "#/components/responses/NotFound"
     post:
       tags: [Stanowiska i kandydaci]
-      summary: Wysłanie zaproszenia do kandydata
+      summary: Wysłanie zaproszenia do kandydata z pierwszą wiadomością
+      description: Kandydat musi mieć opublikowany profil. Pierwsza wiadomość rozpoczyna wątek zaproszenia.
       parameters:
         - $ref: "#/components/parameters/Id"
       requestBody:
@@ -1326,12 +1383,12 @@ paths:
           application/json:
             schema:
               type: object
-              required: [candidateId]
+              required: [candidateId, message]
               properties:
                 candidateId:
                   type: string
                   format: uuid
-                note:
+                message:
                   type: string
                   maxLength: 2000
       responses:
@@ -1340,7 +1397,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SentInvitation"
+                $ref: "#/components/schemas/Invitation"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -1350,7 +1407,7 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
         "409":
-          description: Kandydat ma już zaproszenie do tego stanowiska
+          description: "`INVITATION_EXISTS` – kandydat ma już zaproszenie do tego stanowiska; `POSITION_BLOCKED` – stanowisko zablokowane"
           content:
             application/json:
               schema:
@@ -1427,22 +1484,17 @@ paths:
   /api/invitations/{id}/cv:
     get:
       tags: [Stanowiska i kandydaci]
-      summary: Pobranie udostępnionego dokumentu CV
-      description: CV, które kandydat udostępnił, akceptując to zaproszenie.
+      summary: Pobranie udostępnionego CV
+      description: CV, które kandydat udostępnił, akceptując to zaproszenie. Zapisane CV są tekstem w Markdownie (krok 06.2), więc plik ma rozszerzenie .md.
       parameters:
         - $ref: "#/components/parameters/Id"
       responses:
         "200":
-          description: Zawartość pliku CV
+          description: Treść CV
           content:
-            application/pdf:
+            text/markdown:
               schema:
                 type: string
-                format: binary
-            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
-              schema:
-                type: string
-                format: binary
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -2457,12 +2509,37 @@ components:
       type: string
       enum: [pending, accepted, declined]
 
-    ReceivedInvitation:
+    Invitation:
       type: object
+      description: Zaproszenie widziane przez jedną ze stron. Kandydat i pracodawca dostają ten sam kształt.
       properties:
         id:
           type: string
           format: uuid
+        role:
+          type: string
+          enum: [candidate, employer]
+          description: Strona zaproszenia, którą jest zalogowany użytkownik
+        status:
+          $ref: "#/components/schemas/InvitationStatus"
+        canWrite:
+          type: boolean
+          description: Czy można pisać w wątku (nie po odrzuceniu)
+        hasSharedCv:
+          type: boolean
+        sharedCvId:
+          type: [string, "null"]
+          format: uuid
+          description: Udostępnione CV; tylko dla kandydata
+        createdAt:
+          type: string
+          format: date-time
+        respondedAt:
+          type: [string, "null"]
+          format: date-time
+        lastMessageAt:
+          type: [string, "null"]
+          format: date-time
         position:
           type: object
           properties:
@@ -2476,41 +2553,56 @@ components:
             url:
               type: [string, "null"]
               format: uri
-        note:
-          type: [string, "null"]
-        status:
-          $ref: "#/components/schemas/InvitationStatus"
-        sharedCvId:
-          type: [string, "null"]
-          format: uuid
-        createdAt:
-          type: string
-          format: date-time
-        respondedAt:
-          type: [string, "null"]
-          format: date-time
+            isBlocked:
+              type: boolean
+        candidate:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            displayName:
+              type: [string, "null"]
+            headline:
+              type: [string, "null"]
+            seniority:
+              oneOf:
+                - $ref: "#/components/schemas/Seniority"
+                - type: "null"
+            location:
+              type: [string, "null"]
+            score:
+              type: [number, "null"]
+            email:
+              type: [string, "null"]
+              description: Adres e-mail kandydata; tylko dla pracodawcy po akceptacji
 
-    SentInvitation:
+    InvitationMessage:
       type: object
       properties:
         id:
           type: string
           format: uuid
-        candidate:
-          $ref: "#/components/schemas/CandidateProfile"
-        note:
-          type: [string, "null"]
-        status:
-          $ref: "#/components/schemas/InvitationStatus"
-        hasSharedCv:
+        sender:
+          type: string
+          enum: [candidate, employer]
+        isMine:
           type: boolean
-          description: Czy kandydat udostępnił CV, które można pobrać
+        body:
+          type: string
         createdAt:
           type: string
           format: date-time
-        respondedAt:
-          type: [string, "null"]
-          format: date-time
+
+    InvitationThread:
+      type: object
+      properties:
+        invitation:
+          $ref: "#/components/schemas/Invitation"
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/InvitationMessage"
 
     Position:
       type: object

@@ -1,5 +1,6 @@
 export { WorkspacePage } from "./WorkspacePage";
 export { PreviewTab } from "./tabs/PreviewTab";
+export { CreatorTab } from "./tabs/CreatorTab";
 export { AnalysisTab } from "./tabs/AnalysisTab";
 export { ImprovementsTab } from "./tabs/ImprovementsTab";
 export { ProfileTab } from "./tabs/ProfileTab";

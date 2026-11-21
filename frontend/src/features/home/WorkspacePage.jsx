@@ -61,6 +61,7 @@ export function WorkspacePage({ actions }) {
       title: t("workspace.navGroups.cv"),
       items: [
         { to: "/cv", label: t("workspace.nav.preview") },
+        { to: "/creator", label: t("workspace.nav.creator") },
         { to: "/analysis", label: t("workspace.nav.analysis") },
         {
           to: "/improvements",

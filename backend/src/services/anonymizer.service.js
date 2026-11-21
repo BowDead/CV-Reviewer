@@ -3,11 +3,12 @@ import { escapeRegExp } from "../utils/regexp.js";
 
 const NAME_LINE_RE =
   /^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+(?:[ -][A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+){1,2}$/;
+const HEADING_MARK_RE = /^#{1,6}\s+/;
 
 export function guessFullName(text) {
   const firstLines = text
     .split("\n")
-    .map((line) => line.trim())
+    .map((line) => line.trim().replace(HEADING_MARK_RE, ""))
     .filter(Boolean)
     .slice(0, 3);
 

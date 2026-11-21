@@ -33,6 +33,7 @@
     "navTitle": "Nawigacja",
     "nav": {
       "preview": "Podgląd CV",
+      "creator": "Kreator CV",
       "analysis": "Analiza",
       "improvements": "Poprawki",
       "profile": "Profil",
@@ -62,6 +63,9 @@
       "readingTitle": "Odczytywanie pliku…",
       "emptyTitle": "Nie wgrano jeszcze CV",
       "emptyText": "Wgraj plik w panelu po lewej. Podgląd pojawi się tutaj, a w zakładkach Analiza, Poprawki i Profil zobaczysz wyniki po kliknięciu „Analizuj CV”."
+    },
+    "creator": {
+      "title": "Kreator CV"
     },
     "analysis": {
       "title": "Analiza AI"
@@ -127,6 +131,65 @@
         "manual": "ukryte ręcznie"
       }
     }
+  },
+  "cvCreator": {
+    "intro": "Wypełnij sekcje, a podgląd obok pokaże gotowe CV. Zapisane CV trafi do listy i od razu otworzy się do analizy.",
+    "viewLabel": "Widok kreatora",
+    "views": {
+      "form": "Formularz",
+      "preview": "Podgląd"
+    },
+    "previewEmpty": "Wpisz imię albo specjalizację, a podgląd CV pojawi się tutaj.",
+    "from": "Od",
+    "to": "Do",
+    "moveUp": "W górę",
+    "remove": "Usuń",
+    "chooseLevel": "Wybierz poziom",
+    "contact": {
+      "title": "Dane",
+      "fullName": "Imię i nazwisko",
+      "headline": "Specjalizacja",
+      "headlinePlaceholder": "np. Backend Developer (Java)",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "hint": "Imię, e-mail i telefon są opcjonalne. Przed analizą anonimizacja ukryje je przed modelem."
+    },
+    "summary": {
+      "title": "Podsumowanie",
+      "label": "Kilka zdań o sobie"
+    },
+    "experience": {
+      "title": "Doświadczenie",
+      "add": "Dodaj stanowisko",
+      "position": "Stanowisko",
+      "company": "Firma",
+      "highlights": "Osiągnięcia, każde w nowej linii"
+    },
+    "education": {
+      "title": "Wykształcenie",
+      "add": "Dodaj szkołę",
+      "degree": "Kierunek",
+      "school": "Uczelnia lub szkoła"
+    },
+    "skills": {
+      "title": "Umiejętności",
+      "empty": "Nie dodano jeszcze umiejętności.",
+      "placeholder": "Wpisz albo wybierz umiejętność",
+      "add": "Dodaj",
+      "remove": "Usuń {{name}}",
+      "hint": "Podpowiedzi pochodzą ze słownika umiejętności. Nazwa spoza słownika też trafi do CV."
+    },
+    "languages": {
+      "title": "Języki",
+      "add": "Dodaj język",
+      "name": "Język",
+      "level": "Poziom",
+      "native": "ojczysty"
+    },
+    "name": "Nazwa CV na liście",
+    "namePlaceholder": "np. CV backend",
+    "save": "Zapisz i przejdź do analizy",
+    "saving": "Zapisywanie…"
   },
   "cvAnalysis": {
     "analyze": "Analizuj CV",
@@ -639,6 +702,10 @@
     "CV_NAME_TOO_LONG": "Nazwa CV może mieć najwyżej {{max}} znaków.",
     "CV_CONTENT_REQUIRED": "CV nie zawiera tekstu.",
     "CV_CONTENT_TOO_LONG": "CV jest za długie (limit to {{max}} znaków).",
+    "CV_HEADLINE_REQUIRED": "Podaj specjalizację.",
+    "CV_FIELD_TOO_LONG": "Pole w kreatorze może mieć najwyżej {{max}} znaków.",
+    "CV_LIST_TOO_LONG": "Lista w kreatorze może mieć najwyżej {{max}} pozycji.",
+    "CV_FIELD_INVALID": "Nieprawidłowe dane w kreatorze CV.",
     "ANALYSIS_NOT_FOUND": "Nie znaleziono analizy.",
     "ANALYSIS_IS_PROFILE_SOURCE": "Tej analizy nie można usunąć, bo jest źródłem Twojego profilu.",
     "GITHUB_LOGIN_REQUIRED": "Podaj login GitHub.",

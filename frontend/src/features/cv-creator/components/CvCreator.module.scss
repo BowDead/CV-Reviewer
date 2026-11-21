@@ -1,0 +1,234 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+$breakpoint-creator: 1100px;
+
+.creator,
+.form,
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.intro {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.9rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: $space-lg;
+  align-items: start;
+
+  @media (max-width: $breakpoint-creator) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.preview {
+  position: sticky;
+  top: $space-md;
+}
+
+.views {
+  display: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-sidebar;
+
+  @media (max-width: $breakpoint-creator) {
+    display: grid;
+  }
+}
+
+.view,
+.viewActive {
+  min-height: 2.5rem;
+  border: none;
+  border-radius: $radius;
+  background: transparent;
+  color: $color-text-soft;
+  font: inherit;
+  cursor: pointer;
+}
+
+.viewActive {
+  background: $color-primary-bg;
+  color: $color-primary-text;
+  font-weight: 600;
+}
+
+.hidden {
+  @media (max-width: $breakpoint-creator) {
+    display: none;
+  }
+}
+
+.card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+}
+
+.label {
+  @include section-label;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-sm;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  padding: $space-sm;
+  border: 1px solid $color-divider;
+  border-radius: $radius;
+  background: $color-sidebar;
+}
+
+.entryActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-xs;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  color: $color-muted-text;
+  font-size: 0.8rem;
+}
+
+.input {
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius;
+  background: $color-bg;
+  color: $color-text;
+  font: inherit;
+  font-size: 0.9rem;
+
+  &:focus-visible {
+    border-color: $color-primary;
+    outline: none;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.textarea {
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.hint,
+.placeholder {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.placeholder {
+  padding: $space-lg;
+  border: 1px dashed $color-border;
+  border-radius: $radius;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.125rem 0.25rem 0.125rem 0.5rem;
+  border-radius: $radius-sm;
+  background: $color-muted-bg;
+  color: $color-text-soft;
+  font-size: 0.8125rem;
+}
+
+.tagButton {
+  padding: 0 0.3rem;
+  border: none;
+  border-radius: $radius-sm;
+  background: transparent;
+  color: $color-muted-text;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: $color-border-strong;
+    color: $color-text;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-xs;
+
+  .input {
+    flex: 1;
+    min-width: 12rem;
+  }
+}
+
+.saveBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: $space-sm;
+  padding: $space-md $space-lg;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-sidebar;
+
+  .field {
+    flex: 1 1 14rem;
+  }
+}
+
+.error {
+  margin: 0;
+  padding: $space-xs 0.75rem;
+  border: 1px solid;
+  border-radius: $radius;
+  background: $color-danger-bg;
+  color: $color-danger;
+  font-size: 0.875rem;
+}

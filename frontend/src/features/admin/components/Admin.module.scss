@@ -1,0 +1,243 @@
+@use "@/shared/styles/variables" as *;
+@use "@/shared/styles/mixins" as *;
+
+.panel,
+.skillForm {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.skillForm {
+  gap: $space-sm;
+}
+
+.card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+}
+
+.cardHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-sm;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.title {
+  color: $color-text;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.label {
+  @include section-label;
+}
+
+.meta {
+  color: $color-muted-text;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.hint {
+  margin: 0;
+  color: $color-muted-text;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.badge {
+  flex: none;
+  padding: 0.125rem 0.5rem;
+  border-radius: $radius-sm;
+  font-size: 0.75rem;
+}
+
+.ok {
+  background: $color-success-bg;
+  color: $color-success;
+}
+
+.warn {
+  background: $color-primary-bg;
+  color: $color-primary-text;
+}
+
+.danger {
+  background: $color-danger-bg;
+  color: $color-danger;
+}
+
+.muted {
+  background: $color-muted-bg;
+  color: $color-muted-text;
+}
+
+.reason {
+  margin: 0;
+  padding: $space-xs 0.75rem;
+  border-left: 3px solid $color-primary;
+  background: $color-bg;
+  color: $color-text;
+  font-size: 0.9rem;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.details {
+  color: $color-text-soft;
+  font-size: 0.875rem;
+
+  summary {
+    color: $color-muted-text;
+    cursor: pointer;
+  }
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  margin: $space-xs 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.message {
+  padding: $space-xs 0.75rem;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-bg;
+}
+
+.body {
+  margin: 0.25rem 0 0;
+  color: $color-text;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.error {
+  margin: 0;
+  padding: $space-xs 0.75rem;
+  border: 1px solid;
+  border-radius: $radius;
+  background: $color-danger-bg;
+  color: $color-danger;
+  font-size: 0.875rem;
+}
+
+.errorText {
+  color: $color-danger;
+  font-size: 0.8rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: $space-xs;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  @include card;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-sm;
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-xs;
+}
+
+.tabs {
+  display: flex;
+  gap: $space-xs;
+  border-bottom: 1px solid $color-divider;
+}
+
+.tab {
+  padding: $space-xs $space-sm;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: $color-muted-text;
+  cursor: pointer;
+
+  &:hover {
+    color: $color-text;
+  }
+}
+
+.tabActive {
+  border-bottom-color: $color-primary;
+  color: $color-text;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  align-items: end;
+  gap: $space-sm;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: $color-muted-text;
+  font-size: 0.8rem;
+}
+
+.input {
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius;
+  background: $color-bg;
+  color: $color-text;
+  font-size: 0.9rem;
+
+  &:focus-visible {
+    border-color: $color-primary;
+    outline: none;
+  }
+}
+
+.filterSubmit {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+  color: $color-text-soft;
+  font-size: 0.85rem;
+}

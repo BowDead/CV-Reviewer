@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router";
 import {
   WorkspacePage,
   PreviewTab,
+  CreatorTab,
   AnalysisTab,
   ImprovementsTab,
   ProfileTab,
@@ -39,6 +40,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "/", element: <Navigate to="/cv" replace /> },
       { path: "/cv", element: <PreviewTab /> },
+      { path: "/creator", element: <CreatorTab /> },
       { path: "/analysis", element: <AnalysisTab /> },
       { path: "/improvements", element: <ImprovementsTab /> },
       { path: "/profile", element: <ProfileTab /> },

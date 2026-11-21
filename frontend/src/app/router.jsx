@@ -27,6 +27,7 @@ import {
   RequireAuth,
   UserMenu,
 } from "@/features/auth";
+import { AdminPage, ReportsTab, SkillsTab, UsersTab } from "@/features/admin";
 
 export const router = createBrowserRouter([
   {
@@ -69,6 +70,20 @@ export const router = createBrowserRouter([
       { path: "messages/:invitationId", element: <EmployerInvitationTab /> },
       { path: "candidates", element: <CandidatesTab /> },
       { path: "keys", element: <KeysTab /> },
+    ],
+  },
+  {
+    path: "/admin",
+    element: (
+      <RequireAuth roles={["admin"]}>
+        <AdminPage actions={<UserMenu />} />
+      </RequireAuth>
+    ),
+    children: [
+      { index: true, element: <Navigate to="/admin/reports" replace /> },
+      { path: "reports", element: <ReportsTab /> },
+      { path: "users", element: <UsersTab /> },
+      { path: "skills", element: <SkillsTab /> },
     ],
   },
   { path: "/login", element: <LoginPage /> },

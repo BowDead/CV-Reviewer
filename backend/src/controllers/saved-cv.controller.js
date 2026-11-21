@@ -2,6 +2,7 @@ import {
   getSavedCv,
   getSavedCvs,
   removeSavedCv,
+  saveCreatorCv,
   saveCv,
 } from "../services/saved-cv.service.js";
 import { savedCvSummaryView, savedCvView } from "../views/saved-cv.view.js";
@@ -13,6 +14,11 @@ export async function getSavedList(req, res) {
 
 export async function postSaved(req, res) {
   const cv = await saveCv(req.user.id, req.body);
+  res.status(201).json({ cv: savedCvSummaryView(cv) });
+}
+
+export async function postSavedCreator(req, res) {
+  const cv = await saveCreatorCv(req.user.id, req.body);
   res.status(201).json({ cv: savedCvSummaryView(cv) });
 }
 

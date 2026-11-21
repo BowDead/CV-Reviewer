@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import { Button } from "@/shared/ui/Button";
 import { sharedCvUrl } from "../api/invitationsApi";
 import { InvitationStatus } from "./InvitationStatus";
+import { ReportDialog } from "./ReportDialog";
 import styles from "./Invitations.module.scss";
 
 function EmployerHeading({ invitation }) {
@@ -96,6 +97,7 @@ function EmployerContact({ invitation }) {
 export function InvitationHeader({ invitation, refreshing, onRefresh }) {
   const { t } = useTranslation();
   const [showDescription, setShowDescription] = useState(false);
+  const [reporting, setReporting] = useState(false);
   const isCandidate = invitation.role === "candidate";
 
   return (
@@ -112,6 +114,15 @@ export function InvitationHeader({ invitation, refreshing, onRefresh }) {
         )}
         <div className={styles.headerActions}>
           {!isCandidate && <EmployerContact invitation={invitation} />}
+          {isCandidate && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setReporting(true)}
+            >
+              {t("invitations.report.open")}
+            </Button>
+          )}
           <Button
             size="sm"
             variant="ghost"
@@ -129,6 +140,12 @@ export function InvitationHeader({ invitation, refreshing, onRefresh }) {
       )}
       {invitation.position.isBlocked && (
         <p className={styles.notice}>{t("invitations.header.blocked")}</p>
+      )}
+      {reporting && (
+        <ReportDialog
+          invitationId={invitation.id}
+          onClose={() => setReporting(false)}
+        />
       )}
     </>
   );

@@ -509,7 +509,7 @@ paths:
     post:
       tags: [CV i analizy]
       summary: Zapisanie CV utworzonego w kreatorze
-      description: Dane z kreatora są zamieniane na Markdown i zapisywane tak jak tekst wgranego CV, z `source` równym `creator` (krok 08.1).
+      description: Dane z kreatora są zamieniane na Markdown i zapisywane tak jak tekst wgranego CV, z `source` równym `creator` (krok 13). Puste wpisy są pomijane, a powtórzone umiejętności usuwane.
       requestBody:
         required: true
         content:
@@ -527,9 +527,21 @@ paths:
                   cv:
                     $ref: "#/components/schemas/SavedCvSummary"
         "400":
-          $ref: "#/components/responses/BadRequest"
+          description: "`CV_NAME_REQUIRED`, `CV_NAME_TOO_LONG`, `CV_HEADLINE_REQUIRED`, `CV_FIELD_TOO_LONG`, `CV_LIST_TOO_LONG`, `CV_FIELD_INVALID`, `CV_CONTENT_TOO_LONG`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          description: "`CV_LIMIT` – zapisano już maksymalną liczbę CV"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /api/cv/saved/{id}:
     get:
@@ -2220,59 +2232,90 @@ components:
 
     CvCreatorInput:
       type: object
-      required: [fileName, headline]
+      required: [name, headline]
       properties:
-        fileName:
+        name:
           type: string
           maxLength: 255
+          description: Nazwa CV na liście zapisanych
+        fullName:
+          type: string
+          maxLength: 150
         headline:
           type: string
           maxLength: 150
+          description: Specjalizacja, np. Backend Developer (Java)
+        email:
+          type: string
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 40
         summary:
           type: string
+          maxLength: 2000
         experience:
           type: array
+          maxItems: 20
           items:
             type: object
             properties:
               title:
                 type: string
+                maxLength: 150
               company:
                 type: string
+                maxLength: 150
               start:
                 type: string
+                maxLength: 30
               end:
                 type: string
+                maxLength: 30
               highlights:
                 type: array
+                maxItems: 10
                 items:
                   type: string
+                  maxLength: 300
         education:
           type: array
+          maxItems: 10
           items:
             type: object
             properties:
               degree:
                 type: string
+                maxLength: 150
               school:
                 type: string
+                maxLength: 150
               start:
                 type: string
+                maxLength: 30
               end:
                 type: string
+                maxLength: 30
         skills:
           type: array
+          maxItems: 50
           items:
             type: string
+            maxLength: 100
         languages:
           type: array
+          maxItems: 10
           items:
             type: object
             properties:
               name:
                 type: string
+                maxLength: 50
               level:
                 type: string
+                maxLength: 30
+                example: B2
+
 
     AnalysisSummary:
       type: object

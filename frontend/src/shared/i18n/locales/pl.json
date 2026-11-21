@@ -4,6 +4,7 @@
     "password": "Hasło",
     "checkingSession": "Sprawdzanie sesji…",
     "logout": "Wyloguj",
+    "adminPanel": "Panel administratora",
     "login": {
       "title": "Logowanie",
       "submit": "Zaloguj się",
@@ -486,6 +487,98 @@
       "cancel": "Anuluj",
       "send": "Wyślij zaproszenie",
       "sending": "Wysyłanie…"
+    },
+    "report": {
+      "open": "Zgłoś zaproszenie",
+      "title": "Zgłoszenie zaproszenia",
+      "hint": "Administrator zobaczy zaproszenie i całą rozmowę. Może zablokować stanowisko albo konto pracodawcy.",
+      "reason": "Powód zgłoszenia",
+      "cancel": "Anuluj",
+      "send": "Wyślij zgłoszenie",
+      "sending": "Wysyłanie…",
+      "sent": "Zgłoszenie wysłane do administratora.",
+      "close": "Zamknij"
+    }
+  },
+  "admin": {
+    "navTitle": "Panel administratora",
+    "any": "Dowolny",
+    "search": "Szukaj",
+    "nav": {
+      "reports": "Zgłoszenia",
+      "users": "Konta",
+      "skills": "Słownik umiejętności",
+      "views": "Inne widoki",
+      "candidate": "Strona kandydata",
+      "employer": "Panel pracodawcy"
+    },
+    "reports": {
+      "title": "Zgłoszenia",
+      "tabOpen": "Do rozpatrzenia",
+      "tabResolved": "Rozpatrzone",
+      "loading": "Wczytywanie zgłoszeń…",
+      "loadFailed": "Nie udało się wczytać zgłoszeń",
+      "empty": "Brak zgłoszeń do rozpatrzenia",
+      "emptyResolved": "Brak rozpatrzonych zgłoszeń",
+      "position": "Stanowisko: {{title}}",
+      "meta": "Pracodawca: {{employer}} · zgłasza: {{reporter}} · {{date}}",
+      "deleted": "konto usunięte",
+      "open": "Do rozpatrzenia",
+      "resolved": "Rozpatrzone",
+      "messages": "Rozmowa ({{count}})",
+      "sender": {
+        "candidate": "Kandydat",
+        "employer": "Pracodawca"
+      },
+      "blockPosition": "Zablokuj stanowisko",
+      "unblockPosition": "Odblokuj stanowisko",
+      "blockEmployer": "Zablokuj konto pracodawcy",
+      "unblockEmployer": "Odblokuj konto pracodawcy",
+      "resolve": "Oznacz jako rozpatrzone"
+    },
+    "users": {
+      "title": "Konta",
+      "email": "E-mail zawiera",
+      "role": "Rola",
+      "state": "Stan",
+      "active": "Aktywne",
+      "blocked": "Zablokowane",
+      "block": "Zablokuj",
+      "unblock": "Odblokuj",
+      "created": "założone {{date}}",
+      "loading": "Wczytywanie kont…",
+      "loadFailed": "Nie udało się wczytać kont",
+      "empty": "Brak kont spełniających filtry"
+    },
+    "skills": {
+      "title": "Słownik umiejętności",
+      "hint": "Nazwy spoza słownika, które model znalazł w CV lub w opisach stanowisk, czekają tutaj na decyzję. Zatwierdzone trafiają do wykrywania, podpowiedzi i dopasowania ofert.",
+      "statusFilter": "Stan",
+      "search": "Nazwa lub alias",
+      "status": {
+        "pending": "Oczekuje",
+        "approved": "Zatwierdzona",
+        "rejected": "Odrzucona"
+      },
+      "loading": "Wczytywanie słownika…",
+      "loadFailed": "Nie udało się wczytać słownika",
+      "empty": "Brak umiejętności spełniających filtry",
+      "noCategory": "bez kategorii",
+      "languageValue": "GitHub: {{language}}",
+      "aliasesValue": "aliasy: {{aliases}}",
+      "approve": "Zatwierdź",
+      "reject": "Odrzuć",
+      "edit": "Edytuj",
+      "save": "Zapisz",
+      "cancel": "Anuluj",
+      "addTitle": "Dodaj umiejętność",
+      "add": "Dodaj",
+      "name": "Nazwa",
+      "category": "Kategoria",
+      "githubLanguage": "Język w GitHub",
+      "aliases": "Aliasy",
+      "aliasesPlaceholder": "po przecinku, np. react.js, ReactJS",
+      "caseSensitive": "Wykrywaj tylko w tej pisowni (np. Go, Java)"
     }
   },
   "errors": {
@@ -581,6 +674,20 @@
     "MESSAGE_REQUIRED": "Wpisz treść wiadomości.",
     "MESSAGE_TOO_LONG": "Wiadomość może mieć najwyżej {{max}} znaków.",
     "SHARED_CV_NOT_FOUND": "CV nie jest dostępne. Kandydat mógł je usunąć.",
+    "ACCOUNT_BLOCKED": "Konto zostało zablokowane przez administratora.",
+    "REPORT_REASON_REQUIRED": "Wpisz powód zgłoszenia.",
+    "REPORT_REASON_TOO_LONG": "Powód może mieć najwyżej {{max}} znaków.",
+    "REPORT_EXISTS": "To zaproszenie czeka już na rozpatrzenie Twojego zgłoszenia.",
+    "REPORT_NOT_FOUND": "Nie znaleziono zgłoszenia.",
+    "REPORT_ALREADY_RESOLVED": "Zgłoszenie jest już rozpatrzone.",
+    "USER_NOT_FOUND": "Nie znaleziono konta.",
+    "CANNOT_BLOCK_SELF": "Nie możesz zablokować własnego konta.",
+    "SKILL_EXISTS": "Umiejętność o tej nazwie już jest w słowniku.",
+    "SKILL_NAME_REQUIRED": "Podaj nazwę umiejętności.",
+    "SKILL_NAME_TOO_LONG": "Nazwa może mieć najwyżej {{max}} znaków.",
+    "SKILL_CATEGORY_TOO_LONG": "Kategoria może mieć najwyżej {{max}} znaków.",
+    "SKILL_LANGUAGE_TOO_LONG": "Język może mieć najwyżej {{max}} znaków.",
+    "SKILL_ALIAS_INVALID": "Najwyżej 20 aliasów, każdy do 100 znaków.",
     "UNKNOWN": "Wystąpił nieoczekiwany błąd."
   }
 }

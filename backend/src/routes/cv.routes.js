@@ -11,6 +11,7 @@ import {
   getSavedItem,
   getSavedList,
   postSaved,
+  postSavedCreator,
 } from "../controllers/saved-cv.controller.js";
 
 export const cvRouter = Router();
@@ -23,5 +24,6 @@ cvRouter.post("/analyze", postAnalyzeCv);
 
 cvRouter.get("/saved", getSavedList);
 cvRouter.post("/saved", postSaved);
+cvRouter.post("/saved/creator", postSavedCreator);
 cvRouter.get("/saved/:id", getSavedItem);
 cvRouter.delete("/saved/:id", deleteSavedItem);

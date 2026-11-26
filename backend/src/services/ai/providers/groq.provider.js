@@ -38,14 +38,16 @@ async function completeJson({
   model,
   system,
   user,
-  temperature = 0.3,
+  temperature = 0,
+  seed,
 }) {
   const client = new Groq({ apiKey, timeout: 60_000, maxRetries: 2 });
-  for (const currentTemperature of [temperature, 0]) {
+  for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const completion = await client.chat.completions.create({
         model,
-        temperature: currentTemperature,
+        temperature,
+        seed,
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: system },

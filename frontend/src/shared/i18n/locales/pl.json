@@ -697,7 +697,7 @@
     "LLM_KEY_ORDER_INVALID": "Nieprawidłowa kolejność kluczy.",
     "LLM_KEY_REQUIRED": "Do analizy potrzebny jest klucz API. Dodaj go w zakładce „Klucze AI”.",
     "CV_NOT_FOUND": "Nie znaleziono zapisanego CV.",
-    "CV_LIMIT": "Możesz zapisać najwyżej {{max}} CV. Usuń któreś w zakładce „CV i analizy”.",
+    "CV_LIMIT": "Możesz zapisać najwyżej {{max}} CV. Usuń któreś w zakładce „Zapisane CV i analizy”.",
     "CV_NAME_REQUIRED": "Brakuje nazwy CV.",
     "CV_NAME_TOO_LONG": "Nazwa CV może mieć najwyżej {{max}} znaków.",
     "CV_CONTENT_REQUIRED": "CV nie zawiera tekstu.",

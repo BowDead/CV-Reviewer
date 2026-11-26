@@ -1,9 +1,6 @@
+import { formatScore } from "@/features/profile";
 import { CriteriaList } from "./CriteriaList";
 import styles from "./AnalysisOverview.module.scss";
-
-function formatScore(score) {
-  return score ?? "–";
-}
 
 export function AnalysisOverview({ analysis }) {
   const { overallScore, seniority, summary, categories } = analysis;

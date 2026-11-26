@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { formatScore } from "@/features/profile";
 import { formatDateTime } from "@/shared/i18n/formatDateTime";
 import { Button } from "@/shared/ui/Button";
 import { ItemList, ListItem } from "@/shared/ui/ItemList";
@@ -30,7 +31,7 @@ export function AnalysisRows({
           key={analysis.id}
           leading={
             <span className={styles.score}>
-              {analysis.overallScore ?? "–"}
+              {formatScore(analysis.overallScore)}
               <span className={styles.scoreMax}>/10</span>
             </span>
           }

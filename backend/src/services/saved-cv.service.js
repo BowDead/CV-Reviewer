@@ -8,11 +8,9 @@ import {
   listSavedCvs,
 } from "../models/saved-cv.model.js";
 import { buildCvMarkdown, normalizeCreatorCv } from "../utils/cv-markdown.js";
-import { decryptBytes, encryptBytes } from "../utils/encryption.js";
 import { parseId } from "../utils/parse-id.js";
 import { parseInput } from "../utils/parse-input.js";
 import { getLatestAnalysisForCv } from "./analysis.service.js";
-import { getUserDataKey } from "./user-crypto.service.js";
 
 const MAX_SAVED_CVS = 10;
 const MAX_CONTENT_CHARS = 50_000;
@@ -87,45 +85,15 @@ const creatorSchema = z.object({
   ),
 });
 
-function encryptText(text, dataKey) {
-  return encryptBytes(Buffer.from(text, "utf8"), dataKey);
-}
-
-function decryptText(stored, dataKey) {
-  return decryptBytes(stored, dataKey).toString("utf8");
-}
-
-function readSummary(cv, dataKey) {
-  return {
-    id: cv.id,
-    name: decryptText(cv.nameEnc, dataKey),
-    source: cv.source,
-    createdAt: cv.createdAt,
-  };
-}
-
 async function insertCv(userId, { name, content, source }) {
   if ((await countSavedCvs(userId)) >= MAX_SAVED_CVS) {
     throw new HttpError(409, "CV_LIMIT", { max: MAX_SAVED_CVS });
   }
-
-  const dataKey = await getUserDataKey(userId);
-  const saved = await insertSavedCv({
-    userId,
-    nameEnc: encryptText(name, dataKey),
-    contentEnc: encryptText(content, dataKey),
-    source,
-  });
-  return readSummary(saved, dataKey);
+  return insertSavedCv({ userId, name, content, source });
 }
 
 export async function getSavedCvs(userId) {
-  const cvs = await listSavedCvs(userId);
-  if (cvs.length === 0) {
-    return [];
-  }
-  const dataKey = await getUserDataKey(userId);
-  return cvs.map((cv) => readSummary(cv, dataKey));
+  return listSavedCvs(userId);
 }
 
 export async function saveCv(userId, input) {
@@ -150,10 +118,8 @@ export async function getSavedCv(userId, cvId) {
   if (!cv) {
     throw new HttpError(404, "CV_NOT_FOUND");
   }
-  const dataKey = await getUserDataKey(userId);
   return {
-    ...readSummary(cv, dataKey),
-    content: decryptText(cv.contentEnc, dataKey),
+    ...cv,
     latestAnalysis: await getLatestAnalysisForCv(userId, cvId),
   };
 }
@@ -163,11 +129,7 @@ export async function readSavedCvContent(userId, cvId) {
     return null;
   }
   const cv = await findSavedCv(userId, cvId);
-  if (!cv) {
-    return null;
-  }
-  const dataKey = await getUserDataKey(userId);
-  return decryptText(cv.contentEnc, dataKey);
+  return cv ? cv.content : null;
 }
 
 export async function removeSavedCv(userId, cvId) {

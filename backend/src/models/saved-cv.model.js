@@ -1,11 +1,11 @@
 import { query } from "./db.js";
 
-const LIST_COLUMNS = "id, name_enc, source, created_at";
+const LIST_COLUMNS = "id, name, source, created_at";
 
 function toSavedCv(row) {
   return {
     id: row.id,
-    nameEnc: row.name_enc,
+    name: row.name,
     source: row.source,
     createdAt: row.created_at,
   };
@@ -29,26 +29,26 @@ export async function countSavedCvs(userId) {
   return rows[0].count;
 }
 
-export async function insertSavedCv({ userId, nameEnc, contentEnc, source }) {
+export async function insertSavedCv({ userId, name, content, source }) {
   const { rows } = await query(
-    `INSERT INTO cvs (user_id, name_enc, content_enc, source)
+    `INSERT INTO cvs (user_id, name, content, source)
      VALUES ($1, $2, $3, $4)
      RETURNING ${LIST_COLUMNS}`,
-    [userId, nameEnc, contentEnc, source],
+    [userId, name, content, source],
   );
   return toSavedCv(rows[0]);
 }
 
 export async function findSavedCv(userId, cvId) {
   const { rows } = await query(
-    `SELECT ${LIST_COLUMNS}, content_enc FROM cvs
+    `SELECT ${LIST_COLUMNS}, content FROM cvs
      WHERE id = $1 AND user_id = $2`,
     [cvId, userId],
   );
   if (!rows[0]) {
     return null;
   }
-  return { ...toSavedCv(rows[0]), contentEnc: rows[0].content_enc };
+  return { ...toSavedCv(rows[0]), content: rows[0].content };
 }
 
 export async function deleteSavedCv(userId, cvId) {

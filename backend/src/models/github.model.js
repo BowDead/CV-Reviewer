@@ -4,7 +4,7 @@ function toRepository(row) {
   return {
     id: row.id,
     githubRepoId: Number(row.github_repo_id),
-    dataEnc: row.data_enc,
+    data: row.data,
     pushedAt: row.pushed_at,
     status: row.status,
     analyzedAt: row.analyzed_at,
@@ -36,7 +36,7 @@ export async function updateGithubLogin(userId, loginEnc, clearRepositories) {
 
 export async function listRepositories(userId) {
   const { rows } = await query(
-    `SELECT r.id, r.github_repo_id, r.data_enc, r.pushed_at, r.status, r.analyzed_at,
+    `SELECT r.id, r.github_repo_id, r.data, r.pushed_at, r.status, r.analyzed_at,
        COALESCE(
          json_agg(
            json_build_object(
@@ -68,17 +68,17 @@ export async function listRepositoryStates(userId) {
 export async function upsertRepository({
   userId,
   githubRepoId,
-  dataEnc,
+  data,
   pushedAt,
 }) {
   await query(
-    `INSERT INTO user_repositories (user_id, github_repo_id, data_enc, pushed_at)
+    `INSERT INTO user_repositories (user_id, github_repo_id, data, pushed_at)
      VALUES ($1, $2, $3, $4)
      ON CONFLICT (user_id, github_repo_id) DO UPDATE
-     SET data_enc = EXCLUDED.data_enc,
+     SET data = EXCLUDED.data,
          pushed_at = EXCLUDED.pushed_at,
          status = 'pending'`,
-    [userId, githubRepoId, dataEnc, pushedAt],
+    [userId, githubRepoId, JSON.stringify(data), pushedAt],
   );
 }
 
@@ -92,7 +92,7 @@ export async function deleteMissingRepositories(userId, githubRepoIds) {
 
 export async function listRepositoriesToAnalyze(userId, limit) {
   const { rows } = await query(
-    `SELECT id, github_repo_id, data_enc, pushed_at, status, analyzed_at
+    `SELECT id, github_repo_id, data, pushed_at, status, analyzed_at
      FROM user_repositories
      WHERE user_id = $1 AND status <> 'done'
      ORDER BY pushed_at DESC
@@ -111,13 +111,13 @@ export async function countPendingRepositories(userId) {
   return rows[0].count;
 }
 
-export async function saveRepositoryAnalysis(repositoryId, dataEnc, skills) {
+export async function saveRepositoryAnalysis(repositoryId, data, skills) {
   await withTransaction(async (client) => {
     await client.query(
       `UPDATE user_repositories
-       SET data_enc = $2, status = 'done', analyzed_at = now()
+       SET data = $2, status = 'done', analyzed_at = now()
        WHERE id = $1`,
-      [repositoryId, dataEnc],
+      [repositoryId, JSON.stringify(data)],
     );
     await client.query(
       "DELETE FROM repository_skills WHERE repository_id = $1",

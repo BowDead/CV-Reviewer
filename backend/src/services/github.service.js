@@ -12,12 +12,7 @@ import {
   updateGithubLogin,
   upsertRepository,
 } from "../models/github.model.js";
-import {
-  decryptBytes,
-  decryptJson,
-  encryptBytes,
-  encryptJson,
-} from "../utils/encryption.js";
+import { decryptBytes, encryptBytes } from "../utils/encryption.js";
 import { parseInput } from "../utils/parse-input.js";
 import { escapeRegExp } from "../utils/regexp.js";
 import {
@@ -68,8 +63,8 @@ async function readLogin(userId, dataKey) {
   return loginEnc ? decryptBytes(loginEnc, dataKey).toString("utf8") : null;
 }
 
-function readRepository(repository, dataKey) {
-  return { ...repository, ...decryptJson(repository.dataEnc, dataKey) };
+function readRepository({ data, ...repository }) {
+  return { ...repository, ...data };
 }
 
 export async function getRepositories(userId) {
@@ -78,7 +73,7 @@ export async function getRepositories(userId) {
   const repositories = await listRepositories(userId);
   return {
     login,
-    repositories: repositories.map((repo) => readRepository(repo, dataKey)),
+    repositories: repositories.map(readRepository),
   };
 }
 
@@ -132,7 +127,7 @@ function basicData(repo) {
   };
 }
 
-async function syncRepositories(userId, githubRepos, dataKey) {
+async function syncRepositories(userId, githubRepos) {
   const states = await listRepositoryStates(userId);
   const known = new Map(states.map((state) => [state.githubRepoId, state]));
 
@@ -149,7 +144,7 @@ async function syncRepositories(userId, githubRepos, dataKey) {
     await upsertRepository({
       userId,
       githubRepoId: repo.id,
-      dataEnc: encryptJson(basicData(repo), dataKey),
+      data: basicData(repo),
       pushedAt,
     });
   }
@@ -235,8 +230,8 @@ function mergeRepoSkills(detected, review, detector) {
   return { skills: [...skills.values()], other };
 }
 
-async function fetchDetails(login, row, index, detector, dataKey) {
-  const data = decryptJson(row.dataEnc, dataKey);
+async function fetchDetails(login, row, index, detector) {
+  const { data } = row;
   try {
     const [languages, readme] = await Promise.all([
       fetchRepoLanguages(login, data.name),
@@ -255,12 +250,10 @@ async function fetchDetails(login, row, index, detector, dataKey) {
   }
 }
 
-async function analyzeBatch({ login, llm, batch, dataKey }) {
+async function analyzeBatch({ login, llm, batch }) {
   const detector = await getSkillDetector();
   const fetched = await Promise.all(
-    batch.map((row, index) =>
-      fetchDetails(login, row, index, detector, dataKey),
-    ),
+    batch.map((row, index) => fetchDetails(login, row, index, detector)),
   );
   const ready = fetched.filter(Boolean);
   const failedIds = batch
@@ -300,11 +293,7 @@ async function analyzeBatch({ login, llm, batch, dataKey }) {
         summary: review.summary || null,
         otherSkills: other,
       };
-      await saveRepositoryAnalysis(
-        item.row.id,
-        encryptJson(data, dataKey),
-        skills,
-      );
+      await saveRepositoryAnalysis(item.row.id, data, skills);
     }
     await savePendingSkills(unknown);
   }
@@ -326,12 +315,12 @@ export async function analyzeRepositories(userId) {
   const githubRepos = (await fetchUserRepos(login)).filter(
     (repo) => !repo.fork && repo.size > 0,
   );
-  const unchanged = await syncRepositories(userId, githubRepos, dataKey);
+  const unchanged = await syncRepositories(userId, githubRepos);
 
   const batch = await listRepositoriesToAnalyze(userId, MAX_REPOS_PER_RUN);
   const { analyzed, failed } =
     batch.length > 0
-      ? await analyzeBatch({ login, llm, batch, dataKey })
+      ? await analyzeBatch({ login, llm, batch })
       : { analyzed: 0, failed: 0 };
 
   return {

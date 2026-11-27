@@ -30,231 +30,231 @@ function names(skills) {
 describe("skill detection in text", () => {
   // Skills that must be found
   test("given a full skill name when detect then the skill is returned", () => {
-    // Arrange
+    // Given
     const text = "Programowanie w JavaScript";
     const expected = ["JavaScript"];
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).toEqual(expected);
   });
 
   test("given an alias when detect then the skill of the alias is returned", () => {
-    // Arrange
+    // Given
     const text = "Testy w JS";
     const expected = ["JavaScript"];
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).toEqual(expected);
   });
 
   test("given an inflected form when detect then the skill in its base form is returned", () => {
-    // Arrange
+    // Given
     const text = "Trzy lata w Javie";
     const expected = ["Java"];
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).toEqual(expected);
   });
 
   test("given names in any letter case when detect then the skills are returned", () => {
-    // Arrange
+    // Given
     const text = "javascript i cpp";
     const expected = ["JavaScript", "C++"];
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).toEqual(expected);
   });
 
   test("given an alias at the end of a sentence when detect then the skill of the alias is returned", () => {
-    // Arrange
+    // Given
     const text = "Testy w JS.";
     const expected = ["JavaScript"];
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).toEqual(expected);
   });
 
   test("given a name starting with a dot when detect then the skill is returned", () => {
-    // Arrange
+    // Given
     const text = "Backend w .NET";
     const expected = [".NET"];
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).toEqual(expected);
   });
 
   test("given names separated by commas when detect then every name is returned", () => {
-    // Arrange
+    // Given
     const text = "Java, C#, Go";
     const expected = ["Java", "C#", "Go"];
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).toEqual(expected);
   });
 
   // Similar names that must not be confused
   test("given Java inside JavaScript when detect then Java is not returned", () => {
-    // Arrange
+    // Given
     const text = "JavaScript";
     const unexpected = "Java";
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).not.toContain(unexpected);
   });
 
   test("given C inside C++ when detect then C is not returned", () => {
-    // Arrange
+    // Given
     const text = "C++";
     const unexpected = "C";
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).not.toContain(unexpected);
   });
 
   test("given C inside C# when detect then C is not returned", () => {
-    // Arrange
+    // Given
     const text = "C#";
     const unexpected = "C";
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).not.toContain(unexpected);
   });
 
   test("given Go as a plain word when detect then Go is not returned", () => {
-    // Arrange
+    // Given
     const text = "go home";
     const unexpected = "Go";
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).not.toContain(unexpected);
   });
 
   test("given Go inside a word when detect then Go is not returned", () => {
-    // Arrange
+    // Given
     const text = "Google";
     const unexpected = "Go";
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).not.toContain(unexpected);
   });
 
   // Extra matches kept on purpose
   test("given JavaScript in the name Node.js when detect then JavaScript and Node.js are returned", () => {
-    // Arrange
+    // Given
     const text = "Serwer w Node.js.";
     const expected = ["JavaScript", "Node.js"];
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).toEqual(expected);
   });
 
   test("given JavaScript in the name Vue.js when detect then JavaScript is returned", () => {
-    // Arrange
+    // Given
     const text = "Frontend w Vue.js";
     const expected = ["JavaScript"];
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).toEqual(expected);
   });
 
   test("given a name after a dot without a space when detect then the skill is returned", () => {
-    // Arrange
+    // Given
     const text = "backend.Python";
     const expected = ["Python"];
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).toEqual(expected);
   });
 
   // No skills
   test("given a text without skills when detect then an empty list is returned", () => {
-    // Arrange
+    // Given
     const text = "Obsługa klienta i praca w zespole";
 
-    // Act
+    // When
     const skills = detector.detect(text);
 
-    // Assert
+    // Then
     expect(names(skills)).toEqual([]);
   });
 });
 
 describe("single skill lookup", () => {
   test("given an alias with different case and spaces when find then the skill of the alias is returned", () => {
-    // Arrange
+    // Given
     const name = "  golang ";
 
-    // Act
+    // When
     const result = detector.find(name);
 
-    // Assert
+    // Then
     expect(result.name).toBe("Go");
   });
 
   test("given a GitHub language when findByLanguage then the skill for the language is returned", () => {
-    // Arrange
+    // Given
     const language = "JavaScript";
 
-    // Act
+    // When
     const result = detector.findByLanguage(language);
 
-    // Assert
+    // Then
     expect(result.name).toBe("JavaScript");
   });
 
   test("given an unknown name when find then null is returned", () => {
-    // Arrange
+    // Given
     const name = "Cobol";
 
-    // Act
+    // When
     const result = detector.find(name);
 
-    // Assert
+    // Then
     expect(result).toBeNull();
   });
 });

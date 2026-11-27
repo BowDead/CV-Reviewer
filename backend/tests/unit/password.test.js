@@ -6,93 +6,93 @@ const PASSWORD = "Haslo12345";
 describe("passwords", () => {
   // Hashing and verification
   test("given a correct password when verifyPassword then the password is accepted", async () => {
-    // Arrange
+    // Given
     const hash = await hashPassword(PASSWORD);
 
-    // Act
+    // When
     const result = await verifyPassword(PASSWORD, hash);
 
-    // Assert
+    // Then
     expect(result).toBe(true);
   });
 
   test("given a wrong password when verifyPassword then the password is rejected", async () => {
-    // Arrange
+    // Given
     const hash = await hashPassword(PASSWORD);
 
-    // Act
+    // When
     const result = await verifyPassword("haslo12345", hash);
 
-    // Assert
+    // Then
     expect(result).toBe(false);
   });
 
   test("given a password when hashPassword then the hash does not contain the password", async () => {
-    // Arrange
+    // Given
     const password = "TajneHaslo1";
 
-    // Act
+    // When
     const hash = await hashPassword(password);
 
-    // Assert
+    // Then
     expect(hash).toMatch(/^scrypt\$/);
     expect(hash).not.toContain(password);
   });
 
   test("given the same password twice when hashPassword then the hashes differ", async () => {
-    // Arrange
+    // Given
     const password = "TajneHaslo1";
 
-    // Act
+    // When
     const first = await hashPassword(password);
     const second = await hashPassword(password);
 
-    // Assert
+    // Then
     expect(first).not.toBe(second);
   });
 
   // Malformed stored hashes
   test("given a stored hash with an empty value when verifyPassword then the password is rejected", async () => {
-    // Arrange
+    // Given
     const stored = "";
 
-    // Act
+    // When
     const result = await verifyPassword(PASSWORD, stored);
 
-    // Assert
+    // Then
     expect(result).toBe(false);
   });
 
   test("given a stored hash with no parts when verifyPassword then the password is rejected", async () => {
-    // Arrange
+    // Given
     const stored = "zwykly-tekst";
 
-    // Act
+    // When
     const result = await verifyPassword(PASSWORD, stored);
 
-    // Assert
+    // Then
     expect(result).toBe(false);
   });
 
   test("given a stored hash with another algorithm when verifyPassword then the password is rejected", async () => {
-    // Arrange
+    // Given
     const stored = "bcrypt$sol$skrot";
 
-    // Act
+    // When
     const result = await verifyPassword(PASSWORD, stored);
 
-    // Assert
+    // Then
     expect(result).toBe(false);
   });
 
   test("given a stored hash with no hash part when verifyPassword then the password is rejected", async () => {
-    // Arrange
+    // Given
     const stored = "scrypt$sol";
 
-    // Act
+    // When
     const result = await verifyPassword(PASSWORD, stored);
 
-    // Assert
+    // Then
     expect(result).toBe(false);
   });
 });

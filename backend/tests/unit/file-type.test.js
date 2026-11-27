@@ -8,112 +8,112 @@ const TEXT = Buffer.from("zwykły tekst");
 describe("file type detection", () => {
   // Accepted files
   test("given a valid PDF named cv.pdf when detectCvKind then pdf is returned", () => {
-    // Arrange
+    // Given
     const fileName = "cv.pdf";
     const buffer = PDF;
     const expected = "pdf";
 
-    // Act
+    // When
     const result = detectCvKind(fileName, buffer);
 
-    // Assert
+    // Then
     expect(result).toBe(expected);
   });
 
   test("given a valid PDF named CV.PDF when detectCvKind then pdf is returned", () => {
-    // Arrange
+    // Given
     const fileName = "CV.PDF";
     const buffer = PDF;
     const expected = "pdf";
 
-    // Act
+    // When
     const result = detectCvKind(fileName, buffer);
 
-    // Assert
+    // Then
     expect(result).toBe(expected);
   });
 
   test("given a valid DOCX named cv.docx when detectCvKind then docx is returned", () => {
-    // Arrange
+    // Given
     const fileName = "cv.docx";
     const buffer = DOCX;
     const expected = "docx";
 
-    // Act
+    // When
     const result = detectCvKind(fileName, buffer);
 
-    // Assert
+    // Then
     expect(result).toBe(expected);
   });
 
   // Rejected files
   test("given a text named .pdf when detectCvKind then FILE_NOT_PDF is thrown", () => {
-    // Arrange
+    // Given
     const fileName = "cv.pdf";
     const buffer = TEXT;
     const code = "FILE_NOT_PDF";
     const status = 400;
 
-    // Act
+    // When
     const act = () => detectCvKind(fileName, buffer);
 
-    // Assert
+    // Then
     expect(act).toThrow(expect.objectContaining({ code, status }));
   });
 
   test("given a text named .docx when detectCvKind then FILE_NOT_DOCX is thrown", () => {
-    // Arrange
+    // Given
     const fileName = "cv.docx";
     const buffer = TEXT;
     const code = "FILE_NOT_DOCX";
     const status = 400;
 
-    // Act
+    // When
     const act = () => detectCvKind(fileName, buffer);
 
-    // Assert
+    // Then
     expect(act).toThrow(expect.objectContaining({ code, status }));
   });
 
   test("given a PDF named .docx when detectCvKind then FILE_NOT_DOCX is thrown", () => {
-    // Arrange
+    // Given
     const fileName = "cv.docx";
     const buffer = PDF;
     const code = "FILE_NOT_DOCX";
     const status = 400;
 
-    // Act
+    // When
     const act = () => detectCvKind(fileName, buffer);
 
-    // Assert
+    // Then
     expect(act).toThrow(expect.objectContaining({ code, status }));
   });
 
   test("given an unsupported extension when detectCvKind then FILE_UNSUPPORTED is thrown", () => {
-    // Arrange
+    // Given
     const fileName = "cv.txt";
     const buffer = TEXT;
     const code = "FILE_UNSUPPORTED";
     const status = 415;
 
-    // Act
+    // When
     const act = () => detectCvKind(fileName, buffer);
 
-    // Assert
+    // Then
     expect(act).toThrow(expect.objectContaining({ code, status }));
   });
 
   test("given no extension when detectCvKind then FILE_UNSUPPORTED is thrown", () => {
-    // Arrange
+    // Given
     const fileName = "cv";
     const buffer = PDF;
     const code = "FILE_UNSUPPORTED";
     const status = 415;
 
-    // Act
+    // When
     const act = () => detectCvKind(fileName, buffer);
 
-    // Assert
+    // Then
     expect(act).toThrow(expect.objectContaining({ code, status }));
   });
 });

@@ -15,111 +15,111 @@ const plain = Buffer.from("Jan Kowalski, zażółć gęślą jaźń", "utf8");
 describe("data encryption", () => {
   // Encryption and decryption
   test("given data and the key used to encrypt it when decryptBytes then the original is returned", () => {
-    // Arrange
+    // Given
     const stored = encryptBytes(plain, key);
 
-    // Act
+    // When
     const result = decryptBytes(stored, key);
 
-    // Assert
+    // Then
     expect(result.equals(plain)).toBe(true);
   });
 
   test("given an object saved as JSON when decryptJson then the same object is returned", () => {
-    // Arrange
+    // Given
     const value = { name: "CV", skills: ["React"] };
     const stored = encryptJson(value, key);
 
-    // Act
+    // When
     const result = decryptJson(stored, key);
 
-    // Assert
+    // Then
     expect(result).toEqual(value);
   });
 
   test("given a plain text when encryptBytes then the result does not contain the plain text", () => {
-    // Arrange
+    // Given
     const secret = Buffer.from("Jan Kowalski", "utf8");
 
-    // Act
+    // When
     const stored = encryptBytes(secret, key);
 
-    // Assert
+    // Then
     expect(stored.includes("Kowalski")).toBe(false);
   });
 
   test("given the same text twice when encryptBytes then the results differ", () => {
-    // Arrange
+    // Given
     const text = Buffer.from("Ten sam tekst", "utf8");
 
-    // Act
+    // When
     const first = encryptBytes(text, key);
     const second = encryptBytes(text, key);
 
-    // Assert
+    // Then
     expect(first.equals(second)).toBe(false);
   });
 
   test("given a wrong key when decryptBytes then an error is thrown", () => {
-    // Arrange
+    // Given
     const stored = encryptBytes(plain, key);
 
-    // Act
+    // When
     const act = () => decryptBytes(stored, randomBytes(32));
 
-    // Assert
+    // Then
     expect(act).toThrow();
   });
 
   // Tampered encrypted data
   test("given one changed byte in the initialization vector when decryptBytes then an error is thrown", () => {
-    // Arrange
+    // Given
     const position = 0;
     const stored = encryptBytes(plain, key);
     stored[position] ^= 1;
 
-    // Act
+    // When
     const act = () => decryptBytes(stored, key);
 
-    // Assert
+    // Then
     expect(act).toThrow();
   });
 
   test("given one changed byte in the authentication tag when decryptBytes then an error is thrown", () => {
-    // Arrange
+    // Given
     const position = 12;
     const stored = encryptBytes(plain, key);
     stored[position] ^= 1;
 
-    // Act
+    // When
     const act = () => decryptBytes(stored, key);
 
-    // Assert
+    // Then
     expect(act).toThrow();
   });
 
   test("given one changed byte in the content when decryptBytes then an error is thrown", () => {
-    // Arrange
+    // Given
     const position = 28;
     const stored = encryptBytes(plain, key);
     stored[position] ^= 1;
 
-    // Act
+    // When
     const act = () => decryptBytes(stored, key);
 
-    // Assert
+    // Then
     expect(act).toThrow();
   });
 
   // Data key
   test("given the master key when createDataKeyEnc then a 32-byte key is encrypted with it", () => {
-    // Arrange
+    // Given
     const masterKey = env.masterKey;
 
-    // Act
+    // When
     const stored = createDataKeyEnc();
 
-    // Assert
+    // Then
     expect(decryptBytes(stored, masterKey)).toHaveLength(32);
   });
 });

@@ -12,193 +12,193 @@ function toLabels(segments) {
 describe("personal data anonymization", () => {
   // Personal data replaced with labels
   test("given an email when anonymize then the email is replaced with [EMAIL]", () => {
-    // Arrange
+    // Given
     const text = "Kontakt: jan.kowalski@example.com";
     const expected = "Kontakt: [EMAIL]";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(expected);
   });
 
   test("given a phone with spaces when anonymize then the phone is replaced with [TELEFON]", () => {
-    // Arrange
+    // Given
     const text = "Tel: 600 700 800";
     const expected = "Tel: [TELEFON]";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(expected);
   });
 
   test("given a phone with a prefix when anonymize then the phone is replaced with [TELEFON]", () => {
-    // Arrange
+    // Given
     const text = "Tel: +48 600-700-800";
     const expected = "Tel: [TELEFON]";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(expected);
   });
 
   test("given a PESEL number when anonymize then the PESEL is replaced with [PESEL]", () => {
-    // Arrange
+    // Given
     const text = "PESEL: 90010112345";
     const expected = "PESEL: [PESEL]";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(expected);
   });
 
   test("given a GitHub profile when anonymize then the link is replaced with [LINK GITHUB]", () => {
-    // Arrange
+    // Given
     const text = "https://github.com/jkowalski";
     const expected = "[LINK GITHUB]";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(expected);
   });
 
   test("given a LinkedIn profile when anonymize then the link is replaced with [LINK LINKEDIN]", () => {
-    // Arrange
+    // Given
     const text = "linkedin.com/in/jkowalski";
     const expected = "[LINK LINKEDIN]";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(expected);
   });
 
   test("given another link when anonymize then the link is replaced with [LINK]", () => {
-    // Arrange
+    // Given
     const text = "Blog: https://moj-blog.pl";
     const expected = "Blog: [LINK]";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(expected);
   });
 
   test("given an address with a street when anonymize then the address is replaced with [ADRES]", () => {
-    // Arrange
+    // Given
     const text = "Adres: ul. Długa 12/3";
     const expected = "Adres: [ADRES]";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(expected);
   });
 
   test("given an address without a street when anonymize then the address is replaced with [ADRES]", () => {
-    // Arrange
+    // Given
     const text = "Lipowa 5, 33-100 Tarnów";
     const expected = "[ADRES]";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(expected);
   });
 
   test("given a postal code when anonymize then the postal code is replaced with [KOD POCZTOWY]", () => {
-    // Arrange
+    // Given
     const text = "Okolice 33-100";
     const expected = "Okolice [KOD POCZTOWY]";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(expected);
   });
 
   test("given a birth date when anonymize then the date is replaced with [DATA]", () => {
-    // Arrange
+    // Given
     const text = "Data urodzenia: 01.02.1999";
     const expected = "Data urodzenia: [DATA]";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(expected);
   });
 
   // Ordinary CV content left unchanged
   test("given an employment period when anonymize then the period stays unchanged", () => {
-    // Arrange
+    // Given
     const text = "Programista, 2019 - 2023";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(text);
   });
 
   test("given a number of users when anonymize then the number stays unchanged", () => {
-    // Arrange
+    // Given
     const text = "Aplikacja dla 15000 osób";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(text);
   });
 
   test("given technology names when anonymize then the names stay unchanged", () => {
-    // Arrange
+    // Given
     const text = "Node.js, ASP.NET, C++";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(text);
   });
 
   // Whole CV text
   test("given a full name repeated in the text when anonymize then every occurrence is hidden", () => {
-    // Arrange
+    // Given
     const text = "Jan Kowalski\nProgramista\nPodpis: Jan Kowalski";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(toLabels(segments)).toBe(
       "[IMIĘ I NAZWISKO]\nProgramista\nPodpis: [IMIĘ I NAZWISKO]",
     );
   });
 
   test("given a text with personal data when anonymize then the segments join into the original text", () => {
-    // Arrange
+    // Given
     const text = "Jan Kowalski\njan@example.com, tel. 600 700 800\nJava";
 
-    // Act
+    // When
     const segments = anonymize(text);
 
-    // Assert
+    // Then
     expect(segments.map((segment) => segment.text).join("")).toBe(text);
   });
 });
@@ -206,50 +206,50 @@ describe("personal data anonymization", () => {
 describe("full name recognition", () => {
   // Name formats
   test("given a full name in a plain line when guessFullName then the name is returned", () => {
-    // Arrange
+    // Given
     const text = "Anna Nowak\nTester";
     const expected = "Anna Nowak";
 
-    // Act
+    // When
     const result = guessFullName(text);
 
-    // Assert
+    // Then
     expect(result).toBe(expected);
   });
 
   test("given a full name in a Markdown heading when guessFullName then the name is returned", () => {
-    // Arrange
+    // Given
     const text = "# Anna Nowak\n\n**Tester**";
     const expected = "Anna Nowak";
 
-    // Act
+    // When
     const result = guessFullName(text);
 
-    // Assert
+    // Then
     expect(result).toBe(expected);
   });
 
   test("given a double surname when guessFullName then the whole name is returned", () => {
-    // Arrange
+    // Given
     const text = "Anna Nowak-Zięba\nTester";
     const expected = "Anna Nowak-Zięba";
 
-    // Act
+    // When
     const result = guessFullName(text);
 
-    // Assert
+    // Then
     expect(result).toBe(expected);
   });
 
   // Missing name
   test("given no name in the first three lines when guessFullName then null is returned", () => {
-    // Arrange
+    // Given
     const text = "CV\nprogramista\n2024\nAnna Nowak";
 
-    // Act
+    // When
     const result = guessFullName(text);
 
-    // Assert
+    // Then
     expect(result).toBeNull();
   });
 });
@@ -257,41 +257,41 @@ describe("full name recognition", () => {
 describe("input validation", () => {
   // Invalid input
   test("given no text when anonymizeCv then CV_TEXT_MISSING is thrown", () => {
-    // Arrange
+    // Given
     const text = undefined;
     const code = "CV_TEXT_MISSING";
     const status = 400;
 
-    // Act
+    // When
     const act = () => anonymizeCv(text);
 
-    // Assert
+    // Then
     expect(act).toThrow(expect.objectContaining({ code, status }));
   });
 
   test("given only spaces when anonymizeCv then CV_TEXT_MISSING is thrown", () => {
-    // Arrange
+    // Given
     const text = "   ";
     const code = "CV_TEXT_MISSING";
     const status = 400;
 
-    // Act
+    // When
     const act = () => anonymizeCv(text);
 
-    // Assert
+    // Then
     expect(act).toThrow(expect.objectContaining({ code, status }));
   });
 
   test("given a text over the limit when anonymizeCv then CV_TEXT_TOO_LONG is thrown", () => {
-    // Arrange
+    // Given
     const text = "a".repeat(50_001);
     const code = "CV_TEXT_TOO_LONG";
     const status = 413;
 
-    // Act
+    // When
     const act = () => anonymizeCv(text);
 
-    // Assert
+    // Then
     expect(act).toThrow(expect.objectContaining({ code, status }));
   });
 });

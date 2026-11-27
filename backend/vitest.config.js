@@ -30,6 +30,17 @@ export default defineConfig({
           include: ["tests/unit/**/*.test.js"],
         },
       },
+      {
+        extends: true,
+        test: {
+          name: "integration",
+          include: ["tests/integration/**/*.test.js"],
+          setupFiles: ["tests/helpers/setup.js"],
+          fileParallelism: false,
+          testTimeout: 15_000,
+          hookTimeout: 30_000,
+        },
+      },
     ],
   },
 });
